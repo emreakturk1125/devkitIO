@@ -13,15 +13,15 @@
   --color-brand-600: oklch(0.48 0.18 240);
 
   /* Surface — Dark */
-  --color-surface-900: oklch(0.15 0.005 260);
-  --color-surface-850: oklch(0.17 0.005 260);
-  --color-surface-800: oklch(0.20 0.006 260);
-  --color-surface-750: oklch(0.23 0.006 260);
-  --color-surface-700: oklch(0.27 0.007 260);
-  --color-surface-600: oklch(0.33 0.008 260);
-  --color-surface-500: oklch(0.42 0.01 260);
-  --color-surface-400: oklch(0.55 0.01 260);
-  --color-surface-300: oklch(0.65 0.01 260);
+  --color-surface-900: oklch(0.16 0.005 260);
+  --color-surface-850: oklch(0.20 0.005 260);
+  --color-surface-800: oklch(0.24 0.006 260);
+  --color-surface-750: oklch(0.27 0.006 260);
+  --color-surface-700: oklch(0.32 0.007 260);
+  --color-surface-600: oklch(0.38 0.008 260);
+  --color-surface-500: oklch(0.48 0.01 260);
+  --color-surface-400: oklch(0.62 0.01 260);
+  --color-surface-300: oklch(0.72 0.01 260);
   --color-surface-200: oklch(0.78 0.008 260);
   --color-surface-100: oklch(0.90 0.005 260);
   --color-surface-50: oklch(0.96 0.003 260);
@@ -68,13 +68,13 @@
     --bg-elevated: var(--color-surface-750);
     --bg-hover: var(--color-surface-700);
     --border-default: var(--color-surface-700);
-    --border-subtle: var(--color-surface-750);
+    --border-subtle: var(--color-surface-700);
     --text-primary: var(--color-surface-50);
     --text-secondary: var(--color-surface-400);
     --text-tertiary: var(--color-surface-500);
     --text-inverse: var(--color-surface-900);
     --scrollbar-track: oklch(0.22 0.006 260);
-    --scrollbar-thumb: oklch(0.48 0.012 260);
+    --scrollbar-thumb: oklch(0.52 0.012 260);
     --scrollbar-thumb-hover: oklch(0.68 0.02 260);
     --sidebar-heading: var(--color-surface-400);
     --sidebar-category: var(--color-surface-50);
