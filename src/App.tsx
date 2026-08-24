@@ -15,6 +15,7 @@ import { useToolbox } from '@/hooks/useToolbox';
 import { useTheme } from '@/hooks/useTheme';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { copyToClipboard } from '@/services/clipboard/clipboard';
 import { initializeRegistry } from '@/registry/toolRegistry';
 import { getAllCategories } from '@/registry/categoryRegistry';
@@ -66,6 +67,9 @@ function ToolboxPage() {
   const { theme, toggleTheme } = useTheme();
   const { favoriteIds, toggleFavorite, isFavorite } = useFavorites();
   const { t, toolDescription } = useLocale();
+
+  // SEO: Update document title and meta description based on selected tool
+  useDocumentTitle(selectedTool ?? null);
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -151,7 +155,7 @@ function ToolboxPage() {
         />
 
         {/* Main Content */}
-        <main className="flex-1 flex flex-col min-h-0 overflow-hidden">
+        <main className="flex-1 flex flex-col min-h-0 overflow-hidden" aria-label="Developer tool workspace">
           {/* Controls Area */}
           <div className="p-4 lg:p-5 space-y-4 shrink-0 overflow-y-auto">
             {/* Mobile menu button */}
