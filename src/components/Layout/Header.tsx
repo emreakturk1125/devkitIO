@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Wrench, Search, Sun, Moon } from 'lucide-react';
 import { useLocale } from '@/hooks/useLocale';
 
@@ -13,10 +14,14 @@ export const Header: React.FC<HeaderProps> = ({ onSearchOpen, theme, onToggleThe
 
   return (
     <header className="flex h-12 items-center justify-between px-4 border-b border-[var(--border-subtle)] bg-[var(--bg-panel)]">
-      <div className="flex items-center gap-2 text-[var(--text-primary)]">
+      <Link
+        to="/"
+        className="flex items-center gap-2 text-[var(--text-primary)]"
+        aria-label="DevKit home"
+      >
         <Wrench className="w-5 h-5 text-[var(--text-secondary)]" />
         <span className="font-sans font-bold text-lg">DevKit</span>
-      </div>
+      </Link>
       <div className="flex items-center gap-3">
         <div className="px-2 py-1 text-xs font-semibold rounded bg-[var(--color-success)] text-[var(--bg-app)]">
           {t.clientSide}

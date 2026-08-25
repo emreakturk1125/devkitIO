@@ -47,6 +47,22 @@ export const en: Messages = {
     resultPlaceholder: 'Result will appear here...',
     pasteData: 'Paste your data here...',
     inputNotRequired: 'No input required — results are generated from the options above.',
+    faq: 'FAQ',
+    privacyNote:
+      'Processing runs in your browser only — input is not uploaded to a server.',
+    faqFree: 'Is {name} free?',
+    faqFreeAnswer: 'Yes. {name} is free on DevKit and does not require an account.',
+    faqPrivacy: 'Does my data leave the browser?',
+    faqPrivacyAnswer:
+      'No. Transformations run locally in your browser. DevKit does not send your input to a server.',
+    faqInstall: 'Do I need to install anything?',
+    faqInstallAnswer: 'No. Open the page, paste or type your input, and get the result.',
+    pageNotFound: 'Page not found',
+    pageNotFoundHint: 'This tool or category does not exist. Choose a tool from the sidebar or go back home.',
+    goHome: 'Go to DevKit',
+    homeHeading: 'DevKit — Free Online Developer Tools',
+    homeIntro:
+      'Format, convert and generate JSON, SQL, text and more — entirely in your browser.',
   },
   categories: {
     sql: { name: 'SQL', description: 'SQL formatting, generation and transformation tools' },

@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate, useParams } from 'react-router-dom';
+import { useState, useCallback, useEffect, useMemo } from 'react';
+import { BrowserRouter, Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import { Header } from '@/components/Layout/Header';
 import { CategorySelector } from '@/components/CategorySelector/CategorySelector';
@@ -10,15 +10,27 @@ import OutputPanel from '@/components/OutputPanel/OutputPanel';
 import DiffView from '@/components/DiffView/DiffView';
 import { ToolSearch } from '@/components/ToolSearch/ToolSearch';
 import { Sidebar } from '@/components/Sidebar/Sidebar';
+import { ToolSeo } from '@/components/ToolSeo/ToolSeo';
+import { NotFound } from '@/components/NotFound/NotFound';
 
 import { useToolbox } from '@/hooks/useToolbox';
 import { useTheme } from '@/hooks/useTheme';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { useSeo } from '@/hooks/useSeo';
 import { copyToClipboard } from '@/services/clipboard/clipboard';
-import { initializeRegistry } from '@/registry/toolRegistry';
-import { getAllCategories } from '@/registry/categoryRegistry';
+import { getToolById, getToolsByCategory, initializeRegistry } from '@/registry/toolRegistry';
+import { getAllCategories, getCategoryById } from '@/registry/categoryRegistry';
+import {
+  BASE_DESCRIPTION,
+  BASE_TITLE,
+  categoryPageDescription,
+  categoryPageTitle,
+  categoryPath,
+  toolPageDescription,
+  toolPageTitle,
+  toolPath,
+} from '@/seo/site';
 
 import type { EditorLanguage } from '@/components/Editor/CodeEditor';
 import { Play, Star, Menu } from 'lucide-react';
@@ -39,6 +51,13 @@ function getEditorLanguage(inputType?: string): EditorLanguage {
     default:
       return 'text';
   }
+}
+
+function getRouteKind(pathname: string): 'home' | 'category' | 'tool' | 'unknown' {
+  if (pathname === '/') return 'home';
+  if (/^\/tools\/[^/]+$/.test(pathname)) return 'category';
+  if (/^\/tools\/[^/]+\/[^/]+$/.test(pathname)) return 'tool';
+  return 'unknown';
 }
 
 // ─── Main Toolbox Page ──────────────────────────────────────────────────────
@@ -66,17 +85,78 @@ function ToolboxPage() {
 
   const { theme, toggleTheme } = useTheme();
   const { favoriteIds, toggleFavorite, isFavorite } = useFavorites();
-  const { t, toolDescription } = useLocale();
-
-  // SEO: Update document title and meta description based on selected tool
-  useDocumentTitle(selectedTool ?? null);
+  const { t, toolName, toolDescription, categoryName, categoryDescription } = useLocale();
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [registryReady, setRegistryReady] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
   const params = useParams<{ category?: string; toolId?: string }>();
+  const routeKind = getRouteKind(location.pathname);
+
+  const isNotFound = useMemo(() => {
+    if (routeKind === 'unknown') return true;
+    if (!registryReady) return false;
+    if (routeKind === 'category') {
+      const category = getCategoryById(params.category ?? '');
+      return !category || getToolsByCategory(category.id).length === 0;
+    }
+    if (routeKind === 'tool') {
+      const tool = getToolById(params.toolId ?? '');
+      return !tool || tool.category !== params.category;
+    }
+    return false;
+  }, [registryReady, routeKind, params.category, params.toolId]);
+
+  const seo = useMemo(() => {
+    if (isNotFound) {
+      return {
+        title: `${t.pageNotFound} — DevKit`,
+        description: t.pageNotFoundHint,
+        path: location.pathname,
+        noindex: true,
+      };
+    }
+    if (selectedTool) {
+      const name = toolName(selectedTool.id, selectedTool.name);
+      const desc = toolDescription(selectedTool.id, selectedTool.description);
+      return {
+        title: toolPageTitle(name),
+        description: toolPageDescription(desc),
+        path: toolPath(selectedTool.category, selectedTool.id),
+      };
+    }
+    if (selectedCategoryId) {
+      const category = getCategoryById(selectedCategoryId);
+      const name = categoryName(selectedCategoryId, category?.name ?? selectedCategoryId);
+      const desc = categoryDescription(selectedCategoryId, category?.description ?? '');
+      return {
+        title: categoryPageTitle(name),
+        description: categoryPageDescription(desc),
+        path: categoryPath(selectedCategoryId),
+      };
+    }
+    return {
+      title: BASE_TITLE,
+      description: BASE_DESCRIPTION,
+      path: '/',
+    };
+  }, [
+    isNotFound,
+    selectedTool,
+    selectedCategoryId,
+    location.pathname,
+    t.pageNotFound,
+    t.pageNotFoundHint,
+    toolName,
+    toolDescription,
+    categoryName,
+    categoryDescription,
+  ]);
+
+  useSeo(seo);
 
   // Initialize registry on mount
   useEffect(() => {
@@ -85,25 +165,31 @@ function ToolboxPage() {
 
   // Sync URL params to state on load
   useEffect(() => {
-    if (!registryReady) return;
+    if (!registryReady || isNotFound) return;
     if (params.category && params.toolId) {
-      selectCategoryAndTool(params.category, params.toolId);
+      const tool = getToolById(params.toolId);
+      if (tool && tool.category === params.category) {
+        selectCategoryAndTool(params.category, params.toolId);
+      }
     } else if (params.category) {
-      selectCategory(params.category);
+      const category = getCategoryById(params.category);
+      if (category) selectCategory(params.category);
+    } else {
+      selectCategory(null);
     }
-  }, [registryReady, params.category, params.toolId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [registryReady, params.category, params.toolId, isNotFound]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Sync state to URL
   useEffect(() => {
-    if (!registryReady) return;
+    if (!registryReady || isNotFound) return;
     if (selectedCategoryId && selectedToolId) {
       navigate(`/tools/${selectedCategoryId}/${selectedToolId}`, { replace: true });
     } else if (selectedCategoryId) {
       navigate(`/tools/${selectedCategoryId}`, { replace: true });
-    } else {
+    } else if (location.pathname !== '/') {
       navigate('/', { replace: true });
     }
-  }, [selectedCategoryId, selectedToolId, registryReady, navigate]);
+  }, [selectedCategoryId, selectedToolId, registryReady, navigate, isNotFound, location.pathname]);
 
   // Keyboard shortcuts
   useKeyboardShortcuts({
@@ -156,6 +242,10 @@ function ToolboxPage() {
 
         {/* Main Content */}
         <main className="flex-1 flex flex-col min-h-0 overflow-hidden" aria-label="Developer tool workspace">
+          {isNotFound ? (
+            <NotFound />
+          ) : (
+            <>
           {/* Controls Area */}
           <div className="p-4 lg:p-5 space-y-4 shrink-0 overflow-y-auto">
             {/* Mobile menu button */}
@@ -204,11 +294,31 @@ function ToolboxPage() {
               </div>
             </div>
 
-            {/* Tool Description */}
-            {selectedTool && (
-              <p className="text-xs text-[var(--text-tertiary)]">
-                {toolDescription(selectedTool.id, selectedTool.description)}
-              </p>
+            {selectedTool ? (
+              <ToolSeo
+                toolId={selectedTool.id}
+                name={toolName(selectedTool.id, selectedTool.name)}
+                description={toolDescription(selectedTool.id, selectedTool.description)}
+              />
+            ) : (
+              <section>
+                <h1 className="text-lg font-semibold text-[var(--text-primary)]">
+                  {selectedCategoryId
+                    ? categoryName(
+                        selectedCategoryId,
+                        getCategoryById(selectedCategoryId)?.name ?? selectedCategoryId
+                      )
+                    : t.homeHeading}
+                </h1>
+                <p className="mt-1 text-sm text-[var(--text-secondary)]">
+                  {selectedCategoryId
+                    ? categoryDescription(
+                        selectedCategoryId,
+                        getCategoryById(selectedCategoryId)?.description ?? ''
+                      )
+                    : t.homeIntro}
+                </p>
+              </section>
             )}
 
             {/* Dynamic Options */}
@@ -283,6 +393,8 @@ function ToolboxPage() {
               </div>
             )}
           </div>
+            </>
+          )}
         </main>
       </div>
 
@@ -305,6 +417,7 @@ export default function App() {
           <Route path="/" element={<ToolboxPage />} />
           <Route path="/tools/:category" element={<ToolboxPage />} />
           <Route path="/tools/:category/:toolId" element={<ToolboxPage />} />
+          <Route path="*" element={<ToolboxPage />} />
         </Routes>
       </BrowserRouter>
     </LocaleProvider>

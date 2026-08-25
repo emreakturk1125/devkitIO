@@ -1,0 +1,2 @@
+# Cloudflare Pages: static files are served first; this is the SPA fallback.
+/*    /index.html   200

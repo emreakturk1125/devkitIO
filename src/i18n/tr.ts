@@ -46,6 +46,22 @@ export const tr: Messages = {
     resultPlaceholder: 'Sonuç burada görünecek...',
     pasteData: 'Verinizi buraya yapıştırın...',
     inputNotRequired: 'Girdi gerekmez — sonuçlar yukarıdaki seçeneklerden üretilir.',
+    faq: 'SSS',
+    privacyNote:
+      'İşlem yalnızca tarayıcınızda çalışır — girdi bir sunucuya yüklenmez.',
+    faqFree: '{name} ücretsiz mi?',
+    faqFreeAnswer: 'Evet. {name} DevKit üzerinde ücretsizdir ve hesap gerektirmez.',
+    faqPrivacy: 'Verim tarayıcıdan çıkar mı?',
+    faqPrivacyAnswer:
+      'Hayır. Dönüştürme yerel olarak tarayıcıda çalışır. DevKit girdinizi bir sunucuya göndermez.',
+    faqInstall: 'Bir şey kurmam gerekir mi?',
+    faqInstallAnswer: 'Hayır. Sayfayı açın, girdinizi yapıştırın veya yazın, sonucu alın.',
+    pageNotFound: 'Sayfa bulunamadı',
+    pageNotFoundHint: 'Bu araç veya kategori yok. Kenar çubuğundan bir araç seçin veya ana sayfaya dönün.',
+    goHome: 'DevKit ana sayfa',
+    homeHeading: 'DevKit — Ücretsiz Çevrimiçi Geliştirici Araçları',
+    homeIntro:
+      'JSON, SQL, metin ve daha fazlasını biçimlendirin, dönüştürün ve üretin — tamamen tarayıcınızda.',
   },
   categories: {
     sql: { name: 'SQL', description: 'SQL biçimlendirme, üretme ve dönüştürme araçları' },
