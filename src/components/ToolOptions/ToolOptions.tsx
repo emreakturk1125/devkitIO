@@ -150,13 +150,13 @@ export const ToolOptions: React.FC<ToolOptionsProps> = ({ options, values, onCha
   if (options.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap gap-4 items-center p-4 bg-[var(--bg-panel)] rounded border border-[var(--border-subtle)]">
+    <div className="flex flex-wrap items-center gap-3 rounded border border-[var(--border-subtle)] bg-[var(--bg-panel)] p-3 sm:gap-4 sm:p-4">
       {options.map((option) => {
         const val = values[option.id] ?? option.defaultValue;
         const fieldLabel = label(option.label);
 
         return (
-          <div key={option.id} className="flex flex-col gap-1">
+          <div key={option.id} className="flex w-full min-w-0 flex-col gap-1 sm:w-auto">
             <label className="field-label text-sm text-[var(--text-secondary)] font-medium">
               {fieldLabel}
             </label>

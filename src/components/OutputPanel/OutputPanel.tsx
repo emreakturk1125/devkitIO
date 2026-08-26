@@ -66,7 +66,7 @@ export default function OutputPanel({
   }, [isFullscreen]);
 
   return (
-    <div className="relative h-full min-h-0">
+    <div className="relative h-full min-h-0 min-w-0">
       {isFullscreen && (
         <div
           className="fullscreen-backdrop"
@@ -87,22 +87,24 @@ export default function OutputPanel({
               <>
                 <CopyButton text={value} />
                 <button
-                  className="btn-ghost !px-2 !py-1 !text-[0.6875rem]"
+                  className="btn-ghost !px-2 !py-1.5 sm:!py-1 !text-[0.6875rem] min-h-8 min-w-8"
                   onClick={handleDownload}
                   title={t.downloadOutput}
+                  aria-label={t.downloadOutput}
                 >
-                  <Download size={12} />
-                  {t.download}
+                  <Download size={14} />
+                  <span className="hidden sm:inline">{t.download}</span>
                 </button>
               </>
             )}
             <button
-              className="btn-ghost !px-2 !py-1 !text-[0.6875rem]"
+              className="btn-ghost !px-2 !py-1.5 sm:!py-1 !text-[0.6875rem] min-h-8 min-w-8"
               onClick={toggleFullscreen}
               title={isFullscreen ? t.exitFullscreen : t.fullscreen}
+              aria-label={isFullscreen ? t.exitFullscreen : t.fullscreen}
             >
-              {isFullscreen ? <Minimize2 size={12} /> : <Maximize2 size={12} />}
-              {isFullscreen ? t.exit : t.expand}
+              {isFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+              <span className="hidden sm:inline">{isFullscreen ? t.exit : t.expand}</span>
             </button>
           </div>
         </div>

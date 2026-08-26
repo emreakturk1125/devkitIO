@@ -403,7 +403,7 @@ export default function DiffView({
     <div className="flex flex-col h-full min-h-0 gap-3">
       {/* Editor row — always visible */}
       <div
-        className="grid grid-cols-1 md:grid-cols-2 gap-3 min-h-[160px]"
+        className="grid grid-cols-1 md:grid-cols-2 gap-3 min-h-[160px] max-md:auto-rows-[minmax(12rem,1fr)]"
         style={{ flex: showDiff && hasDiff ? '0 0 auto' : '1 1 0%' }}
       >
         {/* Original */}

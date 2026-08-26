@@ -28,15 +28,16 @@ export default function CopyButton({
 
   return (
     <button
-      className={`btn-ghost !px-2 !py-1 !text-[0.6875rem] ${
+      className={`btn-ghost !px-2 !py-1.5 sm:!py-1 !text-[0.6875rem] min-h-8 min-w-8 ${
         copied ? '!text-[var(--color-success)] !border-[var(--color-success)]' : ''
       } ${className}`}
       onClick={handleCopy}
       disabled={!text}
       title={copied ? t.copied : displayLabel}
+      aria-label={copied ? t.copied : displayLabel}
     >
-      {copied ? <Check size={12} /> : <Copy size={12} />}
-      {copied ? t.copied : displayLabel}
+      {copied ? <Check size={14} /> : <Copy size={14} />}
+      <span className="hidden sm:inline">{copied ? t.copied : displayLabel}</span>
     </button>
   );
 }

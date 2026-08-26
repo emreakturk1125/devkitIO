@@ -20,12 +20,15 @@ export const ToolSeo: React.FC<ToolSeoProps> = ({ toolId, name, description }) =
     <section className="space-y-2" aria-labelledby={`tool-heading-${toolId}`}>
       <h1
         id={`tool-heading-${toolId}`}
-        className="text-lg font-semibold text-[var(--text-primary)]"
+        className="text-base font-semibold text-[var(--text-primary)] sm:text-lg"
       >
         {name}
       </h1>
-      <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
-        {description} {t.privacyNote}
+      <p className="min-w-0 text-sm leading-relaxed text-[var(--text-secondary)]">
+        {description}
+      </p>
+      <p className="min-w-0 text-sm leading-relaxed text-[var(--text-secondary)]">
+        {t.privacyNote}
       </p>
       <details className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-input)] px-3 py-2">
         <summary className="cursor-pointer text-sm font-medium text-[var(--text-secondary)]">

@@ -33,7 +33,7 @@ import {
 } from '@/seo/site';
 
 import type { EditorLanguage } from '@/components/Editor/CodeEditor';
-import { Play, Star, Menu } from 'lucide-react';
+import { Play, Star } from 'lucide-react';
 import { LocaleProvider } from '@/i18n/LocaleContext';
 import { useLocale } from '@/hooks/useLocale';
 
@@ -215,22 +215,23 @@ function ToolboxPage() {
 
   if (!registryReady) {
     return (
-      <div className="flex items-center justify-center h-screen bg-[var(--bg-app)]">
+      <div className="flex items-center justify-center h-dvh bg-[var(--bg-app)]">
         <div className="text-[var(--text-secondary)] text-sm">{t.loadingTools}</div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-screen bg-[var(--bg-app)]">
+    <div className="flex flex-col h-dvh min-w-0 overflow-x-hidden bg-[var(--bg-app)]">
       {/* Header */}
       <Header
         onSearchOpen={() => setSearchOpen(true)}
+        onMenuOpen={() => setSidebarOpen(true)}
         theme={theme}
         onToggleTheme={toggleTheme}
       />
 
-      <div className="flex flex-1 min-h-0 overflow-hidden">
+      <div className="flex min-h-0 min-w-0 flex-1 overflow-hidden">
         {/* Sidebar */}
         <Sidebar
           favoriteIds={favoriteIds}
@@ -238,25 +239,18 @@ function ToolboxPage() {
           onToggleFavorite={toggleFavorite}
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
+          theme={theme}
+          onToggleTheme={toggleTheme}
         />
 
         {/* Main Content */}
-        <main className="flex-1 flex flex-col min-h-0 overflow-hidden" aria-label="Developer tool workspace">
+        <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto md:overflow-hidden" aria-label="Developer tool workspace">
           {isNotFound ? (
             <NotFound />
           ) : (
             <>
           {/* Controls Area */}
-          <div className="p-4 lg:p-5 space-y-4 shrink-0 overflow-y-auto">
-            {/* Mobile menu button */}
-            <button
-              className="btn-ghost lg:hidden"
-              onClick={() => setSidebarOpen(true)}
-            >
-              <Menu size={16} />
-              {t.menu}
-            </button>
-
+          <div className="p-3 sm:p-4 lg:p-5 space-y-3 sm:space-y-4 shrink-0 md:overflow-y-auto">
             {/* Category & Tool Selectors */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
@@ -310,7 +304,7 @@ function ToolboxPage() {
                       )
                     : t.homeHeading}
                 </h1>
-                <p className="mt-1 text-sm text-[var(--text-secondary)]">
+                <p className="mt-1 min-w-0 text-sm break-words text-[var(--text-secondary)]">
                   {selectedCategoryId
                     ? categoryDescription(
                         selectedCategoryId,
@@ -335,10 +329,10 @@ function ToolboxPage() {
           </div>
 
           {/* Editor Area */}
-          <div className="flex-1 min-h-0 p-4 lg:p-5 pt-0 lg:pt-0 flex flex-col gap-3">
+          <div className="flex-1 min-h-0 max-md:min-h-[32rem] p-3 sm:p-4 lg:p-5 pt-0 flex flex-col gap-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
             {isDualInput ? (
               /* Dual input for Diff tool — inline diff highlighting, no separate output */
-              <div className="flex-1 min-h-[200px] flex flex-col">
+              <div className="flex-1 min-h-[200px] max-md:min-h-[28rem] flex flex-col">
                 <DiffView
                   originalValue={input}
                   modifiedValue={secondaryInput}
@@ -351,7 +345,7 @@ function ToolboxPage() {
               </div>
             ) : (
               /* Standard single-input layout */
-              <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3 min-h-0">
+              <div className="grid min-h-0 min-w-0 flex-1 grid-cols-1 gap-3 max-md:auto-rows-[minmax(16rem,1fr)] md:grid-cols-2">
                 <InputPanel
                   value={input}
                   onChange={setInput}
@@ -374,7 +368,7 @@ function ToolboxPage() {
             {selectedTool && !selectedTool.autoTransform && (
               <div className="flex items-center justify-center gap-3 py-2 shrink-0">
                 <button
-                  className="btn-primary"
+                  className="btn-primary w-full min-h-11 sm:w-auto"
                   onClick={transform}
                   disabled={
                     isProcessing ||

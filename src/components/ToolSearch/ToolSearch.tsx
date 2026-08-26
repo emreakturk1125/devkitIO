@@ -80,11 +80,11 @@ export const ToolSearch: React.FC<ToolSearchProps> = ({ isOpen, onClose, onSelec
 
   return (
     <div
-      className="search-overlay fixed inset-0 z-50 flex items-start justify-center pt-20 bg-black/50 backdrop-blur-sm"
+      className="search-overlay fixed inset-0 z-50 flex items-start justify-center bg-black/50 px-3 pt-[max(1rem,env(safe-area-inset-top))] backdrop-blur-sm sm:px-4 sm:pt-20"
       onClick={onClose}
     >
       <div
-        className="slide-up w-full max-w-2xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl shadow-2xl overflow-hidden flex flex-col"
+        className="slide-up flex max-h-[min(32rem,80dvh)] w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-4 border-b border-[var(--border-subtle)]">

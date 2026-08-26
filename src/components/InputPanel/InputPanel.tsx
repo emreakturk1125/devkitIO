@@ -64,7 +64,7 @@ export default function InputPanel({
   }, [isFullscreen]);
 
   return (
-    <div className="relative h-full min-h-0">
+    <div className="relative h-full min-h-0 min-w-0">
       {isFullscreen && (
         <div
           className="fullscreen-backdrop"
@@ -82,13 +82,13 @@ export default function InputPanel({
           </span>
           <div className="flex items-center gap-1">
             {value && (
-              <span className="text-[0.6875rem] text-[var(--text-tertiary)] font-normal normal-case tracking-normal mr-2">
+              <span className="hidden text-[0.6875rem] font-normal normal-case tracking-normal text-[var(--text-tertiary)] sm:inline mr-2">
                 {format(t.linesChars, { lines: lineCount, chars: charCount })}
               </span>
             )}
             {!disabled && (
               <button
-                className="btn-ghost !px-2 !py-1 !text-[0.6875rem]"
+                className="btn-ghost !px-2 !py-1.5 sm:!py-1 !text-[0.6875rem] min-h-8 min-w-8"
                 onClick={async () => {
                   try {
                     const text = await navigator.clipboard.readText();
@@ -96,28 +96,31 @@ export default function InputPanel({
                   } catch { /* clipboard denied */ }
                 }}
                 title={t.pasteFromClipboard}
+                aria-label={t.pasteFromClipboard}
               >
-                <Clipboard size={12} />
-                {t.paste}
+                <Clipboard size={14} />
+                <span className="hidden sm:inline">{t.paste}</span>
               </button>
             )}
             {value && !disabled && (
               <button
-                className="btn-ghost !px-2 !py-1 !text-[0.6875rem]"
+                className="btn-ghost !px-2 !py-1.5 sm:!py-1 !text-[0.6875rem] min-h-8 min-w-8"
                 onClick={onClear}
                 title={t.clearInput}
+                aria-label={t.clearInput}
               >
-                <Trash2 size={12} />
-                {t.clear}
+                <Trash2 size={14} />
+                <span className="hidden sm:inline">{t.clear}</span>
               </button>
             )}
             <button
-              className="btn-ghost !px-2 !py-1 !text-[0.6875rem]"
+              className="btn-ghost !px-2 !py-1.5 sm:!py-1 !text-[0.6875rem] min-h-8 min-w-8"
               onClick={toggleFullscreen}
               title={isFullscreen ? t.exitFullscreen : t.fullscreen}
+              aria-label={isFullscreen ? t.exitFullscreen : t.fullscreen}
             >
-              {isFullscreen ? <Minimize2 size={12} /> : <Maximize2 size={12} />}
-              {isFullscreen ? t.exit : t.expand}
+              {isFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+              <span className="hidden sm:inline">{isFullscreen ? t.exit : t.expand}</span>
             </button>
           </div>
         </div>
