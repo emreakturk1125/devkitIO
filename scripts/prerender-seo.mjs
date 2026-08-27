@@ -83,44 +83,9 @@ function buildBreadcrumbJsonLd(crumbs) {
   });
 }
 
-// ─── FAQPage JSON-LD ────────────────────────────────────────────────────────
-
-function buildFaqJsonLd(toolName) {
-  return JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: `Is ${toolName} free?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `Yes. ${toolName} is free on DevKit and does not require an account.`,
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Does my data leave the browser?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'No. Transformations run locally in your browser. DevKit does not send your input to a server.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Do I need to install anything?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'No. Open the page, paste or type your input, and get the result.',
-        },
-      },
-    ],
-  });
-}
-
 // ─── Page Meta Injection ────────────────────────────────────────────────────
 
-function injectPageMeta(html, { title, description, path, name, breadcrumbs, faqToolName, noindex }) {
+function injectPageMeta(html, { title, description, path, name, breadcrumbs, noindex }) {
   const url = path === '/' ? `${SITE_URL}/` : `${SITE_URL}${path}`;
   const safeTitle = escapeHtml(title);
   const safeDesc = escapeHtml(description);
@@ -184,11 +149,6 @@ function injectPageMeta(html, { title, description, path, name, breadcrumbs, faq
   let structuredData = '';
   if (breadcrumbs && breadcrumbs.length > 1) {
     structuredData += `\n    <script type="application/ld+json" id="seo-breadcrumb">${buildBreadcrumbJsonLd(breadcrumbs)}</script>`;
-  }
-
-  // Inject FAQPage JSON-LD for tool pages
-  if (faqToolName) {
-    structuredData += `\n    <script type="application/ld+json" id="seo-faq">${buildFaqJsonLd(faqToolName)}</script>`;
   }
 
   const noscript = `<noscript><h1>${escapeHtml(name)}</h1><p>${safeDesc}</p></noscript>`;
@@ -313,7 +273,6 @@ for (const category of categories) {
         description,
         path: `/tools/${tool.category}/${tool.id}`,
         name: tool.name,
-        faqToolName: tool.name,
         breadcrumbs: [
           { name: SITE_NAME, url: `${SITE_URL}/` },
           { name: catMeta.name, url: `${SITE_URL}/tools/${tool.category}` },
