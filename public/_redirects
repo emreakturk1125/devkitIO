@@ -1,3 +1,2 @@
-# Static prerendered files (/ and /tools/...) are served first.
-# Unknown paths return a real 404 instead of the home SPA shell.
-/*    /404.html   404
+# Cloudflare only allows 200, 301, 302, 303, 307, 308 here.
+# Unknown paths are served by 404.html (copied/prerendered into dist).
