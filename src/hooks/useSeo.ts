@@ -6,11 +6,18 @@ import {
   SITE_NAME,
 } from '@/seo/site';
 
+export interface BreadcrumbItem {
+  name: string;
+  path: string;
+}
+
 interface SeoOptions {
   title: string;
   description: string;
   path: string;
   noindex?: boolean;
+  locale?: string;
+  breadcrumbs?: BreadcrumbItem[];
 }
 
 function setMeta(attr: 'name' | 'property', key: string, value: string): void {
@@ -35,9 +42,17 @@ function setCanonical(href: string): void {
 }
 
 function updateJsonLd(url: string, name: string, description: string): void {
-  const script = document.querySelector<HTMLScriptElement>(
-    'script[type="application/ld+json"]'
+  // Find the WebApplication JSON-LD script (not the WebSite or id'd ones)
+  const scripts = document.querySelectorAll<HTMLScriptElement>(
+    'script[type="application/ld+json"]:not([id])'
   );
+  let script: HTMLScriptElement | null = null;
+  for (const s of scripts) {
+    if (s.textContent?.includes('"WebApplication"')) {
+      script = s;
+      break;
+    }
+  }
   if (!script?.textContent) return;
   try {
     const data = JSON.parse(script.textContent) as Record<string, unknown>;
@@ -50,10 +65,48 @@ function updateJsonLd(url: string, name: string, description: string): void {
   }
 }
 
+function updateBreadcrumbJsonLd(breadcrumbs?: BreadcrumbItem[]): void {
+  const id = 'seo-breadcrumb';
+  let script = document.getElementById(id) as HTMLScriptElement | null;
+
+  if (!breadcrumbs || breadcrumbs.length <= 1) {
+    script?.remove();
+    return;
+  }
+
+  if (!script) {
+    script = document.createElement('script');
+    script.id = id;
+    script.type = 'application/ld+json';
+    document.head.appendChild(script);
+  }
+
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbs.map((crumb, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: crumb.name,
+      item: absoluteUrl(crumb.path),
+    })),
+  };
+
+  script.textContent = JSON.stringify(data);
+}
+
 /**
- * Keeps title, description, canonical and social tags in sync with the current route.
+ * Keeps title, description, canonical, social tags, lang attribute
+ * and BreadcrumbList structured data in sync with the current route.
  */
-export function useSeo({ title, description, path, noindex = false }: SeoOptions): void {
+export function useSeo({
+  title,
+  description,
+  path,
+  noindex = false,
+  locale,
+  breadcrumbs,
+}: SeoOptions): void {
   useEffect(() => {
     const url = absoluteUrl(path);
 
@@ -71,5 +124,13 @@ export function useSeo({ title, description, path, noindex = false }: SeoOptions
     setMeta('name', 'twitter:url', url);
 
     updateJsonLd(url, title.split(' — ')[0] ?? title, description);
-  }, [title, description, path, noindex]);
+
+    // Dynamic HTML lang attribute
+    if (locale) {
+      document.documentElement.lang = locale;
+    }
+
+    // BreadcrumbList JSON-LD
+    updateBreadcrumbJsonLd(breadcrumbs);
+  }, [title, description, path, noindex, locale, breadcrumbs]);
 }

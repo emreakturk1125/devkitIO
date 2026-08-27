@@ -60,6 +60,7 @@ export const en: Messages = {
     pageNotFound: 'Page not found',
     pageNotFoundHint: 'This tool or category does not exist. Choose a tool from the sidebar or go back home.',
     goHome: 'Go to DevKit',
+    home: 'Home',
     homeHeading: 'DevKit — Free Online Developer Tools',
     homeIntro:
       'Format, convert and generate JSON, SQL, text and more — entirely in your browser.',

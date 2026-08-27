@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Star, ChevronRight, X, Sun, Moon } from 'lucide-react';
 import { getToolById, getCategoriesWithTools } from '@/registry/toolRegistry';
 import type { ToolDefinition } from '@/types/tool';
@@ -6,7 +7,6 @@ import { useLocale } from '@/hooks/useLocale';
 
 interface SidebarProps {
   favoriteIds: string[];
-  onSelectTool: (categoryId: string, toolId: string) => void;
   onToggleFavorite: (toolId: string) => void;
   isOpen: boolean;
   onClose: () => void;
@@ -16,7 +16,6 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({
   favoriteIds,
-  onSelectTool,
   onToggleFavorite,
   isOpen,
   onClose,
@@ -45,16 +44,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
       const name = toolName(tool.id, tool.name);
       return (
         <div key={tool.id} className="flex items-center group px-2 py-1.5 lg:py-1 mx-2 rounded hover:bg-[var(--bg-hover)] cursor-pointer">
-          <button
-            className="flex-1 min-w-0 min-h-9 lg:min-h-0 text-left text-sm text-[var(--sidebar-item)] group-hover:text-[var(--sidebar-category)] truncate pl-4"
+          <Link
+            to={`/tools/${tool.category}/${tool.id}`}
+            className="flex-1 min-w-0 min-h-9 lg:min-h-0 flex items-center text-left text-sm text-[var(--sidebar-item)] group-hover:text-[var(--sidebar-category)] truncate pl-4"
             onClick={() => {
-              onSelectTool(tool.category, tool.id);
               if (window.innerWidth < 1024) onClose();
             }}
             title={name}
           >
             {name}
-          </button>
+          </Link>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -123,7 +122,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto py-4">
+      <nav className="flex-1 overflow-y-auto py-4" aria-label="Developer tools">
         {favoriteTools.length > 0 && (
           <div className="mb-6">
             <div className="flex items-center gap-2 px-4 mb-2 text-xs font-semibold text-[var(--sidebar-heading)] uppercase tracking-wider">
@@ -139,13 +138,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
           {categories.map(category => (
             <div key={category.id} className="mb-1">
-              <button
-                className="flex min-h-10 w-full items-center px-4 py-2 text-sm font-semibold text-[var(--sidebar-category)] hover:bg-[var(--bg-hover)] lg:min-h-0 lg:py-1.5"
-                onClick={() => toggleCategory(category.id)}
-              >
-                <ChevronRight className={`w-3.5 h-3.5 mr-1.5 text-[var(--sidebar-muted)] transition-transform ${expandedCategories[category.id] ? 'rotate-90' : ''}`} />
-                {categoryName(category.id, category.name)}
-              </button>
+              <div className="flex min-h-10 items-center hover:bg-[var(--bg-hover)] lg:min-h-0">
+                <button
+                  type="button"
+                  className="flex shrink-0 items-center py-2 pl-4 pr-1 text-[var(--sidebar-muted)] lg:py-1.5"
+                  onClick={() => toggleCategory(category.id)}
+                  aria-expanded={Boolean(expandedCategories[category.id])}
+                  aria-label={categoryName(category.id, category.name)}
+                >
+                  <ChevronRight className={`h-3.5 w-3.5 transition-transform ${expandedCategories[category.id] ? 'rotate-90' : ''}`} />
+                </button>
+                <Link
+                  to={`/tools/${category.id}`}
+                  className="min-w-0 flex-1 truncate py-2 pr-4 text-sm font-semibold text-[var(--sidebar-category)] lg:py-1.5"
+                  onClick={() => {
+                    if (window.innerWidth < 1024) onClose();
+                  }}
+                >
+                  {categoryName(category.id, category.name)}
+                </Link>
+              </div>
               {expandedCategories[category.id] && (
                 <div className="mt-1">
                   {renderToolList(category.tools)}
@@ -154,7 +166,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           ))}
         </div>
-      </div>
+      </nav>
     </div>
   );
 

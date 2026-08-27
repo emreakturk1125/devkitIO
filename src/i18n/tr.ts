@@ -59,6 +59,7 @@ export const tr: Messages = {
     pageNotFound: 'Sayfa bulunamadı',
     pageNotFoundHint: 'Bu araç veya kategori yok. Kenar çubuğundan bir araç seçin veya ana sayfaya dönün.',
     goHome: 'DevKit ana sayfa',
+    home: 'Ana sayfa',
     homeHeading: 'DevKit — Ücretsiz Çevrimiçi Geliştirici Araçları',
     homeIntro:
       'JSON, SQL, metin ve daha fazlasını biçimlendirin, dönüştürün ve üretin — tamamen tarayıcınızda.',

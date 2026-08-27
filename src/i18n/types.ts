@@ -62,6 +62,7 @@ export interface Messages {
     pageNotFound: string;
     pageNotFoundHint: string;
     goHome: string;
+    home: string;
     homeHeading: string;
     homeIntro: string;
   };

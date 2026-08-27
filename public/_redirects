@@ -1,2 +1,3 @@
-# Cloudflare Pages: static files are served first; this is the SPA fallback.
-/*    /index.html   200
+# Static prerendered files (/ and /tools/...) are served first.
+# Unknown paths return a real 404 instead of the home SPA shell.
+/*    /404.html   404

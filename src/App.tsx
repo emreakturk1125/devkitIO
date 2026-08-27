@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import { Header } from '@/components/Layout/Header';
+import { Footer } from '@/components/Layout/Footer';
 import { CategorySelector } from '@/components/CategorySelector/CategorySelector';
 import { ToolSelector } from '@/components/ToolSelector/ToolSelector';
 import { ToolOptions } from '@/components/ToolOptions/ToolOptions';
@@ -24,6 +25,7 @@ import { getAllCategories, getCategoryById } from '@/registry/categoryRegistry';
 import {
   BASE_DESCRIPTION,
   BASE_TITLE,
+  SITE_NAME,
   categoryPageDescription,
   categoryPageTitle,
   categoryPath,
@@ -85,7 +87,7 @@ function ToolboxPage() {
 
   const { theme, toggleTheme } = useTheme();
   const { favoriteIds, toggleFavorite, isFavorite } = useFavorites();
-  const { t, toolName, toolDescription, categoryName, categoryDescription } = useLocale();
+  const { t, locale, toolName, toolDescription, categoryName, categoryDescription } = useLocale();
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -122,10 +124,19 @@ function ToolboxPage() {
     if (selectedTool) {
       const name = toolName(selectedTool.id, selectedTool.name);
       const desc = toolDescription(selectedTool.id, selectedTool.description);
+      const catName = categoryName(
+        selectedTool.category,
+        getCategoryById(selectedTool.category)?.name ?? selectedTool.category
+      );
       return {
         title: toolPageTitle(name),
         description: toolPageDescription(desc),
         path: toolPath(selectedTool.category, selectedTool.id),
+        breadcrumbs: [
+          { name: SITE_NAME, path: '/' },
+          { name: catName, path: categoryPath(selectedTool.category) },
+          { name, path: toolPath(selectedTool.category, selectedTool.id) },
+        ],
       };
     }
     if (selectedCategoryId) {
@@ -136,6 +147,10 @@ function ToolboxPage() {
         title: categoryPageTitle(name),
         description: categoryPageDescription(desc),
         path: categoryPath(selectedCategoryId),
+        breadcrumbs: [
+          { name: SITE_NAME, path: '/' },
+          { name, path: categoryPath(selectedCategoryId) },
+        ],
       };
     }
     return {
@@ -156,7 +171,7 @@ function ToolboxPage() {
     categoryDescription,
   ]);
 
-  useSeo(seo);
+  useSeo({ ...seo, locale });
 
   // Initialize registry on mount
   useEffect(() => {
@@ -235,7 +250,6 @@ function ToolboxPage() {
         {/* Sidebar */}
         <Sidebar
           favoriteIds={favoriteIds}
-          onSelectTool={selectCategoryAndTool}
           onToggleFavorite={toggleFavorite}
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
@@ -391,6 +405,8 @@ function ToolboxPage() {
           )}
         </main>
       </div>
+
+      <Footer />
 
       {/* Tool Search Modal */}
       <ToolSearch

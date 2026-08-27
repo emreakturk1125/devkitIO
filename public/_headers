@@ -26,5 +26,9 @@
 /index.html
   Cache-Control: no-cache
 
+/404.html
+  Cache-Control: no-cache
+  X-Robots-Tag: noindex, follow
+
 /
   Cache-Control: no-cache
