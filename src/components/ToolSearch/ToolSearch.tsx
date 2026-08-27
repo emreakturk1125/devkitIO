@@ -121,7 +121,7 @@ export const ToolSearch: React.FC<ToolSearchProps> = ({ isOpen, onClose, onSelec
                     {categoryName(tool.category, tool.category)}
                   </span>
                 </div>
-                <span className="text-sm text-[var(--text-secondary)] mt-1 text-left">
+                <span className="mt-1 line-clamp-2 text-left text-sm text-[var(--text-secondary)]">
                   {toolDescription(tool.id, tool.description)}
                 </span>
               </button>

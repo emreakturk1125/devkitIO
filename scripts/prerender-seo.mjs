@@ -38,7 +38,19 @@ function walkTs(dir) {
   return files;
 }
 
+function extractI18nToolCopy() {
+  const text = readFileSync(join(root, 'src/i18n/en.ts'), 'utf8');
+  const copy = new Map();
+  const re =
+    /(\w+):\s*\{\s*name:\s*'((?:\\'|[^'])*)',\s*description:\s*'((?:\\'|[^'])*)'/g;
+  for (const match of text.matchAll(re)) {
+    copy.set(match[1], { name: match[2], description: match[3] });
+  }
+  return copy;
+}
+
 function extractTools() {
+  const i18n = extractI18nToolCopy();
   const tools = [];
   for (const file of walkTs(join(root, 'src/tools'))) {
     const text = readFileSync(file, 'utf8');
@@ -50,7 +62,13 @@ function extractTools() {
     const description = chunk.match(/\bdescription:\s*'([^']+)'/)?.[1];
     const category = chunk.match(/\bcategory:\s*'([^']+)'/)?.[1];
     if (id && category && name) {
-      tools.push({ id, category, name, description: description ?? name });
+      const localized = i18n.get(id);
+      tools.push({
+        id,
+        category,
+        name: localized?.name ?? name,
+        description: localized?.description ?? description ?? name,
+      });
     }
   }
   return tools.sort((a, b) => a.id.localeCompare(b.id));
@@ -265,7 +283,7 @@ for (const category of categories) {
   );
   for (const tool of catTools) {
     const title = `${tool.name} — ${SITE_NAME} | Free Online Developer Tools`;
-    const description = `${tool.description} — Free online tool, 100% client-side. Your data never leaves your browser.`;
+    const description = tool.description;
     writeFile(
       join(root, `dist/tools/${tool.category}/${tool.id}/index.html`),
       injectPageMeta(template, {

@@ -77,48 +77,162 @@ export const en: Messages = {
     web: { name: 'Web', description: 'URL parsing, cURL conversion and web utilities' },
   },
   tools: {
-    jsonFormatter: { name: 'JSON Formatter', description: 'Format and beautify JSON data' },
-    jsonMinifier: { name: 'JSON Minifier', description: 'Minify JSON data' },
-    jsonValidator: { name: 'JSON Validator', description: 'Validate JSON and report parse errors with line and column' },
-    jsonToClass: { name: 'JSON to Class', description: 'Generate C#, TypeScript or Java class definitions from JSON' },
-    jsonToTypeScript: { name: 'JSON to TypeScript', description: 'Generate TypeScript interfaces from JSON' },
-    jsonToXml: { name: 'JSON to XML', description: 'Convert JSON data to XML' },
-    jsonToYaml: { name: 'JSON to YAML', description: 'Convert JSON data to YAML' },
-    jsonDiff: { name: 'JSON Diff', description: 'Compare two JSON documents and list added, removed and changed values' },
-    classToJson: { name: 'Class to JSON', description: 'Convert C#, TypeScript or Java class / interface definitions to JSON' },
-    yamlFormatter: { name: 'YAML Formatter', description: 'Format and beautify YAML data' },
-    xmlFormatter: { name: 'XML Formatter', description: 'Format, beautify and validate XML data' },
-    javascriptFormatter: { name: 'JavaScript Formatter', description: 'Format and beautify JavaScript code' },
-    jqueryFormatter: { name: 'jQuery Formatter', description: 'Format and beautify jQuery / JavaScript code' },
-    typescriptFormatter: { name: 'TypeScript Formatter', description: 'Format and beautify TypeScript code' },
-    htmlFormatter: { name: 'HTML Formatter', description: 'Format and beautify HTML markup' },
-    cssFormatter: { name: 'CSS Formatter', description: 'Format and beautify CSS stylesheets' },
-    base64: { name: 'Base64 Encoder/Decoder', description: 'Encode or decode Base64 strings' },
-    guidGenerator: { name: 'GUID Generator', description: 'Generate random GUIDs (.NET-style formats)' },
-    uuidGenerator: { name: 'UUID Generator', description: 'Generate RFC 4122 UUID v4 values' },
-    passwordGenerator: { name: 'Password Generator', description: 'Generate random passwords with length and character-set options' },
-    randomStringGenerator: { name: 'Random String Generator', description: 'Generate random strings with length and charset options' },
-    sqlFormatter: { name: 'SQL Formatter', description: 'Format and beautify SQL queries' },
-    sqlInGenerator: { name: 'SQL IN Generator', description: 'Convert lines to SQL IN (...) list' },
-    sqlToCSharpClass: { name: 'SQL to C# Class', description: 'Generate a C# class from a CREATE TABLE statement or column list' },
-    columnToComma: { name: 'Column to Comma', description: 'Convert column lines to comma-separated values' },
-    commaToColumn: { name: 'Comma to Column', description: 'Convert comma-separated values to lines' },
-    columnToQuoted: { name: 'Column to Quoted List', description: 'Convert lines to a quoted list' },
-    columnToSqlIn: { name: 'Column to SQL IN', description: 'Convert lines to SQL IN clause' },
-    removeDuplicates: { name: 'Remove Duplicates', description: 'Remove duplicate lines' },
-    sortLines: { name: 'Sort Lines', description: 'Sort lines alphabetically or numerically' },
-    removeEmptyLines: { name: 'Remove Empty Lines', description: 'Remove empty or whitespace-only lines from text' },
-    trimLines: { name: 'Trim Lines', description: 'Trim leading and trailing whitespace from each line' },
-    caseConverter: { name: 'Case Converter', description: 'Convert text between common identifier and letter-case styles' },
-    wordCounter: { name: 'Word Counter', description: 'Count words, lines and sentences in text' },
+    jsonFormatter: {
+      name: 'JSON Formatter',
+      description: 'Indent and tidy JSON so API responses and config files are readable. Invalid JSON is flagged before you copy the result.',
+    },
+    jsonMinifier: {
+      name: 'JSON Minifier',
+      description: 'Strip whitespace from JSON to shrink payloads. Use it before sending data or storing compact fixtures.',
+    },
+    jsonValidator: {
+      name: 'JSON Validator',
+      description: 'Check whether JSON parses cleanly. Errors show the line and column so you can fix the spot quickly.',
+    },
+    jsonToClass: {
+      name: 'JSON to Class',
+      description: 'Turn a JSON sample into C#, TypeScript, or Java types. Useful when scaffolding models from a real API response.',
+    },
+    jsonToTypeScript: {
+      name: 'JSON to TypeScript',
+      description: 'Build TypeScript interfaces from JSON. Nested objects become typed shapes you can paste into a project.',
+    },
+    jsonToXml: {
+      name: 'JSON to XML',
+      description: 'Convert JSON into XML with a chosen root element. Handy when a service still expects XML.',
+    },
+    jsonToYaml: {
+      name: 'JSON to YAML',
+      description: 'Convert JSON to YAML for configs and pipelines. Keys can stay in order or be sorted.',
+    },
+    jsonDiff: {
+      name: 'JSON Diff',
+      description: 'Compare two JSON documents and list added, removed, and changed values. Good for spotting API or config drift.',
+    },
+    classToJson: {
+      name: 'Class to JSON',
+      description: 'Paste a C#, TypeScript, or Java type and get sample JSON. Helps draft fixtures from an existing model.',
+    },
+    yamlFormatter: {
+      name: 'YAML Formatter',
+      description: 'Re-indent YAML so maps and lists line up. Optional key sorting keeps large files consistent.',
+    },
+    xmlFormatter: {
+      name: 'XML Formatter',
+      description: 'Pretty-print and validate XML. Attributes can be sorted when you need a stable layout.',
+    },
+    javascriptFormatter: {
+      name: 'JavaScript Formatter',
+      description: 'Reformat JavaScript with your indent and quote style. Makes minified or messy scripts easier to read.',
+    },
+    jqueryFormatter: {
+      name: 'jQuery Formatter',
+      description: 'Format jQuery and JavaScript snippets. Useful for old pages or copied plugin code.',
+    },
+    typescriptFormatter: {
+      name: 'TypeScript Formatter',
+      description: 'Pretty-print TypeScript with indent and semicolon options. Helps when reviewing pasted .ts files.',
+    },
+    htmlFormatter: {
+      name: 'HTML Formatter',
+      description: 'Indent HTML so tags and nested markup are clear. Paste a fragment and copy a cleaner version.',
+    },
+    cssFormatter: {
+      name: 'CSS Formatter',
+      description: 'Format stylesheets so rules and properties are easy to scan. Works on full files or small snippets.',
+    },
+    base64: {
+      name: 'Base64 Encoder/Decoder',
+      description: 'Encode text to Base64 or decode it back. Common for tokens, data URLs, and email-safe payloads.',
+    },
+    guidGenerator: {
+      name: 'GUID Generator',
+      description: 'Create .NET-style GUIDs in a few formats. Generate one or many without leaving the page.',
+    },
+    uuidGenerator: {
+      name: 'UUID Generator',
+      description: 'Create RFC 4122 UUID v4 values. Choose casing and hyphens to match your codebase.',
+    },
+    passwordGenerator: {
+      name: 'Password Generator',
+      description: 'Build random passwords with length and character-set options. Nothing is stored after you copy the result.',
+    },
+    randomStringGenerator: {
+      name: 'Random String Generator',
+      description: 'Create random strings from letters, numbers, or hex. Useful for test IDs and dummy keys.',
+    },
+    sqlFormatter: {
+      name: 'SQL Formatter',
+      description: 'Pretty-print SQL for MySQL, PostgreSQL, T-SQL, and more. Pick a dialect and keyword case, then copy readable SQL.',
+    },
+    sqlInGenerator: {
+      name: 'SQL IN Generator',
+      description: 'Turn a list of values into a SQL IN (...) clause. Paste IDs or names and get a query-ready list.',
+    },
+    sqlToCSharpClass: {
+      name: 'SQL to C# Class',
+      description: 'Generate a C# class from CREATE TABLE or a column list. Speeds up mapping tables to models.',
+    },
+    columnToComma: {
+      name: 'Column to Comma',
+      description: 'Join one-value-per-line text into a comma-separated list. Trim, skip blanks, or drop duplicates first.',
+    },
+    commaToColumn: {
+      name: 'Comma to Column',
+      description: 'Split a comma-separated string into one item per line. Useful for Excel columns and IN-list cleanup.',
+    },
+    columnToQuoted: {
+      name: 'Column to Quoted List',
+      description: 'Wrap each line in quotes and join them. Ready for CSV cells or language string lists.',
+    },
+    columnToSqlIn: {
+      name: 'Column to SQL IN',
+      description: 'Convert lines into a quoted SQL IN list. Built for ID batches you paste from a spreadsheet.',
+    },
+    removeDuplicates: {
+      name: 'Remove Duplicates',
+      description: 'Drop duplicate lines and keep the first occurrence if you want. Case and trim options are available.',
+    },
+    sortLines: {
+      name: 'Sort Lines',
+      description: 'Sort lines A–Z or by number. Reverse the order when you need a descending list.',
+    },
+    removeEmptyLines: {
+      name: 'Remove Empty Lines',
+      description: 'Delete blank or whitespace-only lines. Tightens logs and pasted lists.',
+    },
+    trimLines: {
+      name: 'Trim Lines',
+      description: 'Remove leading and trailing spaces on each line. Optional empty-line cleanup is included.',
+    },
+    caseConverter: {
+      name: 'Case Converter',
+      description: 'Switch text between camelCase, snake_case, kebab-case, and more. Built for identifiers and titles.',
+    },
+    wordCounter: {
+      name: 'Word Counter',
+      description: 'Count words, lines, and sentences in pasted text. Fast check for docs or UI copy limits.',
+    },
     characterCounter: {
       name: 'Character Counter',
-      description: 'Count characters with optional space and newline handling',
+      description: 'Count characters with or without spaces and newlines. Useful for field limits and tweets.',
     },
-    diffCompare: { name: 'Diff Compare', description: 'Compare two texts and show differences' },
-    regexTester: { name: 'Regex Tester', description: 'Test a regular expression against text and list matches' },
-    jwtDecoder: { name: 'JWT Decoder', description: 'Decode a JWT header and payload without verifying the signature' },
-    httpStatusLookup: { name: 'HTTP Status Lookup', description: 'Look up HTTP status codes with their name and a short description' },
+    diffCompare: {
+      name: 'Diff Compare',
+      description: 'Compare two texts and highlight line or word changes. Paste original and modified versions side by side.',
+    },
+    regexTester: {
+      name: 'Regex Tester',
+      description: 'Run a regular expression against sample text and list matches. Toggle global, case, and multiline flags.',
+    },
+    jwtDecoder: {
+      name: 'JWT Decoder',
+      description: 'Read a JWT header and payload without verifying the signature. Inspect claims locally only.',
+    },
+    httpStatusLookup: {
+      name: 'HTTP Status Lookup',
+      description: 'Look up an HTTP status code and its meaning. Covers standard codes and a few gateway extras.',
+    },
   },
   labels: {},
 };

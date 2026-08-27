@@ -41,7 +41,7 @@ export function toolPageTitle(toolName: string): string {
 }
 
 export function toolPageDescription(toolDescription: string): string {
-  return `${toolDescription} — Free online tool, 100% client-side. Your data never leaves your browser.`;
+  return toolDescription;
 }
 
 export function categoryPageTitle(categoryName: string): string {

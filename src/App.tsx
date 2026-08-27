@@ -347,14 +347,6 @@ function ToolboxPage() {
                       )
                     : t.homeHeading}
                 </h1>
-                <p className="mt-1 min-w-0 text-sm break-words text-[var(--text-secondary)]">
-                  {selectedCategoryId
-                    ? categoryDescription(
-                        selectedCategoryId,
-                        getCategoryById(selectedCategoryId)?.description ?? ''
-                      )
-                    : t.homeIntro}
-                </p>
               </section>
             )}
 

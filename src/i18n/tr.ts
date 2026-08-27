@@ -76,48 +76,162 @@ export const tr: Messages = {
     web: { name: 'Web', description: 'URL ayrıştırma, cURL dönüştürme ve web araçları' },
   },
   tools: {
-    jsonFormatter: { name: 'JSON Biçimlendirici', description: 'JSON verisini biçimlendirir ve güzelleştirir' },
-    jsonMinifier: { name: 'JSON Küçültücü', description: 'JSON içindeki boşlukları kaldırarak küçültür' },
-    jsonValidator: { name: 'JSON Doğrulayıcı', description: 'JSON verisini doğrular; hatalarda satır ve sütun bilgisi gösterir' },
-    jsonToClass: { name: 'JSON → Sınıf', description: 'JSON verisini C#, TypeScript veya Java sınıfına dönüştürür' },
-    jsonToTypeScript: { name: 'JSON → TypeScript', description: 'JSON verisinden TypeScript interface üretir' },
-    jsonToXml: { name: 'JSON → XML', description: 'JSON verisini XML’e dönüştürür' },
-    jsonToYaml: { name: 'JSON → YAML', description: 'JSON verisini YAML’e dönüştürür' },
-    jsonDiff: { name: 'JSON Fark', description: 'İki JSON belgesini karşılaştırır; eklenen, silinen ve değişen değerleri listeler' },
-    classToJson: { name: 'Sınıf → JSON', description: 'C#, TypeScript veya Java sınıfını JSON’a dönüştürür' },
-    yamlFormatter: { name: 'YAML Biçimlendirici', description: 'YAML verisini biçimlendirir ve güzelleştirir' },
-    xmlFormatter: { name: 'XML Biçimlendirici', description: 'XML verisini biçimlendirir, güzelleştirir ve doğrular' },
-    javascriptFormatter: { name: 'JavaScript Biçimlendirici', description: 'JavaScript kodunu biçimlendirir ve güzelleştirir' },
-    jqueryFormatter: { name: 'jQuery Biçimlendirici', description: 'jQuery / JavaScript kodunu biçimlendirir ve güzelleştirir' },
-    typescriptFormatter: { name: 'TypeScript Biçimlendirici', description: 'TypeScript kodunu biçimlendirir ve güzelleştirir' },
-    htmlFormatter: { name: 'HTML Biçimlendirici', description: 'HTML işaretlemesini biçimlendirir ve güzelleştirir' },
-    cssFormatter: { name: 'CSS Biçimlendirici', description: 'CSS stil dosyalarını biçimlendirir ve güzelleştirir' },
-    base64: { name: 'Base64 Kodlayıcı/Çözücü', description: 'Base64 dizelerini kodlar veya çözer' },
-    guidGenerator: { name: 'GUID Üretici', description: 'Rastgele GUID üretir (.NET formatları)' },
-    uuidGenerator: { name: 'UUID Üretici', description: 'RFC 4122 UUID v4 değerleri üretir' },
-    passwordGenerator: { name: 'Parola Üretici', description: 'Uzunluk ve karakter kümesi seçenekleriyle rastgele parola üretir' },
-    randomStringGenerator: { name: 'Rastgele Metin Üretici', description: 'Uzunluk ve karakter kümesi seçenekleriyle rastgele metin üretir' },
-    sqlFormatter: { name: 'SQL Biçimlendirici', description: 'SQL sorgularını biçimlendirir ve güzelleştirir' },
-    sqlInGenerator: { name: 'SQL IN Üretici', description: 'Satırları SQL IN (...) listesine dönüştürür' },
-    sqlToCSharpClass: { name: 'SQL → C# Sınıf', description: 'CREATE TABLE veya kolon listesinden C# sınıfı üretir' },
-    columnToComma: { name: 'Sütun → Virgül', description: 'Sütun satırlarını virgülle ayrılmış değerlere dönüştürür' },
-    commaToColumn: { name: 'Virgül → Sütun', description: 'Virgülle ayrılmış değerleri satırlara dönüştürür' },
-    columnToQuoted: { name: 'Sütun → Tırnaklı Liste', description: 'Satırları tırnaklı listeye dönüştürür' },
-    columnToSqlIn: { name: 'Sütun → SQL IN', description: 'Satırları SQL IN ifadesine dönüştürür' },
-    removeDuplicates: { name: 'Tekrarları Kaldır', description: 'Yinelenen satırları kaldırır' },
-    sortLines: { name: 'Satırları Sırala', description: 'Satırları alfabetik veya sayısal sıralar' },
-    removeEmptyLines: { name: 'Boş Satırları Kaldır', description: 'Boş veya yalnızca boşluk içeren satırları kaldırır' },
-    trimLines: { name: 'Satırları Kırp', description: 'Her satırın başındaki ve sonundaki boşlukları kırpar' },
-    caseConverter: { name: 'Harf Dönüştürücü', description: 'Metni yaygın identifier ve harf stili biçimlerine dönüştürür' },
-    wordCounter: { name: 'Kelime Sayacı', description: 'Metindeki kelime, satır ve cümleleri sayar' },
+    jsonFormatter: {
+      name: 'JSON Biçimlendirici',
+      description: 'JSON’u girintileyip okunur hale getirir. API yanıtı veya config yapıştırmak için kullanın; geçersiz JSON işaretlenir.',
+    },
+    jsonMinifier: {
+      name: 'JSON Küçültücü',
+      description: 'JSON’daki boşlukları silerek boyutu küçültür. Göndermeden veya sıkı fixture saklamadan önce işe yarar.',
+    },
+    jsonValidator: {
+      name: 'JSON Doğrulayıcı',
+      description: 'JSON’un parse edilip edilemediğini kontrol eder. Hatalarda satır ve sütun gösterilir.',
+    },
+    jsonToClass: {
+      name: 'JSON → Sınıf',
+      description: 'JSON örneğinden C#, TypeScript veya Java tipi üretir. Gerçek API yanıtından model çıkarmak için uygundur.',
+    },
+    jsonToTypeScript: {
+      name: 'JSON → TypeScript',
+      description: 'JSON’dan TypeScript interface üretir. İç içe nesneler yapıştırılabilir tiplere dönüşür.',
+    },
+    jsonToXml: {
+      name: 'JSON → XML',
+      description: 'JSON’u seçtiğiniz kök elemanla XML’e çevirir. Hâlâ XML bekleyen servisler için kullanışlıdır.',
+    },
+    jsonToYaml: {
+      name: 'JSON → YAML',
+      description: 'JSON’u YAML’e çevirir. Anahtar sırası korunabilir veya sıralanabilir.',
+    },
+    jsonDiff: {
+      name: 'JSON Fark',
+      description: 'İki JSON belgesini karşılaştırır; eklenen, silinen ve değişen alanları listeler.',
+    },
+    classToJson: {
+      name: 'Sınıf → JSON',
+      description: 'C#, TypeScript veya Java tipinden örnek JSON üretir. Mevcut modelden fixture taslağı için uygundur.',
+    },
+    yamlFormatter: {
+      name: 'YAML Biçimlendirici',
+      description: 'YAML girintisini düzeltir. İsterseniz anahtarları sıralayarak büyük dosyaları tutarlı tutarsınız.',
+    },
+    xmlFormatter: {
+      name: 'XML Biçimlendirici',
+      description: 'XML’i düzenler ve doğrular. İsterseniz öznitelikleri sıralayabilirsiniz.',
+    },
+    javascriptFormatter: {
+      name: 'JavaScript Biçimlendirici',
+      description: 'JavaScript’i girinti ve tırnak stilinize göre düzenler. Minify veya dağınık kodu okunur kılar.',
+    },
+    jqueryFormatter: {
+      name: 'jQuery Biçimlendirici',
+      description: 'jQuery ve JavaScript parçalarını biçimlendirir. Eski sayfa veya eklenti kodu için uygundur.',
+    },
+    typescriptFormatter: {
+      name: 'TypeScript Biçimlendirici',
+      description: 'TypeScript’i girinti ve noktalı virgül seçenekleriyle düzenler. Yapıştırılan .ts dosyalarını okumayı kolaylaştırır.',
+    },
+    htmlFormatter: {
+      name: 'HTML Biçimlendirici',
+      description: 'HTML etiketlerini girintiler. Bir parçayı yapıştırıp daha temiz halini kopyalayın.',
+    },
+    cssFormatter: {
+      name: 'CSS Biçimlendirici',
+      description: 'Stil kurallarını okunur hizalar. Tam dosya veya küçük snippet ile çalışır.',
+    },
+    base64: {
+      name: 'Base64 Kodlayıcı/Çözücü',
+      description: 'Metni Base64’e kodlar veya geri çözer. Token, data URL ve e-posta güvenli veri için kullanılır.',
+    },
+    guidGenerator: {
+      name: 'GUID Üretici',
+      description: '.NET tarzı GUID üretir. Tek veya çoklu üretim sayfadan çıkmadan yapılır.',
+    },
+    uuidGenerator: {
+      name: 'UUID Üretici',
+      description: 'RFC 4122 UUID v4 üretir. Büyük/küçük harf ve tire seçenekleri kod stilinize uyabilir.',
+    },
+    passwordGenerator: {
+      name: 'Parola Üretici',
+      description: 'Uzunluk ve karakter kümesiyle rastgele parola üretir. Kopyaladıktan sonra saklanmaz.',
+    },
+    randomStringGenerator: {
+      name: 'Rastgele Metin Üretici',
+      description: 'Harf, sayı veya hex ile rastgele metin üretir. Test ID ve sahte anahtar için uygundur.',
+    },
+    sqlFormatter: {
+      name: 'SQL Biçimlendirici',
+      description: 'MySQL, PostgreSQL, T-SQL ve diğer diyalektlerde SQL’i düzenler. Anahtar kelime harfini seçip okunur sorguyu kopyalayın.',
+    },
+    sqlInGenerator: {
+      name: 'SQL IN Üretici',
+      description: 'Değer listesini SQL IN (...) ifadesine çevirir. ID veya ad yapıştırıp sorguya hazır liste alın.',
+    },
+    sqlToCSharpClass: {
+      name: 'SQL → C# Sınıf',
+      description: 'CREATE TABLE veya kolon listesinden C# sınıfı üretir. Tabloyu modele bağlamak için zaman kazandırır.',
+    },
+    columnToComma: {
+      name: 'Sütun → Virgül',
+      description: 'Satır satır değerleri virgülle birleştirir. Önce kırpma, boş satır ve tekrar temizliği yapılabilir.',
+    },
+    commaToColumn: {
+      name: 'Virgül → Sütun',
+      description: 'Virgüllü metni satır satır ayırır. Excel sütunu veya IN listesi temizlemek için uygundur.',
+    },
+    columnToQuoted: {
+      name: 'Sütun → Tırnaklı Liste',
+      description: 'Her satırı tırnaklayıp birleştirir. CSV hücresi veya dil string listesi için hazırdır.',
+    },
+    columnToSqlIn: {
+      name: 'Sütun → SQL IN',
+      description: 'Satırları tırnaklı SQL IN listesine çevirir. Tablodan kopyalanan ID yığınları için tasarlandı.',
+    },
+    removeDuplicates: {
+      name: 'Tekrarları Kaldır',
+      description: 'Yinelenen satırları siler; isterseniz ilkini tutar. Büyük/küçük harf ve kırpma seçenekleri vardır.',
+    },
+    sortLines: {
+      name: 'Satırları Sırala',
+      description: 'Satırları A–Z veya sayısal sıralar. Azalan liste için yönü çevirin.',
+    },
+    removeEmptyLines: {
+      name: 'Boş Satırları Kaldır',
+      description: 'Boş veya yalnızca boşluklu satırları siler. Log ve yapıştırılmış listeleri sıkılaştırır.',
+    },
+    trimLines: {
+      name: 'Satırları Kırp',
+      description: 'Her satırın başı ve sonundaki boşlukları alır. İsterseniz boş satırları da temizler.',
+    },
+    caseConverter: {
+      name: 'Harf Dönüştürücü',
+      description: 'Metni camelCase, snake_case, kebab-case ve benzeri stillere çevirir. Identifier ve başlıklar için uygundur.',
+    },
+    wordCounter: {
+      name: 'Kelime Sayacı',
+      description: 'Yapıştırılan metinde kelime, satır ve cümle sayar. Metin veya arayüz limiti kontrolü için hızlıdır.',
+    },
     characterCounter: {
       name: 'Karakter Sayacı',
-      description: 'Karakterleri boşluk ve satır sonu seçenekleriyle sayar',
+      description: 'Karakterleri boşluk ve satır sonu dahil veya hariç sayar. Alan limiti ve kısa metin için kullanışlıdır.',
     },
-    diffCompare: { name: 'Fark Karşılaştırma', description: 'İki metni karşılaştırır ve farkları gösterir' },
-    regexTester: { name: 'Regex Test', description: 'Düzenli ifadeyi metin üzerinde dener ve eşleşmeleri listeler' },
-    jwtDecoder: { name: 'JWT Çözücü', description: 'JWT header ve payload bölümlerini imza doğrulamadan çözer' },
-    httpStatusLookup: { name: 'HTTP Durum Sorgula', description: 'HTTP durum kodunun adını ve kısa açıklamasını gösterir' },
+    diffCompare: {
+      name: 'Fark Karşılaştırma',
+      description: 'İki metni karşılaştırır; satır veya kelime farklarını boyar. Orijinal ve yeni metni yan yana yapıştırın.',
+    },
+    regexTester: {
+      name: 'Regex Test',
+      description: 'Düzenli ifadeyi örnek metinde dener ve eşleşmeleri listeler. Global, harf ve çok satır bayrakları vardır.',
+    },
+    jwtDecoder: {
+      name: 'JWT Çözücü',
+      description: 'JWT header ve payload’u imza doğrulamadan okur. Claim’lere yalnızca tarayıcıda bakın.',
+    },
+    httpStatusLookup: {
+      name: 'HTTP Durum Sorgula',
+      description: 'HTTP durum kodunun adını ve anlamını gösterir. Standart kodlar ve bazı gateway kodları dahildir.',
+    },
   },
   labels: {
     Indentation: 'Girinti',

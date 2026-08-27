@@ -15,7 +15,7 @@ export const ToolSeo: React.FC<ToolSeoProps> = ({ toolId, name, description }) =
       >
         {name}
       </h1>
-      <p className="min-w-0 text-sm leading-relaxed text-[var(--text-secondary)]">
+      <p className="max-w-3xl min-w-0 text-sm leading-relaxed text-[var(--text-secondary)]">
         {description}
       </p>
     </section>
