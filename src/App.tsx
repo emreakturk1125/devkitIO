@@ -55,11 +55,28 @@ function getEditorLanguage(inputType?: string): EditorLanguage {
   }
 }
 
+function normalizePath(pathname: string): string {
+  if (pathname.length > 1 && pathname.endsWith('/')) {
+    return pathname.slice(0, -1);
+  }
+  return pathname;
+}
+
 function getRouteKind(pathname: string): 'home' | 'category' | 'tool' | 'unknown' {
-  if (pathname === '/') return 'home';
-  if (/^\/tools\/[^/]+$/.test(pathname)) return 'category';
-  if (/^\/tools\/[^/]+\/[^/]+$/.test(pathname)) return 'tool';
+  const path = normalizePath(pathname);
+  if (path === '/') return 'home';
+  if (/^\/tools\/[^/]+$/.test(path)) return 'category';
+  if (/^\/tools\/[^/]+\/[^/]+$/.test(path)) return 'tool';
   return 'unknown';
+}
+
+function parseRouteParams(pathname: string): { category?: string; toolId?: string } {
+  const path = normalizePath(pathname);
+  const toolMatch = path.match(/^\/tools\/([^/]+)\/([^/]+)$/);
+  if (toolMatch) return { category: toolMatch[1], toolId: toolMatch[2] };
+  const categoryMatch = path.match(/^\/tools\/([^/]+)$/);
+  if (categoryMatch) return { category: categoryMatch[1] };
+  return {};
 }
 
 // ─── Main Toolbox Page ──────────────────────────────────────────────────────
@@ -95,7 +112,12 @@ function ToolboxPage() {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const params = useParams<{ category?: string; toolId?: string }>();
+  const routeParams = useParams<{ category?: string; toolId?: string }>();
+  const parsedParams = parseRouteParams(location.pathname);
+  const params = {
+    category: routeParams.category ?? parsedParams.category,
+    toolId: routeParams.toolId ?? parsedParams.toolId,
+  };
   const routeKind = getRouteKind(location.pathname);
 
   const isNotFound = useMemo(() => {
@@ -177,6 +199,13 @@ function ToolboxPage() {
   useEffect(() => {
     initializeRegistry().then(() => setRegistryReady(true));
   }, []);
+
+  // Cloudflare serves directory index.html with a trailing slash on refresh.
+  useEffect(() => {
+    if (location.pathname.length > 1 && location.pathname.endsWith('/')) {
+      navigate(`${normalizePath(location.pathname)}${location.search}`, { replace: true });
+    }
+  }, [location.pathname, location.search, navigate]);
 
   // Sync URL params to state on load
   useEffect(() => {
