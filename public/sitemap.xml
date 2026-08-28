@@ -2,277 +2,277 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://devkitio.com/</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/data</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/debugging</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/encoding</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/generators</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/sql</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/text</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/encoding/base64</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/text/caseConverter</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/text/characterCounter</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/data/classToJson</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/text/columnToComma</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/text/columnToQuoted</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/text/columnToSqlIn</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/text/commaToColumn</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/data/cssFormatter</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/debugging/diffCompare</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/generators/guidGenerator</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/data/htmlFormatter</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/debugging/httpStatusLookup</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/data/javascriptFormatter</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/data/jqueryFormatter</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/data/jsonDiff</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/data/jsonFormatter</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/data/jsonMinifier</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/data/jsonToClass</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/data/jsonToTypeScript</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/data/jsonToXml</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/data/jsonToYaml</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/data/jsonValidator</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/debugging/jwtDecoder</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/generators/passwordGenerator</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/generators/randomStringGenerator</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/debugging/regexTester</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/text/removeDuplicates</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/text/removeEmptyLines</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/text/sortLines</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/sql/sqlFormatter</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/sql/sqlInGenerator</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/sql/sqlToCSharpClass</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/text/trimLines</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/data/typescriptFormatter</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/generators/uuidGenerator</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/text/wordCounter</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/data/xmlFormatter</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devkitio.com/tools/data/yamlFormatter</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

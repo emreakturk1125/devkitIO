@@ -77,162 +77,45 @@ export const en: Messages = {
     web: { name: 'Web', description: 'URL parsing, cURL conversion and web utilities' },
   },
   tools: {
-    jsonFormatter: {
-      name: 'JSON Formatter',
-      description: 'Indent and tidy JSON so API responses and config files are readable. Invalid JSON is flagged before you copy the result.',
-    },
-    jsonMinifier: {
-      name: 'JSON Minifier',
-      description: 'Strip whitespace from JSON to shrink payloads. Use it before sending data or storing compact fixtures.',
-    },
-    jsonValidator: {
-      name: 'JSON Validator',
-      description: 'Check whether JSON parses cleanly. Errors show the line and column so you can fix the spot quickly.',
-    },
-    jsonToClass: {
-      name: 'JSON to Class',
-      description: 'Turn a JSON sample into C#, TypeScript, or Java types. Useful when scaffolding models from a real API response.',
-    },
-    jsonToTypeScript: {
-      name: 'JSON to TypeScript',
-      description: 'Build TypeScript interfaces from JSON. Nested objects become typed shapes you can paste into a project.',
-    },
-    jsonToXml: {
-      name: 'JSON to XML',
-      description: 'Convert JSON into XML with a chosen root element. Handy when a service still expects XML.',
-    },
-    jsonToYaml: {
-      name: 'JSON to YAML',
-      description: 'Convert JSON to YAML for configs and pipelines. Keys can stay in order or be sorted.',
-    },
-    jsonDiff: {
-      name: 'JSON Diff',
-      description: 'Compare two JSON documents and list added, removed, and changed values. Good for spotting API or config drift.',
-    },
-    classToJson: {
-      name: 'Class to JSON',
-      description: 'Paste a C#, TypeScript, or Java type and get sample JSON. Helps draft fixtures from an existing model.',
-    },
-    yamlFormatter: {
-      name: 'YAML Formatter',
-      description: 'Re-indent YAML so maps and lists line up. Optional key sorting keeps large files consistent.',
-    },
-    xmlFormatter: {
-      name: 'XML Formatter',
-      description: 'Pretty-print and validate XML. Attributes can be sorted when you need a stable layout.',
-    },
-    javascriptFormatter: {
-      name: 'JavaScript Formatter',
-      description: 'Reformat JavaScript with your indent and quote style. Makes minified or messy scripts easier to read.',
-    },
-    jqueryFormatter: {
-      name: 'jQuery Formatter',
-      description: 'Format jQuery and JavaScript snippets. Useful for old pages or copied plugin code.',
-    },
-    typescriptFormatter: {
-      name: 'TypeScript Formatter',
-      description: 'Pretty-print TypeScript with indent and semicolon options. Helps when reviewing pasted .ts files.',
-    },
-    htmlFormatter: {
-      name: 'HTML Formatter',
-      description: 'Indent HTML so tags and nested markup are clear. Paste a fragment and copy a cleaner version.',
-    },
-    cssFormatter: {
-      name: 'CSS Formatter',
-      description: 'Format stylesheets so rules and properties are easy to scan. Works on full files or small snippets.',
-    },
-    base64: {
-      name: 'Base64 Encoder/Decoder',
-      description: 'Encode text to Base64 or decode it back. Common for tokens, data URLs, and email-safe payloads.',
-    },
-    guidGenerator: {
-      name: 'GUID Generator',
-      description: 'Create .NET-style GUIDs in a few formats. Generate one or many without leaving the page.',
-    },
-    uuidGenerator: {
-      name: 'UUID Generator',
-      description: 'Create RFC 4122 UUID v4 values. Choose casing and hyphens to match your codebase.',
-    },
-    passwordGenerator: {
-      name: 'Password Generator',
-      description: 'Build random passwords with length and character-set options. Nothing is stored after you copy the result.',
-    },
-    randomStringGenerator: {
-      name: 'Random String Generator',
-      description: 'Create random strings from letters, numbers, or hex. Useful for test IDs and dummy keys.',
-    },
-    sqlFormatter: {
-      name: 'SQL Formatter',
-      description: 'Pretty-print SQL for MySQL, PostgreSQL, T-SQL, and more. Pick a dialect and keyword case, then copy readable SQL.',
-    },
-    sqlInGenerator: {
-      name: 'SQL IN Generator',
-      description: 'Turn a list of values into a SQL IN (...) clause. Paste IDs or names and get a query-ready list.',
-    },
-    sqlToCSharpClass: {
-      name: 'SQL to C# Class',
-      description: 'Generate a C# class from CREATE TABLE or a column list. Speeds up mapping tables to models.',
-    },
-    columnToComma: {
-      name: 'Column to Comma',
-      description: 'Join one-value-per-line text into a comma-separated list. Trim, skip blanks, or drop duplicates first.',
-    },
-    commaToColumn: {
-      name: 'Comma to Column',
-      description: 'Split a comma-separated string into one item per line. Useful for Excel columns and IN-list cleanup.',
-    },
-    columnToQuoted: {
-      name: 'Column to Quoted List',
-      description: 'Wrap each line in quotes and join them. Ready for CSV cells or language string lists.',
-    },
-    columnToSqlIn: {
-      name: 'Column to SQL IN',
-      description: 'Convert lines into a quoted SQL IN list. Built for ID batches you paste from a spreadsheet.',
-    },
-    removeDuplicates: {
-      name: 'Remove Duplicates',
-      description: 'Drop duplicate lines and keep the first occurrence if you want. Case and trim options are available.',
-    },
-    sortLines: {
-      name: 'Sort Lines',
-      description: 'Sort lines A–Z or by number. Reverse the order when you need a descending list.',
-    },
-    removeEmptyLines: {
-      name: 'Remove Empty Lines',
-      description: 'Delete blank or whitespace-only lines. Tightens logs and pasted lists.',
-    },
-    trimLines: {
-      name: 'Trim Lines',
-      description: 'Remove leading and trailing spaces on each line. Optional empty-line cleanup is included.',
-    },
-    caseConverter: {
-      name: 'Case Converter',
-      description: 'Switch text between camelCase, snake_case, kebab-case, and more. Built for identifiers and titles.',
-    },
-    wordCounter: {
-      name: 'Word Counter',
-      description: 'Count words, lines, and sentences in pasted text. Fast check for docs or UI copy limits.',
-    },
-    characterCounter: {
-      name: 'Character Counter',
-      description: 'Count characters with or without spaces and newlines. Useful for field limits and tweets.',
-    },
-    diffCompare: {
-      name: 'Diff Compare',
-      description: 'Compare two texts and highlight line or word changes. Paste original and modified versions side by side.',
-    },
-    regexTester: {
-      name: 'Regex Tester',
-      description: 'Run a regular expression against sample text and list matches. Toggle global, case, and multiline flags.',
-    },
-    jwtDecoder: {
-      name: 'JWT Decoder',
-      description: 'Read a JWT header and payload without verifying the signature. Inspect claims locally only.',
-    },
-    httpStatusLookup: {
-      name: 'HTTP Status Lookup',
-      description: 'Look up an HTTP status code and its meaning. Covers standard codes and a few gateway extras.',
-    },
+    jsonFormatter: { name: 'JSON Formatter', description: 'Format and beautify JSON with customizable indentation. Paste an API response or config file, sort keys alphabetically, and copy clean readable JSON.' },
+    jsonMinifier: { name: 'JSON Minifier', description: 'Minify JSON by removing all whitespace and line breaks. Compact your data for APIs, storage, or smaller payloads — paste and copy in one click.' },
+    jsonValidator: { name: 'JSON Validator', description: 'Validate JSON syntax and get instant error diagnostics with line and column numbers. See the structure type, key count, and array length of valid documents.' },
+    jsonToClass: { name: 'JSON to Class', description: 'Generate C#, TypeScript, or Java class definitions from a JSON sample. Smart type inference detects dates, GUIDs, nested objects, and arrays automatically.' },
+    jsonToTypeScript: { name: 'JSON to TypeScript', description: 'Generate TypeScript interfaces from JSON data. Nested objects become separate interfaces, arrays are merged into union types, and invalid keys are quoted.' },
+    jsonToXml: { name: 'JSON to XML', description: 'Convert JSON to well-formed XML with a custom root element name. Includes optional XML declaration, configurable indentation, and proper character escaping.' },
+    jsonToYaml: { name: 'JSON to YAML', description: 'Convert JSON to clean YAML output. Choose indentation width and optionally sort keys — useful for Kubernetes configs, CI pipelines, and Docker Compose files.' },
+    jsonDiff: { name: 'JSON Diff', description: 'Compare two JSON documents side by side. See added, removed, and changed values with full JSON path notation — ideal for API response debugging.' },
+    classToJson: { name: 'Class to JSON', description: 'Convert C#, TypeScript, or Java class definitions to sample JSON. Auto-detects the language and generates realistic mock values for each property type.' },
+    yamlFormatter: { name: 'YAML Formatter', description: 'Format and beautify YAML with configurable indentation. Optionally sort keys alphabetically to keep large configuration files consistent and readable.' },
+    xmlFormatter: { name: 'XML Formatter', description: 'Format and validate XML with customizable indentation. Handles declarations, CDATA sections, comments, and processing instructions — optionally sort attributes.' },
+    javascriptFormatter: { name: 'JavaScript Formatter', description: 'Format and beautify JavaScript code with Prettier. Configure indentation, semicolons, and quote style — paste minified or messy JS and get clean readable code.' },
+    jqueryFormatter: { name: 'jQuery Formatter', description: 'Format and beautify jQuery and JavaScript code. Configure indentation, semicolons, and quote style — ideal for legacy scripts and plugin code.' },
+    typescriptFormatter: { name: 'TypeScript Formatter', description: 'Format and beautify TypeScript code with Prettier. Configure indentation, semicolons, and quote style for clean, consistent .ts and .tsx files.' },
+    htmlFormatter: { name: 'HTML Formatter', description: 'Format and beautify HTML markup with Prettier. Choose your indentation style and get properly nested, readable HTML from minified or messy source.' },
+    cssFormatter: { name: 'CSS Formatter', description: 'Format and beautify CSS stylesheets with Prettier. Configure indentation and quote style — works with full stylesheets and small snippets alike.' },
+    base64: { name: 'Base64 Encoder/Decoder', description: 'Encode text to Base64 or decode Base64 back to text. Fully UTF-8 safe — handles Unicode characters, data URIs, and encoded tokens right in your browser.' },
+    guidGenerator: { name: 'GUID Generator', description: 'Generate random GUIDs in .NET-compatible formats (D, N, B, P). Choose uppercase or lowercase, batch generate up to 10,000 at once, and pick your preferred separator.' },
+    uuidGenerator: { name: 'UUID Generator', description: 'Generate RFC 4122 UUID v4 values with cryptographically secure randomness. Choose standard or compact format, casing, and batch generate up to 10,000 UUIDs.' },
+    passwordGenerator: { name: 'Password Generator', description: 'Generate cryptographically secure random passwords. Pick length from 4 to 256 characters, toggle uppercase, lowercase, numbers, and symbols, then generate multiple at once.' },
+    randomStringGenerator: { name: 'Random String Generator', description: 'Generate random strings with alphanumeric, letter-only, number-only, or hex character sets. Cryptographically secure — ideal for test IDs, tokens, and mock API keys.' },
+    sqlFormatter: { name: 'SQL Formatter', description: 'Pretty-print SQL for MySQL, PostgreSQL, T-SQL, SQLite, and PL/SQL. Pick a dialect and keyword case, then copy readable, well-indented SQL queries.' },
+    sqlInGenerator: { name: 'SQL IN Generator', description: 'Convert a list of values into a SQL IN clause. Paste IDs or names from a spreadsheet and get a ready-to-use IN expression with automatic deduplication and trimming.' },
+    sqlToCSharpClass: { name: 'SQL to C# Class', description: 'Generate a C# POCO class from a CREATE TABLE statement or column list. Maps SQL types to C# types including nullability — saves time scaffolding entity models.' },
+    columnToComma: { name: 'Column to Comma', description: 'Convert newline-separated values to a comma-separated list. Trim whitespace, remove empty lines, and deduplicate — paste from a spreadsheet column and get a single line.' },
+    commaToColumn: { name: 'Comma to Column', description: 'Split comma-separated values into individual lines. Paste a CSV row or IN clause and get a clean vertical list with optional whitespace trimming.' },
+    columnToQuoted: { name: 'Column to Quoted List', description: 'Wrap each line in single or double quotes and join with a separator. Turn a column of values into a quoted list ready for code, CSV, or configuration files.' },
+    columnToSqlIn: { name: 'Column to SQL IN', description: 'Convert a column of values into a SQL IN expression. Paste IDs or names line by line and get a ready-to-use IN clause with automatic deduplication.' },
+    removeDuplicates: { name: 'Remove Duplicates', description: 'Remove duplicate lines from text while preserving the original order. Supports case-insensitive matching and whitespace trimming for log entries, lists, or data rows.' },
+    sortLines: { name: 'Sort Lines', description: 'Sort lines alphabetically or numerically in ascending or descending order. Supports case-sensitive sorting, whitespace trimming, and empty line removal.' },
+    removeEmptyLines: { name: 'Remove Empty Lines', description: 'Strip empty and whitespace-only lines from text. Clean up logs, pasted data, and code snippets — optionally trim remaining lines too.' },
+    trimLines: { name: 'Trim Lines', description: 'Trim leading and trailing whitespace from each line independently. Choose to trim start, end, or both — optionally remove resulting empty lines.' },
+    caseConverter: { name: 'Case Converter', description: 'Convert text between camelCase, PascalCase, snake_case, kebab-case, CONSTANT_CASE, Title Case, and more. Smart tokenization handles mixed-case identifiers.' },
+    wordCounter: { name: 'Word Counter', description: 'Count words, characters, lines, sentences, and paragraphs in your text. Unicode-aware word detection handles international text, hyphens, and apostrophes correctly.' },
+    characterCounter: { name: 'Character Counter', description: 'Count characters with options to include or exclude spaces and newlines. See letter count, digit count, and whitespace breakdown — useful for field length limits.' },
+    diffCompare: { name: 'Diff Compare', description: 'Compare two texts and highlight differences line by line, word by word, or character by character. Paste original and modified text side by side with optional whitespace ignoring.' },
+    regexTester: { name: 'Regex Tester', description: 'Test regular expressions against sample text in real time. See all matches with index positions and capture groups — supports global, case-insensitive, multiline, and dotAll flags.' },
+    jwtDecoder: { name: 'JWT Decoder', description: 'Decode JWT tokens to inspect the header and payload without verifying the signature. Timestamp claims like exp and iat are automatically converted to readable UTC dates.' },
+    httpStatusLookup: { name: 'HTTP Status Lookup', description: 'Look up any HTTP status code instantly. Covers standard 1xx–5xx codes plus vendor-specific codes from Nginx, Cloudflare, IIS, and Laravel — enter one or multiple codes.' },
   },
   labels: {},
 };
