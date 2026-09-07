@@ -49,6 +49,25 @@ function extractI18nToolCopy() {
   return copy;
 }
 
+function extractI18nFaqCopy() {
+  const text = readFileSync(join(root, 'src/i18n/en.ts'), 'utf8');
+  const faq = {};
+  const keys = ['faqFree', 'faqFreeAnswer', 'faqPrivacy', 'faqPrivacyAnswer', 'faqInstall', 'faqInstallAnswer'];
+  for (const key of keys) {
+    // Match single-line: key: 'value',
+    const re = new RegExp(`${key}:\\s*'((?:\\\\'|[^'])*)'`);
+    const m = text.match(re);
+    if (m) faq[key] = m[1];
+    // Also try multi-line string (template ending with comma)
+    if (!faq[key]) {
+      const re2 = new RegExp(`${key}:\\s*\\n\\s*'((?:\\\\'|[^'])*)'`);
+      const m2 = text.match(re2);
+      if (m2) faq[key] = m2[1];
+    }
+  }
+  return faq;
+}
+
 function extractTools() {
   const i18n = extractI18nToolCopy();
   const tools = [];
@@ -101,9 +120,38 @@ function buildBreadcrumbJsonLd(crumbs) {
   });
 }
 
+function buildFaqJsonLd(toolName, faqCopy) {
+  const items = [
+    {
+      question: (faqCopy.faqFree ?? 'Is {name} free?').replace('{name}', toolName),
+      answer: (faqCopy.faqFreeAnswer ?? 'Yes. {name} is free on DevKit and does not require an account.').replace('{name}', toolName),
+    },
+    {
+      question: faqCopy.faqPrivacy ?? 'Does my data leave the browser?',
+      answer: faqCopy.faqPrivacyAnswer ?? 'No. Transformations run locally in your browser. DevKit does not send your input to a server.',
+    },
+    {
+      question: faqCopy.faqInstall ?? 'Do I need to install anything?',
+      answer: faqCopy.faqInstallAnswer ?? 'No. Open the page, paste or type your input, and get the result.',
+    },
+  ];
+  return JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  });
+}
+
 // ─── Page Meta Injection ────────────────────────────────────────────────────
 
-function injectPageMeta(html, { title, description, path, name, breadcrumbs, noindex }) {
+function injectPageMeta(html, { title, description, path, name, breadcrumbs, noindex, faqJsonLd, noscriptExtra }) {
   const url = path === '/' ? `${SITE_URL}/` : `${SITE_URL}${path}`;
   const safeTitle = escapeHtml(title);
   const safeDesc = escapeHtml(description);
@@ -169,7 +217,18 @@ function injectPageMeta(html, { title, description, path, name, breadcrumbs, noi
     structuredData += `\n    <script type="application/ld+json" id="seo-breadcrumb">${buildBreadcrumbJsonLd(breadcrumbs)}</script>`;
   }
 
-  const noscript = `<noscript><h1>${escapeHtml(name)}</h1><p>${safeDesc}</p></noscript>`;
+  // Inject FAQPage JSON-LD
+  if (faqJsonLd) {
+    structuredData += `\n    <script type="application/ld+json" id="seo-faq">${faqJsonLd}</script>`;
+  }
+
+  // Build enriched noscript with optional extra content
+  let noscriptContent = `<h1>${escapeHtml(name)}</h1><p>${safeDesc}</p>`;
+  if (noscriptExtra) {
+    noscriptContent += noscriptExtra;
+  }
+  const noscript = `<noscript>${noscriptContent}</noscript>`;
+
   next = next.replace(
     '<div id="root"></div>',
     `${structuredData ? structuredData : ''}
@@ -223,6 +282,7 @@ if (tools.length === 0) {
   throw new Error('SEO prerender: no tools discovered under src/tools');
 }
 
+const faqCopy = extractI18nFaqCopy();
 const categories = [...new Set(tools.map((t) => t.category))].sort();
 const sitemap = buildSitemap(tools, categories);
 writeFile(join(root, 'public/sitemap.xml'), sitemap);
@@ -242,6 +302,17 @@ const HOME_TITLE = `${SITE_NAME} — Free Online Developer Tools`;
 const HOME_DESCRIPTION =
   'Free online developer toolkit — JSON formatter, SQL formatter, Base64 encoder, GUID generator, diff compare & 20+ tools. 100% client-side, your data never leaves your browser.';
 
+// Home page — enriched noscript with category list and popular tools
+const homeNoscriptExtra = `<nav><h2>Categories</h2><ul>${categories
+  .map((id) => {
+    const meta = CATEGORY_META[id] || { name: id };
+    return `<li><a href="/tools/${id}">${escapeHtml(meta.name)} Tools</a></li>`;
+  })
+  .join('')}</ul></nav><nav><h2>Popular Tools</h2><ul>${tools
+  .filter((t) => HIGH_PRIORITY.has(t.id))
+  .map((t) => `<li><a href="/tools/${t.category}/${t.id}">${escapeHtml(t.name)}</a> — ${escapeHtml(t.description)}</li>`)
+  .join('')}</ul></nav>`;
+
 writeFile(
   distHtmlPath,
   injectPageMeta(template, {
@@ -249,6 +320,7 @@ writeFile(
     description: HOME_DESCRIPTION,
     path: '/',
     name: SITE_NAME,
+    noscriptExtra: homeNoscriptExtra,
   })
 );
 
@@ -260,6 +332,7 @@ writeFile(
     path: '/404',
     name: 'Page not found',
     noindex: true,
+    noscriptExtra: `<nav><p><a href="/">Go to ${escapeHtml(SITE_NAME)}</a></p></nav>`,
   })
 );
 
@@ -268,6 +341,12 @@ for (const category of categories) {
   const catTools = tools.filter((t) => t.category === category);
   const title = `${catMeta.name} Tools — ${SITE_NAME} | Free Online Developer Tools`;
   const description = `${catMeta.description} — Free online, 100% client-side on ${SITE_NAME}.`;
+
+  // Category noscript — list of tools in this category with links
+  const catNoscriptExtra = `<nav><h2>${escapeHtml(catMeta.name)} Tools</h2><ul>${catTools
+    .map((t) => `<li><a href="/tools/${t.category}/${t.id}">${escapeHtml(t.name)}</a> — ${escapeHtml(t.description)}</li>`)
+    .join('')}</ul></nav>`;
+
   writeFile(
     join(root, `dist/tools/${category}/index.html`),
     injectPageMeta(template, {
@@ -279,11 +358,25 @@ for (const category of categories) {
         { name: SITE_NAME, url: `${SITE_URL}/` },
         { name: catMeta.name, url: `${SITE_URL}/tools/${category}` },
       ],
+      noscriptExtra: catNoscriptExtra,
     })
   );
   for (const tool of catTools) {
     const title = `${tool.name} — ${SITE_NAME} | Free Online Developer Tools`;
     const description = tool.description;
+
+    // Tool page FAQ JSON-LD
+    const toolFaqJsonLd = buildFaqJsonLd(tool.name, faqCopy);
+
+    // Tool noscript — FAQ content
+    const faqFreeQ = escapeHtml((faqCopy.faqFree ?? 'Is {name} free?').replace('{name}', tool.name));
+    const faqFreeA = escapeHtml((faqCopy.faqFreeAnswer ?? 'Yes. {name} is free on DevKit and does not require an account.').replace('{name}', tool.name));
+    const faqPrivacyQ = escapeHtml(faqCopy.faqPrivacy ?? 'Does my data leave the browser?');
+    const faqPrivacyA = escapeHtml(faqCopy.faqPrivacyAnswer ?? 'No. Transformations run locally in your browser. DevKit does not send your input to a server.');
+    const faqInstallQ = escapeHtml(faqCopy.faqInstall ?? 'Do I need to install anything?');
+    const faqInstallA = escapeHtml(faqCopy.faqInstallAnswer ?? 'No. Open the page, paste or type your input, and get the result.');
+    const toolNoscriptExtra = `<section><h2>FAQ</h2><dl><dt>${faqFreeQ}</dt><dd>${faqFreeA}</dd><dt>${faqPrivacyQ}</dt><dd>${faqPrivacyA}</dd><dt>${faqInstallQ}</dt><dd>${faqInstallA}</dd></dl></section>`;
+
     writeFile(
       join(root, `dist/tools/${tool.category}/${tool.id}/index.html`),
       injectPageMeta(template, {
@@ -296,6 +389,8 @@ for (const category of categories) {
           { name: catMeta.name, url: `${SITE_URL}/tools/${tool.category}` },
           { name: tool.name, url: `${SITE_URL}/tools/${tool.category}/${tool.id}` },
         ],
+        faqJsonLd: toolFaqJsonLd,
+        noscriptExtra: toolNoscriptExtra,
       })
     );
   }

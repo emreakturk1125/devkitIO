@@ -104,7 +104,7 @@ function ToolboxPage() {
 
   const { theme, toggleTheme } = useTheme();
   const { favoriteIds, toggleFavorite, isFavorite } = useFavorites();
-  const { t, locale, toolName, toolDescription, categoryName, categoryDescription } = useLocale();
+  const { t, locale, toolName, toolDescription, categoryName, categoryDescription, format } = useLocale();
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -159,6 +159,11 @@ function ToolboxPage() {
           { name: catName, path: categoryPath(selectedTool.category) },
           { name, path: toolPath(selectedTool.category, selectedTool.id) },
         ],
+        faqItems: [
+          { question: format(t.faqFree, { name }), answer: format(t.faqFreeAnswer, { name }) },
+          { question: t.faqPrivacy, answer: t.faqPrivacyAnswer },
+          { question: t.faqInstall, answer: t.faqInstallAnswer },
+        ],
       };
     }
     if (selectedCategoryId) {
@@ -187,10 +192,17 @@ function ToolboxPage() {
     location.pathname,
     t.pageNotFound,
     t.pageNotFoundHint,
+    t.faqFree,
+    t.faqFreeAnswer,
+    t.faqPrivacy,
+    t.faqPrivacyAnswer,
+    t.faqInstall,
+    t.faqInstallAnswer,
     toolName,
     toolDescription,
     categoryName,
     categoryDescription,
+    format,
   ]);
 
   useSeo({ ...seo, locale });

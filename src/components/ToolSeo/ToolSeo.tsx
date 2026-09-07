@@ -1,4 +1,5 @@
 import React from 'react';
+import { Faq } from '@/components/Faq/Faq';
 
 interface ToolSeoProps {
   toolId: string;
@@ -18,6 +19,7 @@ export const ToolSeo: React.FC<ToolSeoProps> = ({ toolId, name, description }) =
       <p className="max-w-3xl min-w-0 text-sm leading-relaxed text-[var(--text-secondary)]">
         {description}
       </p>
+      <Faq toolName={name} />
     </section>
   );
 };

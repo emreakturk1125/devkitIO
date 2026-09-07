@@ -11,6 +11,11 @@ export interface BreadcrumbItem {
   path: string;
 }
 
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
 interface SeoOptions {
   title: string;
   description: string;
@@ -18,6 +23,7 @@ interface SeoOptions {
   noindex?: boolean;
   locale?: string;
   breadcrumbs?: BreadcrumbItem[];
+  faqItems?: FaqItem[];
 }
 
 function setMeta(attr: 'name' | 'property', key: string, value: string): void {
@@ -95,9 +101,41 @@ function updateBreadcrumbJsonLd(breadcrumbs?: BreadcrumbItem[]): void {
   script.textContent = JSON.stringify(data);
 }
 
+function updateFaqJsonLd(faqItems?: FaqItem[]): void {
+  const id = 'seo-faq';
+  let script = document.getElementById(id) as HTMLScriptElement | null;
+
+  if (!faqItems || faqItems.length === 0) {
+    script?.remove();
+    return;
+  }
+
+  if (!script) {
+    script = document.createElement('script');
+    script.id = id;
+    script.type = 'application/ld+json';
+    document.head.appendChild(script);
+  }
+
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  };
+
+  script.textContent = JSON.stringify(data);
+}
+
 /**
- * Keeps title, description, canonical, social tags, lang attribute
- * and BreadcrumbList structured data in sync with the current route.
+ * Keeps title, description, canonical, social tags, lang attribute,
+ * BreadcrumbList and FAQPage structured data in sync with the current route.
  */
 export function useSeo({
   title,
@@ -106,6 +144,7 @@ export function useSeo({
   noindex = false,
   locale,
   breadcrumbs,
+  faqItems,
 }: SeoOptions): void {
   useEffect(() => {
     const url = absoluteUrl(path);
@@ -132,5 +171,8 @@ export function useSeo({
 
     // BreadcrumbList JSON-LD
     updateBreadcrumbJsonLd(breadcrumbs);
-  }, [title, description, path, noindex, locale, breadcrumbs]);
+
+    // FAQPage JSON-LD
+    updateFaqJsonLd(faqItems);
+  }, [title, description, path, noindex, locale, breadcrumbs, faqItems]);
 }
