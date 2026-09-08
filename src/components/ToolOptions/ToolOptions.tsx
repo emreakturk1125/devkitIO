@@ -150,14 +150,14 @@ export const ToolOptions: React.FC<ToolOptionsProps> = ({ options, values, onCha
   if (options.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-3 rounded border border-[var(--border-subtle)] bg-[var(--bg-panel)] p-3 sm:gap-4 sm:p-4">
+    <div className="flex flex-wrap items-center gap-2 rounded border border-[var(--border-subtle)] bg-[var(--bg-panel)] p-2.5 sm:gap-3 sm:p-3">
       {options.map((option) => {
         const val = values[option.id] ?? option.defaultValue;
         const fieldLabel = label(option.label);
 
         return (
           <div key={option.id} className="flex w-full min-w-0 flex-col gap-1 sm:w-auto">
-            <label className="field-label text-sm text-[var(--text-secondary)] font-medium">
+            <label className="field-label">
               {fieldLabel}
             </label>
             {option.type === 'select' && option.options ? (
@@ -169,21 +169,17 @@ export const ToolOptions: React.FC<ToolOptionsProps> = ({ options, values, onCha
               />
             ) : option.type === 'boolean' ? (
               <button
-                className="toggle-switch flex items-center justify-center w-10 h-5 rounded-full transition-colors relative"
-                style={{ backgroundColor: val ? 'var(--color-brand-500)' : 'var(--bg-input)' }}
+                type="button"
+                className="toggle-switch"
+                data-checked={Boolean(val)}
                 onClick={() => onChange(option.id, !val)}
                 aria-pressed={Boolean(val)}
                 aria-label={fieldLabel}
-              >
-                <div
-                  className="w-4 h-4 rounded-full bg-white absolute top-0.5 transition-transform"
-                  style={{ transform: val ? 'translateX(0.6rem)' : 'translateX(-0.6rem)' }}
-                />
-              </button>
+              />
             ) : option.type === 'number' ? (
               <input
                 type="number"
-                className="text-input h-10 px-2 rounded bg-[var(--bg-input)] border border-[var(--border-default)] text-[var(--text-primary)] w-24"
+                className="text-input w-24"
                 value={val as number}
                 onChange={(e) => onChange(option.id, Number(e.target.value))}
                 aria-label={fieldLabel}
@@ -191,7 +187,7 @@ export const ToolOptions: React.FC<ToolOptionsProps> = ({ options, values, onCha
             ) : (
               <input
                 type="text"
-                className="text-input h-10 px-2 rounded bg-[var(--bg-input)] border border-[var(--border-default)] text-[var(--text-primary)]"
+                className="text-input"
                 value={val as string}
                 onChange={(e) => onChange(option.id, e.target.value)}
                 aria-label={fieldLabel}

@@ -305,9 +305,9 @@ function ToolboxPage() {
           ) : (
             <>
           {/* Controls Area */}
-          <div className="p-3 sm:p-4 lg:p-5 space-y-3 sm:space-y-4 shrink-0 md:overflow-y-auto">
+          <div className="px-3 py-2 sm:px-4 sm:py-3 lg:px-5 lg:py-4 space-y-2 shrink-0 md:overflow-y-auto">
             {/* Category & Tool Selectors */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <div>
                 <label className="field-label">{t.category}</label>
                 <CategorySelector
@@ -365,7 +365,7 @@ function ToolboxPage() {
             {/* Dynamic Options */}
             {selectedTool?.options && selectedTool.options.length > 0 && (
               <div>
-                <label className="field-label mb-2">{t.options}</label>
+                <label className="field-label mb-1">{t.options}</label>
                 <ToolOptions
                   options={selectedTool.options}
                   values={toolOptions}

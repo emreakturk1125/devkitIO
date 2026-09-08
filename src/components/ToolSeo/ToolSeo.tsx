@@ -9,14 +9,14 @@ interface ToolSeoProps {
 
 export const ToolSeo: React.FC<ToolSeoProps> = ({ toolId, name, description }) => {
   return (
-    <section className="space-y-1" aria-labelledby={`tool-heading-${toolId}`}>
+    <section aria-labelledby={`tool-heading-${toolId}`}>
       <h1
         id={`tool-heading-${toolId}`}
-        className="text-base font-semibold text-[var(--text-primary)] sm:text-lg"
+        className="text-sm font-semibold text-[var(--text-primary)] sm:text-base mb-0.5"
       >
         {name}
       </h1>
-      <p className="max-w-3xl min-w-0 text-sm leading-relaxed text-[var(--text-secondary)]">
+      <p className="max-w-3xl min-w-0 text-xs leading-relaxed text-[var(--text-secondary)]">
         {description}
       </p>
       <Faq toolName={name} />
