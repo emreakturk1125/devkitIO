@@ -4,7 +4,7 @@ const tool: ToolDefinition = {
   id: 'cssFormatter',
   name: 'CSS Formatter',
   description: 'Format and beautify CSS stylesheets',
-  category: 'data',
+  category: 'formatters',
   keywords: ['css', 'format', 'beautify', 'pretty', 'stylesheet', 'prettier'],
   inputType: 'code',
   outputType: 'code',

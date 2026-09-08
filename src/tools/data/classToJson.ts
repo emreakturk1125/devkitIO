@@ -170,7 +170,7 @@ const tool: ToolDefinition = {
   id: 'classToJson',
   name: 'Class to JSON',
   description: 'Convert C#, TypeScript or Java class / interface definitions to JSON',
-  category: 'data',
+  category: 'json',
   keywords: [
     'class', 'json', 'convert', 'csharp', 'c#', 'typescript', 'java',
     'model', 'dto', 'interface', 'pojo', 'poco', 'schema',

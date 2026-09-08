@@ -36,7 +36,7 @@ const tool: ToolDefinition = {
   id: 'regexTester',
   name: 'Regex Tester',
   description: 'Test a regular expression against text and list matches',
-  category: 'debugging',
+  category: 'inspect',
   keywords: ['regex', 'regexp', 'regular', 'expression', 'match', 'test', 'pattern'],
   inputType: 'text',
   outputType: 'text',

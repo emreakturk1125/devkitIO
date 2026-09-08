@@ -100,7 +100,7 @@ const tool: ToolDefinition = {
   id: 'httpStatusLookup',
   name: 'HTTP Status Lookup',
   description: 'Look up HTTP status codes with their name and a short description',
-  category: 'debugging',
+  category: 'inspect',
   keywords: ['http', 'status', 'code', 'lookup', 'error', '404', '500', 'rest'],
   inputType: 'text',
   outputType: 'text',

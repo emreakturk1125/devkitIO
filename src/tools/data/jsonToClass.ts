@@ -241,7 +241,7 @@ const tool: ToolDefinition = {
   id: 'jsonToClass',
   name: 'JSON to Class',
   description: 'Generate C#, TypeScript or Java class definitions from JSON',
-  category: 'data',
+  category: 'json',
   keywords: [
     'json', 'class', 'generate', 'csharp', 'c#', 'typescript', 'java',
     'model', 'dto', 'interface', 'pojo', 'poco', 'schema', 'convert',

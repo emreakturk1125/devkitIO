@@ -1,42 +1,31 @@
-import type { Locale, Messages } from './types';
+import type { Messages } from './types';
 import { en } from './en';
-import { tr } from './tr';
 
-export type { Locale, Messages, ToolLocale } from './types';
+export type { Messages, ToolLocale } from './types';
 export { en } from './en';
-export { tr } from './tr';
 
-export const DEFAULT_LOCALE: Locale = 'en';
-
-const dictionaries: Record<Locale, Messages> = { en, tr };
-
-export function getMessages(locale: Locale): Messages {
-  return dictionaries[locale] ?? en;
+export function getMessages(): Messages {
+  return en;
 }
 
-export function resolveLabel(locale: Locale, englishLabel: string): string {
-  if (locale === 'en') return englishLabel;
-  return getMessages(locale).labels[englishLabel] ?? englishLabel;
+export function resolveToolName(toolId: string, fallback: string): string {
+  return en.tools[toolId]?.name ?? fallback;
 }
 
-export function resolveToolName(locale: Locale, toolId: string, fallback: string): string {
-  return getMessages(locale).tools[toolId]?.name ?? fallback;
+export function resolveToolDescription(toolId: string, fallback: string): string {
+  return en.tools[toolId]?.description ?? fallback;
 }
 
-export function resolveToolDescription(locale: Locale, toolId: string, fallback: string): string {
-  return getMessages(locale).tools[toolId]?.description ?? fallback;
+export function resolveCategoryName(categoryId: string, fallback: string): string {
+  return en.categories[categoryId]?.name ?? fallback;
 }
 
-export function resolveCategoryName(locale: Locale, categoryId: string, fallback: string): string {
-  return getMessages(locale).categories[categoryId]?.name ?? fallback;
+export function resolveCategoryDescription(categoryId: string, fallback: string): string {
+  return en.categories[categoryId]?.description ?? fallback;
 }
 
-export function resolveCategoryDescription(
-  locale: Locale,
-  categoryId: string,
-  fallback: string
-): string {
-  return getMessages(locale).categories[categoryId]?.description ?? fallback;
+export function resolveLabel(englishLabel: string): string {
+  return englishLabel;
 }
 
 export function formatMessage(

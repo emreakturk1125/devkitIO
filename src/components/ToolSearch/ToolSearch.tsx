@@ -10,7 +10,7 @@ interface ToolSearchProps {
 }
 
 export const ToolSearch: React.FC<ToolSearchProps> = ({ isOpen, onClose, onSelectTool }) => {
-  const { t, locale, toolName, toolDescription, categoryName } = useLocale();
+  const { t, toolName, toolDescription, categoryName } = useLocale();
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -20,7 +20,7 @@ export const ToolSearch: React.FC<ToolSearchProps> = ({ isOpen, onClose, onSelec
     if (!q) return getAllTools().slice(0, 8);
 
     const englishHits = new Set(searchTools(query).map((tool) => tool.id));
-    const messages = getMessages(locale);
+    const messages = getMessages();
 
     return getAllTools()
       .filter((tool) => {
@@ -35,7 +35,7 @@ export const ToolSearch: React.FC<ToolSearchProps> = ({ isOpen, onClose, onSelec
         );
       })
       .slice(0, 8);
-  }, [query, locale]);
+  }, [query]);
 
   useEffect(() => {
     if (isOpen) {

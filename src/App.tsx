@@ -104,7 +104,7 @@ function ToolboxPage() {
 
   const { theme, toggleTheme } = useTheme();
   const { favoriteIds, toggleFavorite, isFavorite } = useFavorites();
-  const { t, locale, toolName, toolDescription, categoryName, categoryDescription, format } = useLocale();
+  const { t, toolName, toolDescription, categoryName, categoryDescription, format } = useLocale();
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -205,7 +205,7 @@ function ToolboxPage() {
     format,
   ]);
 
-  useSeo({ ...seo, locale });
+  useSeo(seo);
 
   // Initialize registry on mount
   useEffect(() => {

@@ -17,15 +17,13 @@ const HIGH_PRIORITY = new Set([
 
 /** Category display names and descriptions (mirrors categoryRegistry.ts) */
 const CATEGORY_META = {
-  sql: { name: 'SQL', description: 'SQL formatting, generation and transformation tools' },
-  data: { name: 'Data', description: 'JSON, YAML, XML, JavaScript and data conversion tools' },
-  text: { name: 'Text', description: 'Text manipulation, sorting and transformation tools' },
+  json: { name: 'JSON & Data Conversion', description: 'JSON, XML, YAML formatting, validation and data conversion tools' },
+  formatters: { name: 'Code Formatters', description: 'JavaScript, TypeScript, HTML, CSS and SQL code formatting tools' },
+  sql: { name: 'SQL', description: 'SQL generation and transformation tools' },
+  text: { name: 'Text & List Utils', description: 'Text manipulation, list conversion, sorting and counting tools' },
   encoding: { name: 'Encoding', description: 'Base64, URL, HTML encoding and decoding tools' },
-  generators: { name: 'Generators', description: 'UUID, hash, password and random data generators' },
-  debugging: { name: 'Debugging', description: 'Diff, validation and debugging utilities' },
-  code: { name: 'Code', description: 'Code formatting and beautification tools' },
-  conversion: { name: 'Conversion', description: 'Data format conversion tools' },
-  web: { name: 'Web', description: 'URL parsing, cURL conversion and web utilities' },
+  generators: { name: 'Generators', description: 'UUID, GUID, password and random data generators' },
+  inspect: { name: 'Inspect & Debug', description: 'Diff compare, JWT decode, regex test and HTTP status lookup' },
 };
 
 function walkTs(dir) {

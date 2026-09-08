@@ -11,7 +11,7 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onSearchOpen, onMenuOpen, theme, onToggleTheme }) => {
-  const { t, locale, setLocale } = useLocale();
+  const { t } = useLocale();
 
   return (
     <header className="flex min-h-12 shrink-0 items-center justify-between gap-2 border-b border-[var(--border-subtle)] bg-[var(--bg-panel)] px-3 pt-[env(safe-area-inset-top)] pl-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))] sm:px-4">
@@ -47,35 +47,6 @@ export const Header: React.FC<HeaderProps> = ({ onSearchOpen, onMenuOpen, theme,
           <span className="hidden sm:inline">{t.searchTools}</span>
           <kbd className="hidden font-mono text-xs px-1.5 py-0.5 rounded bg-[var(--bg-elevated)] border border-[var(--border-subtle)] sm:inline-flex">⌘K</kbd>
         </button>
-        <div
-          className="hidden items-center overflow-hidden rounded border border-[var(--border-default)] bg-[var(--bg-input)] sm:flex"
-          title={t.language}
-          role="group"
-          aria-label={t.language}
-        >
-          <button
-            type="button"
-            onClick={() => setLocale('en')}
-            className={`min-h-9 px-2.5 text-xs font-semibold transition-colors ${
-              locale === 'en'
-                ? 'bg-[var(--color-brand-500)] text-white'
-                : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]'
-            }`}
-          >
-            EN
-          </button>
-          <button
-            type="button"
-            onClick={() => setLocale('tr')}
-            className={`min-h-9 px-2.5 text-xs font-semibold transition-colors ${
-              locale === 'tr'
-                ? 'bg-[var(--color-brand-500)] text-white'
-                : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]'
-            }`}
-          >
-            TR
-          </button>
-        </div>
         <button
           type="button"
           onClick={onToggleTheme}

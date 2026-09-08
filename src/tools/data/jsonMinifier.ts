@@ -4,7 +4,7 @@ const tool: ToolDefinition = {
   id: 'jsonMinifier',
   name: 'JSON Minifier',
   description: 'Minify JSON data',
-  category: 'data',
+  category: 'json',
   keywords: ['json', 'minify', 'compress'],
   inputType: 'json',
   outputType: 'json',

@@ -1,13 +1,9 @@
 import {
   createContext,
-  useCallback,
-  useEffect,
   useMemo,
-  useState,
   type ReactNode,
 } from 'react';
 import {
-  DEFAULT_LOCALE,
   formatMessage,
   getMessages,
   resolveCategoryDescription,
@@ -15,15 +11,10 @@ import {
   resolveLabel,
   resolveToolDescription,
   resolveToolName,
-  type Locale,
   type Messages,
 } from '@/i18n';
-import { readStorage, writeStorage } from '@/services/storage/storage';
 
 export interface LocaleContextValue {
-  locale: Locale;
-  setLocale: (locale: Locale) => void;
-  toggleLocale: () => void;
   messages: Messages;
   t: Messages['ui'];
   label: (englishLabel: string) => string;
@@ -37,41 +28,20 @@ export interface LocaleContextValue {
 export const LocaleContext = createContext<LocaleContextValue | null>(null);
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(() => {
-    const stored = readStorage<Locale>('locale', DEFAULT_LOCALE);
-    return stored === 'tr' || stored === 'en' ? stored : DEFAULT_LOCALE;
-  });
-
-  useEffect(() => {
-    document.documentElement.lang = locale;
-    writeStorage('locale', locale);
-  }, [locale]);
-
-  const setLocale = useCallback((next: Locale) => {
-    setLocaleState(next);
-  }, []);
-
-  const toggleLocale = useCallback(() => {
-    setLocaleState((prev) => (prev === 'en' ? 'tr' : 'en'));
-  }, []);
-
   const value = useMemo<LocaleContextValue>(() => {
-    const messages = getMessages(locale);
+    const messages = getMessages();
     return {
-      locale,
-      setLocale,
-      toggleLocale,
       messages,
       t: messages.ui,
-      label: (englishLabel) => resolveLabel(locale, englishLabel),
-      toolName: (toolId, fallback) => resolveToolName(locale, toolId, fallback),
-      toolDescription: (toolId, fallback) => resolveToolDescription(locale, toolId, fallback),
-      categoryName: (categoryId, fallback) => resolveCategoryName(locale, categoryId, fallback),
+      label: (englishLabel) => resolveLabel(englishLabel),
+      toolName: (toolId, fallback) => resolveToolName(toolId, fallback),
+      toolDescription: (toolId, fallback) => resolveToolDescription(toolId, fallback),
+      categoryName: (categoryId, fallback) => resolveCategoryName(categoryId, fallback),
       categoryDescription: (categoryId, fallback) =>
-        resolveCategoryDescription(locale, categoryId, fallback),
+        resolveCategoryDescription(categoryId, fallback),
       format: formatMessage,
     };
-  }, [locale, setLocale, toggleLocale]);
+  }, []);
 
   return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;
 }

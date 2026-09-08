@@ -4,7 +4,7 @@ const tool: ToolDefinition = {
   id: 'htmlFormatter',
   name: 'HTML Formatter',
   description: 'Format and beautify HTML markup',
-  category: 'data',
+  category: 'formatters',
   keywords: ['html', 'format', 'beautify', 'pretty', 'markup', 'prettier'],
   inputType: 'code',
   outputType: 'code',

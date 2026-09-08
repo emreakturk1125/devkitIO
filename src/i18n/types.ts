@@ -1,5 +1,3 @@
-export type Locale = 'en' | 'tr';
-
 export interface ToolLocale {
   name: string;
   description: string;
@@ -12,7 +10,6 @@ export interface Messages {
     searchPlaceholder: string;
     noToolsFound: string;
     toggleTheme: string;
-    language: string;
     loadingTools: string;
     menu: string;
     favorites: string;

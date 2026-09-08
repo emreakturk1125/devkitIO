@@ -53,7 +53,7 @@ const tool: ToolDefinition = {
   id: 'jsonToXml',
   name: 'JSON to XML',
   description: 'Convert JSON data to XML',
-  category: 'data',
+  category: 'json',
   keywords: ['json', 'xml', 'convert', 'transform'],
   inputType: 'json',
   outputType: 'xml',

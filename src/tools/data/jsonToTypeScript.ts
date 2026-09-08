@@ -130,7 +130,7 @@ const tool: ToolDefinition = {
   id: 'jsonToTypeScript',
   name: 'JSON to TypeScript',
   description: 'Generate TypeScript interfaces from JSON',
-  category: 'data',
+  category: 'json',
   keywords: ['json', 'typescript', 'interface', 'type', 'convert', 'ts', 'dto'],
   inputType: 'json',
   outputType: 'code',

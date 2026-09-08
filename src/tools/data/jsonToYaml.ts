@@ -4,7 +4,7 @@ const tool: ToolDefinition = {
   id: 'jsonToYaml',
   name: 'JSON to YAML',
   description: 'Convert JSON data to YAML',
-  category: 'data',
+  category: 'json',
   keywords: ['json', 'yaml', 'yml', 'convert', 'transform'],
   inputType: 'json',
   outputType: 'text',

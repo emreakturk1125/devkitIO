@@ -4,7 +4,7 @@ const tool: ToolDefinition = {
   id: 'typescriptFormatter',
   name: 'TypeScript Formatter',
   description: 'Format and beautify TypeScript code',
-  category: 'data',
+  category: 'formatters',
   keywords: ['typescript', 'ts', 'tsx', 'format', 'beautify', 'pretty', 'prettier'],
   inputType: 'code',
   outputType: 'code',

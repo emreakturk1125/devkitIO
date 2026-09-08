@@ -5,7 +5,7 @@ const tool: ToolDefinition = {
   id: 'diffCompare',
   name: 'Diff Compare',
   description: 'Compare two text inputs and show differences',
-  category: 'debugging',
+  category: 'inspect',
   keywords: ['diff', 'compare', 'difference', 'text'],
   inputType: 'dual',
   outputType: 'text',

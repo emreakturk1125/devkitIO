@@ -77,7 +77,7 @@ const tool: ToolDefinition = {
   id: 'jsonDiff',
   name: 'JSON Diff',
   description: 'Compare two JSON documents and list added, removed and changed values',
-  category: 'data',
+  category: 'json',
   keywords: ['json', 'diff', 'compare', 'difference', 'patch'],
   inputType: 'dual',
   outputType: 'text',

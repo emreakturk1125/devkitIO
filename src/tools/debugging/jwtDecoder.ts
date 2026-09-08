@@ -47,7 +47,7 @@ const tool: ToolDefinition = {
   id: 'jwtDecoder',
   name: 'JWT Decoder',
   description: 'Decode a JWT header and payload without verifying the signature',
-  category: 'debugging',
+  category: 'inspect',
   keywords: ['jwt', 'token', 'decode', 'json', 'web', 'bearer', 'header', 'payload'],
   inputType: 'text',
   outputType: 'code',

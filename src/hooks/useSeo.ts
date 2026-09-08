@@ -21,7 +21,6 @@ interface SeoOptions {
   description: string;
   path: string;
   noindex?: boolean;
-  locale?: string;
   breadcrumbs?: BreadcrumbItem[];
   faqItems?: FaqItem[];
 }
@@ -142,7 +141,6 @@ export function useSeo({
   description,
   path,
   noindex = false,
-  locale,
   breadcrumbs,
   faqItems,
 }: SeoOptions): void {
@@ -164,15 +162,10 @@ export function useSeo({
 
     updateJsonLd(url, title.split(' — ')[0] ?? title, description);
 
-    // Dynamic HTML lang attribute
-    if (locale) {
-      document.documentElement.lang = locale;
-    }
-
     // BreadcrumbList JSON-LD
     updateBreadcrumbJsonLd(breadcrumbs);
 
     // FAQPage JSON-LD
     updateFaqJsonLd(faqItems);
-  }, [title, description, path, noindex, locale, breadcrumbs, faqItems]);
+  }, [title, description, path, noindex, breadcrumbs, faqItems]);
 }

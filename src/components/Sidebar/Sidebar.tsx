@@ -22,7 +22,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   theme,
   onToggleTheme,
 }) => {
-  const { t, locale, setLocale, toolName, categoryName } = useLocale();
+  const { t, toolName, categoryName } = useLocale();
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
 
   const favoriteTools = favoriteIds.map(id => getToolById(id)).filter(Boolean) as ToolDefinition[];
@@ -74,34 +74,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="flex items-center justify-between gap-2 p-4 border-b border-[var(--border-subtle)] lg:hidden">
         <span className="font-bold text-[var(--text-primary)]">{t.menu}</span>
         <div className="flex items-center gap-1">
-          <div
-            className="flex items-center overflow-hidden rounded border border-[var(--border-default)] bg-[var(--bg-input)]"
-            role="group"
-            aria-label={t.language}
-          >
-            <button
-              type="button"
-              onClick={() => setLocale('en')}
-              className={`min-h-9 px-2.5 text-xs font-semibold ${
-                locale === 'en'
-                  ? 'bg-[var(--color-brand-500)] text-white'
-                  : 'text-[var(--text-secondary)]'
-              }`}
-            >
-              EN
-            </button>
-            <button
-              type="button"
-              onClick={() => setLocale('tr')}
-              className={`min-h-9 px-2.5 text-xs font-semibold ${
-                locale === 'tr'
-                  ? 'bg-[var(--color-brand-500)] text-white'
-                  : 'text-[var(--text-secondary)]'
-              }`}
-            >
-              TR
-            </button>
-          </div>
           <button
             type="button"
             onClick={onToggleTheme}

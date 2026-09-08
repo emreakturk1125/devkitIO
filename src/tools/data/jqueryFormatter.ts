@@ -4,7 +4,7 @@ const tool: ToolDefinition = {
   id: 'jqueryFormatter',
   name: 'jQuery Formatter',
   description: 'Format and beautify jQuery / JavaScript code',
-  category: 'data',
+  category: 'formatters',
   keywords: ['jquery', 'js', 'javascript', 'format', 'beautify', 'pretty', 'dom'],
   inputType: 'code',
   outputType: 'code',

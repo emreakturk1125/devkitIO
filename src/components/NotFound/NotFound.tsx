@@ -4,11 +4,11 @@ import { useLocale } from '@/hooks/useLocale';
 import { getCategoriesWithTools } from '@/registry/toolRegistry';
 
 const POPULAR_TOOLS = [
-  { id: 'jsonFormatter', category: 'data' },
-  { id: 'sqlFormatter', category: 'sql' },
+  { id: 'jsonFormatter', category: 'json' },
+  { id: 'sqlFormatter', category: 'formatters' },
   { id: 'base64', category: 'encoding' },
   { id: 'guidGenerator', category: 'generators' },
-  { id: 'diffCompare', category: 'debugging' },
+  { id: 'diffCompare', category: 'inspect' },
   { id: 'wordCounter', category: 'text' },
 ];
 

@@ -4,7 +4,7 @@ const tool: ToolDefinition = {
   id: 'jsonFormatter',
   name: 'JSON Formatter',
   description: 'Format and beautify JSON data',
-  category: 'data',
+  category: 'json',
   keywords: ['json', 'format', 'beautify', 'pretty'],
   inputType: 'json',
   outputType: 'json',

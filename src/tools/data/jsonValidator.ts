@@ -26,7 +26,7 @@ const tool: ToolDefinition = {
   id: 'jsonValidator',
   name: 'JSON Validator',
   description: 'Validate JSON and report parse errors with line and column',
-  category: 'data',
+  category: 'json',
   keywords: ['json', 'validate', 'validator', 'lint', 'check', 'parse'],
   inputType: 'json',
   outputType: 'text',
