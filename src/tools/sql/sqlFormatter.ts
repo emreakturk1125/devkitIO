@@ -4,7 +4,7 @@ const tool: ToolDefinition = {
   id: 'sqlFormatter',
   name: 'SQL Formatter',
   description: 'Format and beautify SQL queries',
-  category: 'formatters',
+  category: 'sql',
   keywords: ['sql', 'format', 'beautify', 'pretty'],
   inputType: 'sql',
   outputType: 'sql',

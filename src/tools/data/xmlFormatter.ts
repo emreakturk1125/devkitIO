@@ -126,7 +126,7 @@ const tool: ToolDefinition = {
   id: 'xmlFormatter',
   name: 'XML Formatter',
   description: 'Format, beautify and validate XML data',
-  category: 'json',
+  category: 'formatters',
   keywords: ['xml', 'format', 'beautify', 'pretty', 'markup', 'xslt', 'svg', 'xhtml'],
   inputType: 'xml',
   outputType: 'xml',

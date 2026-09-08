@@ -4,7 +4,7 @@ const tool: ToolDefinition = {
   id: 'yamlFormatter',
   name: 'YAML Formatter',
   description: 'Format and beautify YAML data',
-  category: 'json',
+  category: 'formatters',
   keywords: ['yaml', 'yml', 'format', 'beautify', 'pretty'],
   inputType: 'text',
   outputType: 'text',
