@@ -11,6 +11,7 @@ import {
   resolveLabel,
   resolveToolDescription,
   resolveToolName,
+  resolveToolFaq,
   type Messages,
 } from '@/i18n';
 
@@ -20,6 +21,7 @@ export interface LocaleContextValue {
   label: (englishLabel: string) => string;
   toolName: (toolId: string, fallback: string) => string;
   toolDescription: (toolId: string, fallback: string) => string;
+  toolFaq: (toolId: string) => { q: string; a: string }[] | undefined;
   categoryName: (categoryId: string, fallback: string) => string;
   categoryDescription: (categoryId: string, fallback: string) => string;
   format: (template: string, vars: Record<string, string | number>) => string;
@@ -36,6 +38,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
       label: (englishLabel) => resolveLabel(englishLabel),
       toolName: (toolId, fallback) => resolveToolName(toolId, fallback),
       toolDescription: (toolId, fallback) => resolveToolDescription(toolId, fallback),
+      toolFaq: (toolId) => resolveToolFaq(toolId),
       categoryName: (categoryId, fallback) => resolveCategoryName(categoryId, fallback),
       categoryDescription: (categoryId, fallback) =>
         resolveCategoryDescription(categoryId, fallback),

@@ -1,6 +1,7 @@
 export interface ToolLocale {
   name: string;
   description: string;
+  faq?: { q: string; a: string }[];
 }
 
 export interface Messages {

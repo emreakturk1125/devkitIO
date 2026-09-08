@@ -5,9 +5,10 @@ interface ToolSeoProps {
   toolId: string;
   name: string;
   description: string;
+  faq?: { q: string; a: string }[];
 }
 
-export const ToolSeo: React.FC<ToolSeoProps> = ({ toolId, name, description }) => {
+export const ToolSeo: React.FC<ToolSeoProps> = ({ toolId, name, description, faq }) => {
   return (
     <section aria-labelledby={`tool-heading-${toolId}`}>
       <h1
@@ -19,7 +20,10 @@ export const ToolSeo: React.FC<ToolSeoProps> = ({ toolId, name, description }) =
       <p className="max-w-3xl min-w-0 text-xs leading-relaxed text-[var(--text-secondary)]">
         {description}
       </p>
-      <Faq toolName={name} />
+      <Faq 
+        toolName={name} 
+        extraItems={faq?.map(f => ({ question: f.q, answer: f.a }))} 
+      />
     </section>
   );
 };

@@ -3,7 +3,7 @@ export const SITE_NAME = 'DevKit';
 
 export const BASE_TITLE = 'DevKit — Free Online Developer Tools';
 export const BASE_DESCRIPTION =
-  'Free online developer toolkit — JSON formatter, SQL formatter, Base64 encoder, GUID generator, diff compare & 20+ tools. 100% client-side, your data never leaves your browser.';
+  'Free online developer toolkit — JSON formatter, SQL formatter, Base64 encoder, GUID generator & 35+ tools. 100% client-side, nothing leaves your browser.';
 
 export const INDEXABLE_ROBOTS =
   'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1';
@@ -49,5 +49,6 @@ export function categoryPageTitle(categoryName: string): string {
 }
 
 export function categoryPageDescription(categoryDescription: string): string {
-  return `${categoryDescription} Free online, 100% client-side on DevKit.`;
+  return `${categoryDescription}. Free online, 100% client-side on DevKit.`;
 }
+

@@ -1,7 +1,7 @@
 {
   "name": "DevKit — Free Online Developer Tools",
   "short_name": "DevKit",
-  "description": "20+ free online developer tools — JSON formatter, SQL formatter, Base64 encoder, GUID generator, diff compare. 100% client-side, your data never leaves your browser.",
+  "description": "35+ free online developer tools — JSON formatter, SQL formatter, Base64 encoder, GUID generator, diff compare. 100% client-side, your data never leaves your browser.",
   "start_url": "/",
   "scope": "/",
   "lang": "en",
@@ -33,3 +33,5 @@
   "display": "standalone",
   "categories": ["developer", "productivity", "utilities"]
 }
+
+

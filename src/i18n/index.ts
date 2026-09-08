@@ -16,6 +16,10 @@ export function resolveToolDescription(toolId: string, fallback: string): string
   return en.tools[toolId]?.description ?? fallback;
 }
 
+export function resolveToolFaq(toolId: string): { q: string; a: string }[] | undefined {
+  return en.tools[toolId]?.faq;
+}
+
 export function resolveCategoryName(categoryId: string, fallback: string): string {
   return en.categories[categoryId]?.name ?? fallback;
 }

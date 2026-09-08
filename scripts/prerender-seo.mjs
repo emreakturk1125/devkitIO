@@ -17,13 +17,13 @@ const HIGH_PRIORITY = new Set([
 
 /** Category display names and descriptions (mirrors categoryRegistry.ts) */
 const CATEGORY_META = {
-  json: { name: 'JSON & Data Conversion', description: 'JSON, XML, YAML formatting, validation and data conversion tools' },
-  formatters: { name: 'Code Formatters', description: 'JavaScript, TypeScript, HTML, CSS and SQL code formatting tools' },
-  sql: { name: 'SQL', description: 'SQL generation and transformation tools' },
-  text: { name: 'Text & List Utils', description: 'Text manipulation, list conversion, sorting and counting tools' },
-  encoding: { name: 'Encoding', description: 'Base64, URL, HTML encoding and decoding tools' },
-  generators: { name: 'Generators', description: 'UUID, GUID, password and random data generators' },
-  inspect: { name: 'Inspect & Debug', description: 'Diff compare, JWT decode, regex test and HTTP status lookup' },
+  json: { name: 'JSON & Data Conversion', description: 'JSON, XML, YAML formatting, validation and data conversion tools', keywords: 'json formatter, json beautifier, json to xml, json to yaml, json validator, xml formatter, yaml formatter, json converter' },
+  formatters: { name: 'Code Formatters', description: 'JavaScript, TypeScript, HTML, CSS and SQL code formatting tools', keywords: 'javascript formatter, typescript formatter, html formatter, css formatter, code beautifier, prettier online, format code' },
+  sql: { name: 'SQL', description: 'SQL generation and transformation tools', keywords: 'sql formatter, sql beautifier, sql in clause, sql to csharp, sql generator, format sql online' },
+  text: { name: 'Text & List Utils', description: 'Text manipulation, list conversion, sorting and counting tools', keywords: 'word counter, character counter, remove duplicates, sort lines, case converter, text tools online' },
+  encoding: { name: 'Encoding', description: 'Base64, URL, HTML encoding and decoding tools', keywords: 'base64 encoder, base64 decoder, encode decode online, base64 converter' },
+  generators: { name: 'Generators', description: 'UUID, GUID, password and random data generators', keywords: 'guid generator, uuid generator, password generator, random string generator, generate uuid online' },
+  inspect: { name: 'Inspect & Debug', description: 'Diff compare, JWT decode, regex test and HTTP status lookup', keywords: 'diff compare, jwt decoder, regex tester, http status codes, text diff online' },
 };
 
 function walkTs(dir) {
@@ -38,11 +38,23 @@ function walkTs(dir) {
 
 function extractI18nToolCopy() {
   const text = readFileSync(join(root, 'src/i18n/en.ts'), 'utf8');
+  let code = text.replace(/import type .*?;/g, '');
+  code = code.replace(/export const en:\s*Messages\s*=/, 'const en =');
+  let en;
+  try {
+    en = new Function(`${code}; return en;`)();
+  } catch(e) {
+    console.warn('Fallback to regex parsing due to eval error:', e.message);
+    const copy = new Map();
+    const re = /(\w+):\s*\{\s*name:\s*'((?:\\'|[^'])*)',\s*description:\s*'((?:\\'|[^'])*)'/g;
+    for (const match of text.matchAll(re)) {
+      copy.set(match[1], { name: match[2], description: match[3] });
+    }
+    return copy;
+  }
   const copy = new Map();
-  const re =
-    /(\w+):\s*\{\s*name:\s*'((?:\\'|[^'])*)',\s*description:\s*'((?:\\'|[^'])*)'/g;
-  for (const match of text.matchAll(re)) {
-    copy.set(match[1], { name: match[2], description: match[3] });
+  for (const [key, value] of Object.entries(en.tools)) {
+    copy.set(key, value);
   }
   return copy;
 }
@@ -85,6 +97,7 @@ function extractTools() {
         category,
         name: localized?.name ?? name,
         description: localized?.description ?? description ?? name,
+        faq: localized?.faq,
       });
     }
   }
@@ -118,8 +131,14 @@ function buildBreadcrumbJsonLd(crumbs) {
   });
 }
 
-function buildFaqJsonLd(toolName, faqCopy) {
-  const items = [
+function buildFaqJsonLd(toolName, faqCopy, toolFaq) {
+  const items = [];
+  if (toolFaq && toolFaq.length > 0) {
+    for (const f of toolFaq) {
+      items.push({ question: f.q, answer: f.a });
+    }
+  }
+  items.push(
     {
       question: (faqCopy.faqFree ?? 'Is {name} free?').replace('{name}', toolName),
       answer: (faqCopy.faqFreeAnswer ?? 'Yes. {name} is free on DevKit and does not require an account.').replace('{name}', toolName),
@@ -131,8 +150,8 @@ function buildFaqJsonLd(toolName, faqCopy) {
     {
       question: faqCopy.faqInstall ?? 'Do I need to install anything?',
       answer: faqCopy.faqInstallAnswer ?? 'No. Open the page, paste or type your input, and get the result.',
-    },
-  ];
+    }
+  );
   return JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -149,7 +168,7 @@ function buildFaqJsonLd(toolName, faqCopy) {
 
 // ─── Page Meta Injection ────────────────────────────────────────────────────
 
-function injectPageMeta(html, { title, description, path, name, breadcrumbs, noindex, faqJsonLd, noscriptExtra }) {
+function injectPageMeta(html, { title, description, path, name, breadcrumbs, noindex, faqJsonLd, noscriptExtra, keywords }) {
   const url = path === '/' ? `${SITE_URL}/` : `${SITE_URL}${path}`;
   const safeTitle = escapeHtml(title);
   const safeDesc = escapeHtml(description);
@@ -196,6 +215,15 @@ function injectPageMeta(html, { title, description, path, name, breadcrumbs, noi
     `<meta name="twitter:description" content="${safeDesc}" />`
   );
 
+  // Update per-page keywords
+  if (keywords) {
+    next = replaceAttr(
+      next,
+      /<meta name="keywords" content="[^"]*" \/>/,
+      `<meta name="keywords" content="${escapeHtml(keywords)}" />`
+    );
+  }
+
   if (noindex) {
     next = replaceAttr(
       next,
@@ -206,6 +234,25 @@ function injectPageMeta(html, { title, description, path, name, breadcrumbs, noi
       next,
       /<meta name="googlebot" content="[^"]*" \/>/,
       '<meta name="googlebot" content="noindex, follow" />'
+    );
+  }
+
+  // Update WebApplication JSON-LD for this page
+  if (path !== '/') {
+    next = next.replace(
+      /(<script type="application\/ld\+json">\s*\{[^}]*"@type":\s*"WebApplication"[\s\S]*?)<\/script>/,
+      (match, prefix) => {
+        try {
+          const jsonStr = match.replace(/<script type="application\/ld\+json">\s*/, '').replace(/<\/script>$/, '');
+          const data = JSON.parse(jsonStr);
+          data.url = url;
+          data.name = name === SITE_NAME ? SITE_NAME : `${name} — ${SITE_NAME}`;
+          data.description = description;
+          return `<script type="application/ld+json">${JSON.stringify(data)}</script>`;
+        } catch {
+          return match; // keep original if parse fails
+        }
+      }
     );
   }
 
@@ -298,7 +345,7 @@ writeFile(join(root, 'dist/sitemap.xml'), sitemap);
 
 const HOME_TITLE = `${SITE_NAME} — Free Online Developer Tools`;
 const HOME_DESCRIPTION =
-  'Free online developer toolkit — JSON formatter, SQL formatter, Base64 encoder, GUID generator, diff compare & 20+ tools. 100% client-side, your data never leaves your browser.';
+  'Free online developer toolkit — JSON formatter, SQL formatter, Base64 encoder, GUID generator, diff compare & 35+ tools. 100% client-side, your data never leaves your browser.';
 
 // Home page — enriched noscript with category list and popular tools
 const homeNoscriptExtra = `<nav><h2>Categories</h2><ul>${categories
@@ -338,7 +385,7 @@ for (const category of categories) {
   const catMeta = CATEGORY_META[category] || { name: category, description: '' };
   const catTools = tools.filter((t) => t.category === category);
   const title = `${catMeta.name} Tools — ${SITE_NAME} | Free Online Developer Tools`;
-  const description = `${catMeta.description} — Free online, 100% client-side on ${SITE_NAME}.`;
+  const description = `${catMeta.description}. Free online, 100% client-side on ${SITE_NAME}.`;
 
   // Category noscript — list of tools in this category with links
   const catNoscriptExtra = `<nav><h2>${escapeHtml(catMeta.name)} Tools</h2><ul>${catTools
@@ -352,6 +399,7 @@ for (const category of categories) {
       description,
       path: `/tools/${category}`,
       name: `${catMeta.name} Tools`,
+      keywords: catMeta.keywords,
       breadcrumbs: [
         { name: SITE_NAME, url: `${SITE_URL}/` },
         { name: catMeta.name, url: `${SITE_URL}/tools/${category}` },
@@ -363,17 +411,26 @@ for (const category of categories) {
     const title = `${tool.name} — ${SITE_NAME} | Free Online Developer Tools`;
     const description = tool.description;
 
+    // Build tool-specific keywords from tool name + category keywords
+    const toolKeywords = `${tool.name.toLowerCase()}, ${tool.name.toLowerCase()} online, free ${tool.name.toLowerCase()}, ${catMeta.keywords || ''}`;
+
     // Tool page FAQ JSON-LD
-    const toolFaqJsonLd = buildFaqJsonLd(tool.name, faqCopy);
+    const toolFaqJsonLd = buildFaqJsonLd(tool.name, faqCopy, tool.faq);
 
     // Tool noscript — FAQ content
+    let toolNoscriptExtra = `<section><h2>FAQ</h2><dl>`;
+    if (tool.faq) {
+      for (const f of tool.faq) {
+        toolNoscriptExtra += `<dt>${escapeHtml(f.q)}</dt><dd>${escapeHtml(f.a)}</dd>`;
+      }
+    }
     const faqFreeQ = escapeHtml((faqCopy.faqFree ?? 'Is {name} free?').replace('{name}', tool.name));
     const faqFreeA = escapeHtml((faqCopy.faqFreeAnswer ?? 'Yes. {name} is free on DevKit and does not require an account.').replace('{name}', tool.name));
     const faqPrivacyQ = escapeHtml(faqCopy.faqPrivacy ?? 'Does my data leave the browser?');
     const faqPrivacyA = escapeHtml(faqCopy.faqPrivacyAnswer ?? 'No. Transformations run locally in your browser. DevKit does not send your input to a server.');
     const faqInstallQ = escapeHtml(faqCopy.faqInstall ?? 'Do I need to install anything?');
     const faqInstallA = escapeHtml(faqCopy.faqInstallAnswer ?? 'No. Open the page, paste or type your input, and get the result.');
-    const toolNoscriptExtra = `<section><h2>FAQ</h2><dl><dt>${faqFreeQ}</dt><dd>${faqFreeA}</dd><dt>${faqPrivacyQ}</dt><dd>${faqPrivacyA}</dd><dt>${faqInstallQ}</dt><dd>${faqInstallA}</dd></dl></section>`;
+    toolNoscriptExtra += `<dt>${faqFreeQ}</dt><dd>${faqFreeA}</dd><dt>${faqPrivacyQ}</dt><dd>${faqPrivacyA}</dd><dt>${faqInstallQ}</dt><dd>${faqInstallA}</dd></dl></section>`;
 
     writeFile(
       join(root, `dist/tools/${tool.category}/${tool.id}/index.html`),
@@ -382,6 +439,7 @@ for (const category of categories) {
         description,
         path: `/tools/${tool.category}/${tool.id}`,
         name: tool.name,
+        keywords: toolKeywords,
         breadcrumbs: [
           { name: SITE_NAME, url: `${SITE_URL}/` },
           { name: catMeta.name, url: `${SITE_URL}/tools/${tool.category}` },
@@ -397,3 +455,5 @@ for (const category of categories) {
 console.log(
   `SEO: sitemap + prerendered ${categories.length} categories and ${tools.length} tool pages`
 );
+
+

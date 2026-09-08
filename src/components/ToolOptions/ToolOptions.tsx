@@ -89,8 +89,8 @@ function FitSelect({ label, value, options, onChange }: FitSelectProps) {
   }, [open, updateMenuPosition]);
 
   return (
-    <div className="select-fit" ref={rootRef}>
-      <span className="select-fit-sizer" aria-hidden="true">
+    <div className="select-fit" ref={rootRef} style={{ '--field-height': '28px' } as React.CSSProperties}>
+      <span className="select-fit-sizer !text-[11px]" aria-hidden="true">
         {localizedOptions.map((opt) => (
           <span key={opt.value}>{opt.display}</span>
         ))}
@@ -98,7 +98,7 @@ function FitSelect({ label, value, options, onChange }: FitSelectProps) {
       <button
         ref={triggerRef}
         type="button"
-        className="select-field select-fit-trigger"
+        className="select-field select-fit-trigger h-[28px] flex items-center py-0 pl-2 pr-6 text-[11px]"
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={listId}
@@ -106,7 +106,7 @@ function FitSelect({ label, value, options, onChange }: FitSelectProps) {
         title={selected?.display}
         onClick={() => setOpen((prev) => !prev)}
       >
-        <span className="select-fit-value">{selected?.display}</span>
+        <span className="select-fit-value block truncate mt-[1px]">{selected?.display}</span>
       </button>
       {open && (
         <ul
@@ -125,7 +125,7 @@ function FitSelect({ label, value, options, onChange }: FitSelectProps) {
                   type="button"
                   role="option"
                   aria-selected={isSelected}
-                  className={`select-fit-option${isSelected ? ' is-selected' : ''}`}
+                  className={`select-fit-option text-[11px] py-1.5${isSelected ? ' is-selected' : ''}`}
                   title={opt.display}
                   onClick={() => {
                     onChange(opt.value);
@@ -150,49 +150,51 @@ export const ToolOptions: React.FC<ToolOptionsProps> = ({ options, values, onCha
   if (options.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-2 rounded border border-[var(--border-subtle)] bg-[var(--bg-panel)] p-2.5 sm:gap-3 sm:p-3">
+    <div className="flex flex-wrap items-center gap-4 rounded border border-[var(--border-subtle)] bg-[var(--bg-panel)] px-3 py-2 sm:gap-6">
       {options.map((option) => {
         const val = values[option.id] ?? option.defaultValue;
         const fieldLabel = label(option.label);
 
         return (
-          <div key={option.id} className="flex w-full min-w-0 flex-col gap-1 sm:w-auto">
-            <label className="field-label">
+          <div key={option.id} className="flex items-center gap-2">
+            <label className="text-[11px] font-semibold text-[var(--text-secondary)] whitespace-nowrap select-none flex items-center h-[28px]">
               {fieldLabel}
             </label>
-            {option.type === 'select' && option.options ? (
-              <FitSelect
-                label={fieldLabel}
-                value={val as string}
-                options={option.options}
-                onChange={(next) => onChange(option.id, next)}
-              />
-            ) : option.type === 'boolean' ? (
-              <button
-                type="button"
-                className="toggle-switch"
-                data-checked={Boolean(val)}
-                onClick={() => onChange(option.id, !val)}
-                aria-pressed={Boolean(val)}
-                aria-label={fieldLabel}
-              />
-            ) : option.type === 'number' ? (
-              <input
-                type="number"
-                className="text-input w-24"
-                value={val as number}
-                onChange={(e) => onChange(option.id, Number(e.target.value))}
-                aria-label={fieldLabel}
-              />
-            ) : (
-              <input
-                type="text"
-                className="text-input"
-                value={val as string}
-                onChange={(e) => onChange(option.id, e.target.value)}
-                aria-label={fieldLabel}
-              />
-            )}
+            <div className="flex-shrink-0 flex items-center h-[28px]">
+              {option.type === 'select' && option.options ? (
+                <FitSelect
+                  label={fieldLabel}
+                  value={val as string}
+                  options={option.options}
+                  onChange={(next) => onChange(option.id, next)}
+                />
+              ) : option.type === 'boolean' ? (
+                <button
+                  type="button"
+                  className="toggle-switch scale-[0.8] origin-left"
+                  data-checked={Boolean(val)}
+                  onClick={() => onChange(option.id, !val)}
+                  aria-pressed={Boolean(val)}
+                  aria-label={fieldLabel}
+                />
+              ) : option.type === 'number' ? (
+                <input
+                  type="number"
+                  className="text-input w-16 h-[28px] py-0 px-2 text-[11px] leading-[26px]"
+                  value={val as number}
+                  onChange={(e) => onChange(option.id, Number(e.target.value))}
+                  aria-label={fieldLabel}
+                />
+              ) : (
+                <input
+                  type="text"
+                  className="text-input w-32 h-[28px] py-0 px-2 text-[11px] leading-[26px]"
+                  value={val as string}
+                  onChange={(e) => onChange(option.id, e.target.value)}
+                  aria-label={fieldLabel}
+                />
+              )}
+            </div>
           </div>
         );
       })}

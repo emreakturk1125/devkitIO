@@ -3,12 +3,14 @@ import { useLocale } from '@/hooks/useLocale';
 
 interface FaqProps {
   toolName: string;
+  extraItems?: { question: string; answer: string }[];
 }
 
-export const Faq: React.FC<FaqProps> = ({ toolName }) => {
+export const Faq: React.FC<FaqProps> = ({ toolName, extraItems = [] }) => {
   const { t, format } = useLocale();
 
   const items = [
+    ...extraItems,
     {
       question: format(t.faqFree, { name: toolName }),
       answer: format(t.faqFreeAnswer, { name: toolName }),

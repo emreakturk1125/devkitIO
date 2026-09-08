@@ -104,7 +104,7 @@ function ToolboxPage() {
 
   const { theme, toggleTheme } = useTheme();
   const { favoriteIds, toggleFavorite, isFavorite } = useFavorites();
-  const { t, toolName, toolDescription, categoryName, categoryDescription, format } = useLocale();
+  const { t, toolName, toolDescription, toolFaq, categoryName, categoryDescription, format } = useLocale();
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -160,6 +160,7 @@ function ToolboxPage() {
           { name, path: toolPath(selectedTool.category, selectedTool.id) },
         ],
         faqItems: [
+          ...(toolFaq(selectedTool.id) || []).map(f => ({ question: f.q, answer: f.a })),
           { question: format(t.faqFree, { name }), answer: format(t.faqFreeAnswer, { name }) },
           { question: t.faqPrivacy, answer: t.faqPrivacyAnswer },
           { question: t.faqInstall, answer: t.faqInstallAnswer },
@@ -211,6 +212,18 @@ function ToolboxPage() {
   useEffect(() => {
     initializeRegistry().then(() => setRegistryReady(true));
   }, []);
+
+  // Support Google Sitelinks Searchbox: open search modal if ?q= is present
+  useEffect(() => {
+    if (!registryReady) return;
+    const urlParams = new URLSearchParams(location.search);
+    const q = urlParams.get('q');
+    if (q) {
+      setSearchOpen(true);
+      // Remove ?q= from URL to keep it clean
+      navigate(location.pathname, { replace: true });
+    }
+  }, [registryReady]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Cloudflare serves directory index.html with a trailing slash on refresh.
   useEffect(() => {
@@ -305,74 +318,71 @@ function ToolboxPage() {
           ) : (
             <>
           {/* Controls Area */}
-          <div className="px-3 py-2 sm:px-4 sm:py-3 lg:px-5 lg:py-4 space-y-2 shrink-0 md:overflow-y-auto">
-            {/* Category & Tool Selectors */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <div>
-                <label className="field-label">{t.category}</label>
-                <CategorySelector
-                  value={selectedCategoryId}
-                  onChange={selectCategory}
-                  categories={categories}
-                />
+          <div className="px-3 py-2 sm:px-4 sm:py-3 lg:px-5 lg:py-3 space-y-2 shrink-0 md:overflow-y-visible z-10">
+            <div className="flex flex-col lg:flex-row lg:items-start gap-3 lg:gap-8">
+              {/* Left Side: Selectors & Options */}
+              <div className="flex flex-1 flex-col gap-3 min-w-0">
+                <div className="flex flex-col gap-2">
+                  <div>
+                    <label className="field-label">{t.category}</label>
+                    <CategorySelector
+                      value={selectedCategoryId}
+                      onChange={selectCategory}
+                      categories={categories}
+                    />
+                  </div>
+                  <div>
+                    <label className="field-label">
+                      {t.tool}
+                      {selectedTool && (
+                        <button
+                          className="ml-2 inline-flex"
+                          onClick={() => toggleFavorite(selectedTool.id)}
+                          title={isFavorite(selectedTool.id) ? t.removeFavorite : t.addFavorite}
+                        >
+                          <Star
+                            size={12}
+                            className={isFavorite(selectedTool.id)
+                              ? 'fill-current text-[var(--color-brand-500)]'
+                              : 'text-[var(--text-tertiary)]'}
+                          />
+                        </button>
+                      )}
+                    </label>
+                    <ToolSelector
+                      value={selectedToolId}
+                      onChange={selectTool}
+                      tools={availableTools}
+                      disabled={!selectedCategoryId}
+                    />
+                  </div>
+                </div>
+
+                {/* Dynamic Options */}
+                {selectedTool?.options && selectedTool.options.length > 0 && (
+                  <div>
+                    <label className="field-label mb-1">{t.options}</label>
+                    <ToolOptions
+                      options={selectedTool.options}
+                      values={toolOptions}
+                      onChange={setOption}
+                    />
+                  </div>
+                )}
               </div>
-              <div>
-                <label className="field-label">
-                  {t.tool}
-                  {selectedTool && (
-                    <button
-                      className="ml-2 inline-flex"
-                      onClick={() => toggleFavorite(selectedTool.id)}
-                      title={isFavorite(selectedTool.id) ? t.removeFavorite : t.addFavorite}
-                    >
-                      <Star
-                        size={12}
-                        className={isFavorite(selectedTool.id)
-                          ? 'fill-current text-[var(--color-brand-500)]'
-                          : 'text-[var(--text-tertiary)]'}
-                      />
-                    </button>
-                  )}
-                </label>
-                <ToolSelector
-                  value={selectedToolId}
-                  onChange={selectTool}
-                  tools={availableTools}
-                  disabled={!selectedCategoryId}
-                />
+
+              {/* Right Side: Tool Details & FAQ */}
+              <div className="flex-1 min-w-0 lg:pt-1">
+                {selectedTool ? (
+                  <ToolSeo
+                    toolId={selectedTool.id}
+                    name={toolName(selectedTool.id, selectedTool.name)}
+                    description={toolDescription(selectedTool.id, selectedTool.description)}
+                    faq={toolFaq(selectedTool.id)}
+                  />
+                ) : null}
               </div>
             </div>
-
-            {selectedTool ? (
-              <ToolSeo
-                toolId={selectedTool.id}
-                name={toolName(selectedTool.id, selectedTool.name)}
-                description={toolDescription(selectedTool.id, selectedTool.description)}
-              />
-            ) : (
-              <section>
-                <h1 className="text-lg font-semibold text-[var(--text-primary)]">
-                  {selectedCategoryId
-                    ? categoryName(
-                        selectedCategoryId,
-                        getCategoryById(selectedCategoryId)?.name ?? selectedCategoryId
-                      )
-                    : t.homeHeading}
-                </h1>
-              </section>
-            )}
-
-            {/* Dynamic Options */}
-            {selectedTool?.options && selectedTool.options.length > 0 && (
-              <div>
-                <label className="field-label mb-1">{t.options}</label>
-                <ToolOptions
-                  options={selectedTool.options}
-                  values={toolOptions}
-                  onChange={setOption}
-                />
-              </div>
-            )}
           </div>
 
           {/* Editor Area */}
@@ -466,3 +476,4 @@ export default function App() {
     </LocaleProvider>
   );
 }
+
