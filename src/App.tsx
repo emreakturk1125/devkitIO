@@ -12,6 +12,8 @@ import DiffView from '@/components/DiffView/DiffView';
 import { ToolSearch } from '@/components/ToolSearch/ToolSearch';
 import { Sidebar } from '@/components/Sidebar/Sidebar';
 import { ToolSeo } from '@/components/ToolSeo/ToolSeo';
+import { CategorySeo } from '@/components/ToolSeo/CategorySeo';
+import { HomeSeo } from '@/components/ToolSeo/HomeSeo';
 import { NotFound } from '@/components/NotFound/NotFound';
 
 import { useToolbox } from '@/hooks/useToolbox';
@@ -380,7 +382,11 @@ function ToolboxPage() {
                     description={toolDescription(selectedTool.id, selectedTool.description)}
                     faq={toolFaq(selectedTool.id)}
                   />
-                ) : null}
+                ) : selectedCategoryId ? (
+                  <CategorySeo categoryId={selectedCategoryId} />
+                ) : (
+                  <HomeSeo />
+                )}
               </div>
             </div>
           </div>
