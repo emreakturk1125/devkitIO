@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Faq } from '@/components/Faq/Faq';
-import { RelatedTools } from './RelatedTools';
+import { ToolAbout } from './ToolAbout';
 import { getToolById } from '@/registry/toolRegistry';
 import { getCategoryById } from '@/registry/categoryRegistry';
 import { useLocale } from '@/hooks/useLocale';
@@ -46,57 +45,17 @@ export const ToolSeo: React.FC<ToolSeoProps> = ({ toolId, name, description, faq
       </h1>
       
       {/* Short Description */}
-      <p className="max-w-3xl min-w-0 text-xs leading-relaxed text-[var(--text-secondary)] mb-3">
+      <p className="max-w-3xl min-w-0 text-xs leading-relaxed text-[var(--text-secondary)] mb-2">
         {description}
       </p>
 
-      {/* Extended Semantic SEO Content */}
-      {tool?.longDescription && (
-        <div className="mb-3">
-          <h2 className="text-xs font-semibold text-[var(--text-primary)] mb-1">What is {name}?</h2>
-          <p className="text-[11px] leading-relaxed text-[var(--text-secondary)]">{tool.longDescription}</p>
-        </div>
-      )}
-
-      {tool?.howToUse && (
-        <div className="mb-3">
-          <h2 className="text-xs font-semibold text-[var(--text-primary)] mb-1">How to use {name}</h2>
-          <p className="text-[11px] leading-relaxed text-[var(--text-secondary)]">{tool.howToUse}</p>
-        </div>
-      )}
-
-      {tool?.features && tool.features.length > 0 && (
-        <div className="mb-3">
-          <h2 className="text-xs font-semibold text-[var(--text-primary)] mb-1">Features</h2>
-          <ul className="list-disc pl-4 text-[11px] leading-relaxed text-[var(--text-secondary)] space-y-0.5">
-            {tool.features.map((feature, idx) => (
-              <li key={idx}>{feature}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {tool?.useCases && tool.useCases.length > 0 && (
-        <div className="mb-3">
-          <h2 className="text-xs font-semibold text-[var(--text-primary)] mb-1">Use Cases</h2>
-          <ul className="list-disc pl-4 text-[11px] leading-relaxed text-[var(--text-secondary)] space-y-0.5">
-            {tool.useCases.map((useCase, idx) => (
-              <li key={idx}>{useCase}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      <Faq 
-        toolName={name} 
-        extraItems={faq?.map(f => ({ question: f.q, answer: f.a }))} 
-      />
-
-      {/* Related Tools */}
-      {tool?.relatedToolIds && (
-        <RelatedTools 
-          relatedToolIds={tool.relatedToolIds} 
-          categoryId={tool.category} 
+      {/* Extended Semantic SEO Content in Collapsible Accordion */}
+      {tool && (
+        <ToolAbout
+          key={tool.id}
+          tool={tool}
+          name={name}
+          faq={faq}
         />
       )}
     </section>

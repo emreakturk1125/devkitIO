@@ -207,6 +207,7 @@ function ToolboxPage() {
     categoryName,
     categoryDescription,
     format,
+    toolFaq,
   ]);
 
   useSeo(seo);
@@ -324,7 +325,7 @@ function ToolboxPage() {
           <div className="px-3 py-2 sm:px-4 sm:py-3 lg:px-5 lg:py-3 space-y-2 shrink-0 md:overflow-y-visible z-10">
             <div className="flex flex-col lg:flex-row lg:items-start gap-3 lg:gap-8">
               {/* Left Side: Selectors & Options */}
-              <div className="flex flex-1 flex-col gap-3 min-w-0">
+              <div className={`flex flex-1 flex-col gap-3 min-w-0 ${selectedTool ? 'order-2 lg:order-1' : ''}`}>
                 <div className="flex flex-col gap-2">
                   <div>
                     <label className="field-label">{t.category}</label>
@@ -375,7 +376,7 @@ function ToolboxPage() {
               </div>
 
               {/* Right Side: Tool Details & FAQ */}
-              <div className="flex-1 min-w-0 lg:pt-1">
+              <div className={`flex-1 min-w-0 lg:pt-1 ${selectedTool ? 'order-1 lg:order-2' : ''}`}>
                 {selectedTool ? (
                   <ToolSeo
                     toolId={selectedTool.id}
