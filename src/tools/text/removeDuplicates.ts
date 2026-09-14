@@ -9,6 +9,7 @@ const tool: ToolDefinition = {
   inputType: 'text',
   outputType: 'text',
   autoTransform: true,
+  relatedToolIds: ['sortLines', 'removeEmptyLines'],
   options: [
     { id: 'caseSensitive', label: 'Case Sensitive', type: 'boolean', defaultValue: true },
     { id: 'trim', label: 'Trim whitespace', type: 'boolean', defaultValue: true },

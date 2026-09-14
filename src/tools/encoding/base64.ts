@@ -9,6 +9,7 @@ const tool: ToolDefinition = {
   inputType: 'text',
   outputType: 'text',
   autoTransform: true,
+  relatedToolIds: ['jwtDecoder'],
   longDescription: 'The Base64 Encoder/Decoder is a secure tool to convert text into Base64 format and vice versa. It properly handles UTF-8 characters and emojis, making it safe for all modern web encoding needs.',
   howToUse: 'Type or paste your text into the input field. Select either "Encode" or "Decode" from the options panel. The tool will automatically transform your text instantly. For decoding, ensure the input is a valid Base64 string.',
   features: [

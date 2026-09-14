@@ -9,6 +9,7 @@ const tool: ToolDefinition = {
   inputType: 'code',
   outputType: 'code',
   autoTransform: false,
+  relatedToolIds: ['javascriptFormatter', 'jsonToTypeScript'],
   options: [
     {
       id: 'indentation',

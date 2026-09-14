@@ -178,6 +178,7 @@ const tool: ToolDefinition = {
   inputType: 'code',
   outputType: 'json',
   autoTransform: true,
+  relatedToolIds: ['jsonToClass', 'jsonFormatter'],
   options: [
     {
       id: 'indentation',

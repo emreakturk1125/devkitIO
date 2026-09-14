@@ -249,6 +249,21 @@ const tool: ToolDefinition = {
   inputType: 'json',
   outputType: 'code',
   autoTransform: true,
+  relatedToolIds: ['classToJson', 'jsonToTypeScript', 'jsonFormatter'],
+  longDescription: 'JSON to Class automatically analyzes JSON payloads and generates strongly-typed class and interface models for C#, TypeScript, and Java. It infers primitive types, handles nested structures, and resolves list collections gracefully.',
+  howToUse: 'Paste a valid JSON object or array into the input editor. Select your target programming language (C#, TypeScript, or Java), specify your root class name, and configure indentation preferences. The generated model code will appear instantly in the output editor.',
+  features: [
+    'Multi-language output: C# POCOs, TypeScript interfaces/types, and Java POJOs',
+    'Automatic type inference for numbers, booleans, strings, dates, and nested objects',
+    'Recursive generation for deeply nested object graphs and array collections',
+    'Configurable root model name and indentation styling',
+    'Entirely client-side: sensitive data payloads never leave your computer'
+  ],
+  useCases: [
+    'Scaffolding API response models and DTOs in backend services',
+    'Creating TypeScript type definitions from third-party REST API responses',
+    'Converting sample configuration JSON into Java or C# entity classes'
+  ],
   options: [
     {
       id: 'language',

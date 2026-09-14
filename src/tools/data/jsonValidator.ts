@@ -31,6 +31,7 @@ const tool: ToolDefinition = {
   inputType: 'json',
   outputType: 'text',
   autoTransform: true,
+  relatedToolIds: ['jsonFormatter', 'jsonMinifier'],
   detect: (input: string) => {
     const trimmed = input.trim();
     return trimmed.startsWith('{') || trimmed.startsWith('[');

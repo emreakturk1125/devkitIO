@@ -9,6 +9,7 @@ const tool: ToolDefinition = {
   inputType: 'text',
   outputType: 'text',
   autoTransform: true,
+  relatedToolIds: ['commaToColumn', 'columnToQuoted', 'columnToSqlIn'],
   options: [
     { id: 'separator', label: 'Separator', type: 'text', defaultValue: ',' },
     { id: 'trim', label: 'Trim whitespace', type: 'boolean', defaultValue: true },

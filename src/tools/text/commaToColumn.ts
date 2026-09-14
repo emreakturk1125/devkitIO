@@ -9,6 +9,7 @@ const tool: ToolDefinition = {
   inputType: 'text',
   outputType: 'text',
   autoTransform: true,
+  relatedToolIds: ['columnToComma'],
   options: [
     { id: 'trim', label: 'Trim whitespace', type: 'boolean', defaultValue: true },
     { id: 'removeEmptyLines', label: 'Remove Empty Lines', type: 'boolean', defaultValue: true },

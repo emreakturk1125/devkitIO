@@ -10,6 +10,7 @@ const tool: ToolDefinition = {
   outputType: 'text',
   autoTransform: false,
   requiresInput: false,
+  relatedToolIds: ['guidGenerator', 'randomStringGenerator'],
   options: [
     { id: 'count', label: 'Count', type: 'number', defaultValue: 1 },
     {

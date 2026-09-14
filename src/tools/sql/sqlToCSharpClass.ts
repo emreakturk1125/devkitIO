@@ -151,6 +151,7 @@ const tool: ToolDefinition = {
   inputType: 'sql',
   outputType: 'code',
   autoTransform: true,
+  relatedToolIds: ['sqlFormatter', 'jsonToClass'],
   options: [
     {
       id: 'className',

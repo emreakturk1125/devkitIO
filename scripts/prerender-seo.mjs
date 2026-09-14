@@ -90,6 +90,13 @@ function extractTools() {
     const name = chunk.match(/\bname:\s*'([^']+)'/)?.[1];
     const description = chunk.match(/\bdescription:\s*'([^']+)'/)?.[1];
     const category = chunk.match(/\bcategory:\s*'([^']+)'/)?.[1];
+    const relatedMatch = text.match(/relatedToolIds:\s*\[([^\]]*)\]/);
+    const relatedToolIds = relatedMatch
+      ? relatedMatch[1]
+          .split(',')
+          .map((s) => s.trim().replace(/^['"]|['"]$/g, ''))
+          .filter(Boolean)
+      : [];
     if (id && category && name) {
       const localized = i18n.get(id);
       tools.push({
@@ -98,6 +105,7 @@ function extractTools() {
         name: localized?.name ?? name,
         description: localized?.description ?? description ?? name,
         faq: localized?.faq,
+        relatedToolIds,
       });
     }
   }
@@ -241,7 +249,7 @@ function injectPageMeta(html, { title, description, path, name, breadcrumbs, noi
   if (path !== '/') {
     next = next.replace(
       /(<script type="application\/ld\+json">\s*\{[^}]*"@type":\s*"WebApplication"[\s\S]*?)<\/script>/,
-      (match, prefix) => {
+      (match, _prefix) => {
         try {
           const jsonStr = match.replace(/<script type="application\/ld\+json">\s*/, '').replace(/<\/script>$/, '');
           const data = JSON.parse(jsonStr);
@@ -326,6 +334,7 @@ const tools = extractTools();
 if (tools.length === 0) {
   throw new Error('SEO prerender: no tools discovered under src/tools');
 }
+const toolsMap = new Map(tools.map((t) => [t.id, t]));
 
 const faqCopy = extractI18nFaqCopy();
 const categories = [...new Set(tools.map((t) => t.category))].sort();
@@ -431,6 +440,17 @@ for (const category of categories) {
     const faqInstallQ = escapeHtml(faqCopy.faqInstall ?? 'Do I need to install anything?');
     const faqInstallA = escapeHtml(faqCopy.faqInstallAnswer ?? 'No. Open the page, paste or type your input, and get the result.');
     toolNoscriptExtra += `<dt>${faqFreeQ}</dt><dd>${faqFreeA}</dd><dt>${faqPrivacyQ}</dt><dd>${faqPrivacyA}</dd><dt>${faqInstallQ}</dt><dd>${faqInstallA}</dd></dl></section>`;
+
+    if (tool.relatedToolIds && tool.relatedToolIds.length > 0) {
+      const relatedLinks = tool.relatedToolIds
+        .map((relId) => toolsMap.get(relId))
+        .filter(Boolean)
+        .map((rel) => `<li><a href="/tools/${rel.category}/${rel.id}">${escapeHtml(rel.name)}</a> — ${escapeHtml(rel.description)}</li>`)
+        .join('');
+      if (relatedLinks) {
+        toolNoscriptExtra += `<nav aria-label="Related tools"><h2>Related Tools</h2><ul>${relatedLinks}</ul></nav>`;
+      }
+    }
 
     writeFile(
       join(root, `dist/tools/${tool.category}/${tool.id}/index.html`),

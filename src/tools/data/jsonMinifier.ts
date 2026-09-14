@@ -9,6 +9,7 @@ const tool: ToolDefinition = {
   inputType: 'json',
   outputType: 'json',
   autoTransform: true,
+  relatedToolIds: ['jsonFormatter', 'jsonValidator'],
   detect: (input: string) => {
     try {
       JSON.parse(input);

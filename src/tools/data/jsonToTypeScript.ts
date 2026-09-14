@@ -135,6 +135,7 @@ const tool: ToolDefinition = {
   inputType: 'json',
   outputType: 'code',
   autoTransform: true,
+  relatedToolIds: ['jsonToClass', 'jsonFormatter', 'typescriptFormatter'],
   options: [
     {
       id: 'rootName',

@@ -52,6 +52,21 @@ const tool: ToolDefinition = {
   inputType: 'text',
   outputType: 'code',
   autoTransform: true,
+  relatedToolIds: ['base64', 'jsonFormatter'],
+  longDescription: 'JWT Decoder is an offline-capable browser utility that unpacks JSON Web Tokens to display their header and payload in human-readable JSON format. It automatically parses standard timestamp claims such as expiration and issued-at times into ISO UTC strings.',
+  howToUse: 'Paste an encoded JWT string into the input panel. The tool immediately decodes the header and payload sections, highlights decoded JSON structures, and lists human-readable date translations for standard Unix timestamp claims.',
+  features: [
+    'Instant parsing of JWT Header and Payload sections',
+    'Automatic translation of Unix epoch claims (exp, iat, nbf, auth_time) to ISO dates',
+    'Syntax-highlighted, formatted JSON view for nested claims',
+    'Handles URL-safe Base64 encoding and padding variations',
+    '100% private and client-side: secret tokens and credentials are never transmitted over the network'
+  ],
+  useCases: [
+    'Verifying token expiration times and audience claims during auth debugging',
+    'Inspecting custom role, permission, and user claims in OAuth2 / OIDC tokens',
+    'Checking token algorithm and key IDs (kid) without requiring server-side tools'
+  ],
   detect: (input: string) => {
     const trimmed = input.trim();
     return /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]*$/.test(trimmed);

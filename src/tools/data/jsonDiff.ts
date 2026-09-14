@@ -82,6 +82,7 @@ const tool: ToolDefinition = {
   inputType: 'dual',
   outputType: 'text',
   autoTransform: true,
+  relatedToolIds: ['diffCompare', 'jsonFormatter'],
   process: (input: string, options?: Record<string, unknown>) => {
     const secondaryInput = (options?.secondaryInput as string) || '';
     if (!input.trim() && !secondaryInput.trim()) return '';

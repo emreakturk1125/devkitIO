@@ -9,7 +9,7 @@ const tool: ToolDefinition = {
   inputType: 'sql',
   outputType: 'sql',
   autoTransform: false,
-  relatedToolIds: ['sqlInGenerator'],
+  relatedToolIds: ['sqlInGenerator', 'sqlToCSharpClass'],
   longDescription: 'SQL Formatter is a powerful browser-based utility that beautifies disorganized SQL queries into standardized, readable code. It supports multiple dialects including Standard SQL, T-SQL, PostgreSQL, and MySQL.',
   howToUse: 'Paste your raw SQL query into the left editor. Choose your specific SQL dialect, preferred keyword casing (e.g., uppercase keywords), and tab width from the options panel. Click the Transform button to generate the formatted SQL.',
   features: [
