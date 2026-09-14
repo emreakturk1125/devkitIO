@@ -33,6 +33,14 @@ export interface ToolDefinition {
   autoTransform?: boolean;
   /** When false, the tool generates from options only — input panel is inactive. Default: true. */
   requiresInput?: boolean;
+  
+  // SEO & Content Fields
+  relatedToolIds?: string[];
+  longDescription?: string;
+  howToUse?: string;
+  features?: string[];
+  useCases?: string[];
+  faq?: { q: string; a: string }[];
 }
 
 export interface ToolCategory {

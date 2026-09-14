@@ -9,6 +9,32 @@ const tool: ToolDefinition = {
   inputType: 'sql',
   outputType: 'sql',
   autoTransform: false,
+  relatedToolIds: ['sqlInGenerator'],
+  longDescription: 'SQL Formatter is a powerful browser-based utility that beautifies disorganized SQL queries into standardized, readable code. It supports multiple dialects including Standard SQL, T-SQL, PostgreSQL, and MySQL.',
+  howToUse: 'Paste your raw SQL query into the left editor. Choose your specific SQL dialect, preferred keyword casing (e.g., uppercase keywords), and tab width from the options panel. Click the Transform button to generate the formatted SQL.',
+  features: [
+    'Supports 6 major SQL dialects (Standard, T-SQL, Postgres, MySQL, SQLite, PL/SQL)',
+    'Configurable keyword casing (Uppercase, Lowercase, Preserve)',
+    'Adjustable tab width for indentation',
+    'Syntax highlighting for clear code structure',
+    'Processes data entirely in the browser for complete privacy'
+  ],
+  useCases: [
+    'Formatting single-line or obfuscated SQL queries from application logs',
+    'Standardizing SQL formatting before code reviews or PRs',
+    'Making complex JOINs and nested subqueries easier to read',
+    'Converting keywords to a consistent uppercase or lowercase style'
+  ],
+  faq: [
+    {
+      q: 'Which SQL dialects are supported?',
+      a: 'The formatter supports Standard SQL, T-SQL (SQL Server), PostgreSQL, MySQL, SQLite, and PL/SQL. Choosing the correct dialect ensures accurate formatting for dialect-specific keywords and syntax.'
+    },
+    {
+      q: 'Can I force SQL keywords to be uppercase?',
+      a: 'Yes, you can select "Uppercase" under the Keyword Case option. This will automatically convert all recognized SQL keywords (like SELECT, FROM, WHERE) to uppercase.'
+    }
+  ],
   options: [
     {
       id: 'dialect',

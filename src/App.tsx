@@ -8,7 +8,8 @@ import { ToolSelector } from '@/components/ToolSelector/ToolSelector';
 import { ToolOptions } from '@/components/ToolOptions/ToolOptions';
 import InputPanel from '@/components/InputPanel/InputPanel';
 import OutputPanel from '@/components/OutputPanel/OutputPanel';
-import DiffView from '@/components/DiffView/DiffView';
+import { lazy, Suspense } from 'react';
+const DiffView = lazy(() => import('@/components/DiffView/DiffView'));
 import { ToolSearch } from '@/components/ToolSearch/ToolSearch';
 import { Sidebar } from '@/components/Sidebar/Sidebar';
 import { ToolSeo } from '@/components/ToolSeo/ToolSeo';
@@ -396,15 +397,17 @@ function ToolboxPage() {
             {isDualInput ? (
               /* Dual input for Diff tool — inline diff highlighting, no separate output */
               <div className="flex-1 min-h-[200px] max-md:min-h-[28rem] flex flex-col">
-                <DiffView
-                  originalValue={input}
-                  modifiedValue={secondaryInput}
-                  onOriginalChange={setInput}
-                  onModifiedChange={setSecondaryInput}
-                  theme={theme}
-                  diffType={(toolOptions.diffType as 'lines' | 'words' | 'chars') ?? 'lines'}
-                  ignoreWhitespace={toolOptions.ignoreWhitespace === true}
-                />
+                <Suspense fallback={<div className="flex-1 flex items-center justify-center text-[var(--text-secondary)] text-sm">Loading diff engine...</div>}>
+                  <DiffView
+                    originalValue={input}
+                    modifiedValue={secondaryInput}
+                    onOriginalChange={setInput}
+                    onModifiedChange={setSecondaryInput}
+                    theme={theme}
+                    diffType={(toolOptions.diffType as 'lines' | 'words' | 'chars') ?? 'lines'}
+                    ignoreWhitespace={toolOptions.ignoreWhitespace === true}
+                  />
+                </Suspense>
               </div>
             ) : (
               /* Standard single-input layout */

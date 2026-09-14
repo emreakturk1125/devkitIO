@@ -9,6 +9,32 @@ const tool: ToolDefinition = {
   inputType: 'json',
   outputType: 'json',
   autoTransform: true,
+  relatedToolIds: ['jsonMinifier', 'jsonToClass', 'xmlFormatter'],
+  longDescription: 'JSON Formatter is a secure, client-side tool that takes messy, unformatted, or minified JSON data and converts it into a readable, beautifully indented structure. It helps developers quickly inspect and debug API responses or configuration files.',
+  howToUse: 'Simply paste your JSON into the input editor. The tool will automatically format it. You can adjust the indentation level (2 spaces, 4 spaces, or tabs) and optionally sort the object keys alphabetically using the options panel.',
+  features: [
+    'Instant, automatic formatting as you type or paste',
+    'Customizable indentation (spaces or tabs)',
+    'Alphabetical key sorting for easier visual comparison',
+    'Syntax highlighting and error detection for invalid JSON',
+    '100% secure: runs entirely in your browser without uploading data'
+  ],
+  useCases: [
+    'Debugging complex JSON payloads from API endpoints',
+    'Beautifying minified JSON code for readability',
+    'Standardizing JSON configuration files before committing to version control',
+    'Finding syntax errors in broken JSON strings'
+  ],
+  faq: [
+    {
+      q: 'What is a JSON Formatter?',
+      a: 'A JSON Formatter is a tool that takes unformatted or minified JSON text and adds proper indentation, line breaks, and spacing, making it easy for humans to read and understand.'
+    },
+    {
+      q: 'How do I format minified JSON?',
+      a: 'Just paste the minified JSON string into the input area. Our tool automatically detects and formats it into a readable structure instantly.'
+    }
+  ],
   options: [
     {
       id: 'indentation',
