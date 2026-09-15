@@ -326,21 +326,22 @@ function ToolboxPage() {
             <div className="flex flex-col lg:flex-row lg:items-start gap-3 lg:gap-8">
               {/* Left Side: Selectors & Options */}
               <div className={`flex flex-1 flex-col gap-3 min-w-0 ${selectedTool ? 'order-2 lg:order-1' : ''}`}>
-                <div className="flex flex-col gap-2">
-                  <div>
-                    <label className="field-label">{t.category}</label>
+                <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+                  <div className="min-w-0">
+                    <label className="field-label flex items-center h-5">{t.category}</label>
                     <CategorySelector
                       value={selectedCategoryId}
                       onChange={selectCategory}
                       categories={categories}
                     />
                   </div>
-                  <div>
-                    <label className="field-label">
-                      {t.tool}
+                  <div className="min-w-0">
+                    <label className="field-label flex items-center h-5 gap-1.5">
+                      <span>{t.tool}</span>
                       {selectedTool && (
                         <button
-                          className="ml-2 inline-flex"
+                          type="button"
+                          className="inline-flex items-center text-[var(--text-tertiary)] hover:text-[var(--color-brand-500)] transition-colors"
                           onClick={() => toggleFavorite(selectedTool.id)}
                           title={isFavorite(selectedTool.id) ? t.removeFavorite : t.addFavorite}
                         >
