@@ -22,6 +22,7 @@ const tool: ToolDefinition = {
   inputType: 'text',
   outputType: 'text',
   autoTransform: true,
+  relatedToolIds: ['characterCounter', 'caseConverter'],
   options: [
     {
       id: 'mode',

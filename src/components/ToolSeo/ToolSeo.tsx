@@ -1,19 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ToolAbout } from './ToolAbout';
+import { BookOpen } from 'lucide-react';
 import { getToolById } from '@/registry/toolRegistry';
 import { getCategoryById } from '@/registry/categoryRegistry';
 import { useLocale } from '@/hooks/useLocale';
 import { SITE_NAME } from '@/seo/site';
+import { DOCS_SECTION_ID } from './ToolDocs';
 
 interface ToolSeoProps {
   toolId: string;
   name: string;
   description: string;
-  faq?: { q: string; a: string }[];
 }
 
-export const ToolSeo: React.FC<ToolSeoProps> = ({ toolId, name, description, faq }) => {
+export const ToolSeo: React.FC<ToolSeoProps> = ({ toolId, name, description }) => {
   const tool = getToolById(toolId);
   const category = tool ? getCategoryById(tool.category) : undefined;
   const { categoryName } = useLocale();
@@ -45,19 +45,22 @@ export const ToolSeo: React.FC<ToolSeoProps> = ({ toolId, name, description, faq
       </h1>
       
       {/* Short Description */}
-      <p className="max-w-3xl min-w-0 text-xs leading-relaxed text-[var(--text-secondary)] mb-2">
+      <p className="max-w-3xl min-w-0 text-xs leading-relaxed text-[var(--text-secondary)] mb-1.5">
         {description}
       </p>
 
-      {/* Extended Semantic SEO Content in Collapsible Accordion */}
-      {tool && (
-        <ToolAbout
-          key={tool.id}
-          tool={tool}
-          name={name}
-          faq={faq}
-        />
-      )}
+      {/* Jump to the below-the-fold guide (keeps the editor area full size) */}
+      <a
+        href={`#${DOCS_SECTION_ID}`}
+        onClick={(e) => {
+          e.preventDefault();
+          document.getElementById(DOCS_SECTION_ID)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }}
+        className="inline-flex items-center gap-1 text-[11px] font-medium text-[var(--color-brand-400)] hover:text-[var(--color-brand-300)] transition-colors"
+      >
+        <BookOpen size={12} aria-hidden="true" />
+        Guide, examples &amp; FAQ ↓
+      </a>
     </section>
   );
 };

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useLayoutEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import { Header } from '@/components/Layout/Header';
@@ -13,6 +13,7 @@ const DiffView = lazy(() => import('@/components/DiffView/DiffView'));
 import { ToolSearch } from '@/components/ToolSearch/ToolSearch';
 import { Sidebar } from '@/components/Sidebar/Sidebar';
 import { ToolSeo } from '@/components/ToolSeo/ToolSeo';
+import { ToolDocs } from '@/components/ToolSeo/ToolDocs';
 import { CategorySeo } from '@/components/ToolSeo/CategorySeo';
 import { HomeSeo } from '@/components/ToolSeo/HomeSeo';
 import { NotFound } from '@/components/NotFound/NotFound';
@@ -23,7 +24,7 @@ import { useFavorites } from '@/hooks/useFavorites';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useSeo } from '@/hooks/useSeo';
 import { copyToClipboard } from '@/services/clipboard/clipboard';
-import { getToolById, getToolsByCategory, initializeRegistry } from '@/registry/toolRegistry';
+import { getToolById, getToolsByCategory } from '@/registry/toolRegistry';
 import { getAllCategories, getCategoryById } from '@/registry/categoryRegistry';
 import {
   BASE_DESCRIPTION,
@@ -36,6 +37,7 @@ import {
   toolPageTitle,
   toolPath,
 } from '@/seo/site';
+import { getToolContent } from '@/seo/toolContent';
 
 import type { EditorLanguage } from '@/components/Editor/CodeEditor';
 import { Play, Star } from 'lucide-react';
@@ -111,7 +113,11 @@ function ToolboxPage() {
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [registryReady, setRegistryReady] = useState(false);
+  const registryReady = true;
+
+  useLayoutEffect(() => {
+    document.getElementById('root')?.classList.add('is-mounted');
+  }, []);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -149,25 +155,35 @@ function ToolboxPage() {
     if (selectedTool) {
       const name = toolName(selectedTool.id, selectedTool.name);
       const desc = toolDescription(selectedTool.id, selectedTool.description);
+      const content = getToolContent(selectedTool.id);
       const catName = categoryName(
         selectedTool.category,
         getCategoryById(selectedTool.category)?.name ?? selectedTool.category
       );
       return {
-        title: toolPageTitle(name),
-        description: toolPageDescription(desc),
+        title: toolPageTitle(name, selectedTool.id),
+        description: toolPageDescription(desc, selectedTool.id),
+        schemaName: name,
+        featureList: content?.features,
+        applicationSubCategory: catName,
         path: toolPath(selectedTool.category, selectedTool.id),
         breadcrumbs: [
           { name: SITE_NAME, path: '/' },
           { name: catName, path: categoryPath(selectedTool.category) },
           { name, path: toolPath(selectedTool.category, selectedTool.id) },
         ],
-        faqItems: [
-          ...(toolFaq(selectedTool.id) || []).map(f => ({ question: f.q, answer: f.a })),
-          { question: format(t.faqFree, { name }), answer: format(t.faqFreeAnswer, { name }) },
-          { question: t.faqPrivacy, answer: t.faqPrivacyAnswer },
-          { question: t.faqInstall, answer: t.faqInstallAnswer },
-        ],
+        faqItems: (() => {
+          const specific = (toolFaq(selectedTool.id) || []).map(f => ({ question: f.q, answer: f.a }));
+          if (specific.length >= 5) return specific.slice(0, 7);
+          return [
+            ...specific,
+            { question: format(t.faqFree, { name }), answer: format(t.faqFreeAnswer, { name }) },
+            { question: t.faqPrivacy, answer: t.faqPrivacyAnswer },
+            { question: t.faqInstall, answer: t.faqInstallAnswer },
+          ].slice(0, 7);
+        })(),
+        toolName: name,
+        howToSteps: content?.howToSteps,
       };
     }
     if (selectedCategoryId) {
@@ -212,11 +228,6 @@ function ToolboxPage() {
 
   useSeo(seo);
 
-  // Initialize registry on mount
-  useEffect(() => {
-    initializeRegistry().then(() => setRegistryReady(true));
-  }, []);
-
   // Support Google Sitelinks Searchbox: open search modal if ?q= is present
   useEffect(() => {
     if (!registryReady) return;
@@ -236,13 +247,13 @@ function ToolboxPage() {
     }
   }, [location.pathname, location.search, navigate]);
 
-  // Sync URL params to state on load
+  // Sync URL params to state. Store the registry id, never the kebab-case slug.
   useEffect(() => {
     if (!registryReady || isNotFound) return;
     if (params.category && params.toolId) {
       const tool = getToolById(params.toolId);
       if (tool && tool.category === params.category) {
-        selectCategoryAndTool(params.category, params.toolId);
+        selectCategoryAndTool(tool.category, tool.id);
       }
     } else if (params.category) {
       const category = getCategoryById(params.category);
@@ -252,16 +263,34 @@ function ToolboxPage() {
     }
   }, [registryReady, params.category, params.toolId, isNotFound]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Sync state to URL
+  // Push selector changes to the URL. Ignore renders where only the URL changed,
+  // so a sidebar/header navigation is not immediately overwritten by stale state.
+  const appliedSelection = useRef({ category: selectedCategoryId, tool: selectedToolId });
   useEffect(() => {
-    if (!registryReady || isNotFound) return;
-    if (selectedCategoryId && selectedToolId) {
-      navigate(`/tools/${selectedCategoryId}/${selectedToolId}`, { replace: true });
-    } else if (selectedCategoryId) {
-      navigate(`/tools/${selectedCategoryId}`, { replace: true });
-    } else if (location.pathname !== '/') {
-      navigate('/', { replace: true });
+    if (!registryReady || isNotFound) {
+      appliedSelection.current = { category: selectedCategoryId, tool: selectedToolId };
+      return;
     }
+
+    const selectionChanged =
+      appliedSelection.current.category !== selectedCategoryId ||
+      appliedSelection.current.tool !== selectedToolId;
+    appliedSelection.current = { category: selectedCategoryId, tool: selectedToolId };
+    if (!selectionChanged) return;
+
+    const current = normalizePath(location.pathname);
+    if (selectedCategoryId && selectedToolId) {
+      const tool = getToolById(selectedToolId);
+      const next = toolPath(tool?.category ?? selectedCategoryId, tool?.id ?? selectedToolId);
+      if (current !== next) navigate(next, { replace: true });
+      return;
+    }
+    if (selectedCategoryId) {
+      const next = categoryPath(selectedCategoryId);
+      if (current !== next) navigate(next, { replace: true });
+      return;
+    }
+    if (current !== '/') navigate('/', { replace: true });
   }, [selectedCategoryId, selectedToolId, registryReady, navigate, isNotFound, location.pathname]);
 
   // Keyboard shortcuts
@@ -286,14 +315,6 @@ function ToolboxPage() {
       ? 'typescript'
       : getEditorLanguage(selectedTool?.outputType ?? selectedTool?.inputType);
 
-  if (!registryReady) {
-    return (
-      <div className="flex items-center justify-center h-dvh bg-[var(--bg-app)]">
-        <div className="text-[var(--text-secondary)] text-sm">{t.loadingTools}</div>
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col h-dvh min-w-0 overflow-x-hidden bg-[var(--bg-app)]">
       {/* Header */}
@@ -315,8 +336,8 @@ function ToolboxPage() {
           onToggleTheme={toggleTheme}
         />
 
-        {/* Main Content */}
-        <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto md:overflow-hidden" aria-label="Developer tool workspace">
+        {/* Main Content — scrolls as one page: workspace (above the fold) + docs + footer */}
+        <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto" aria-label="Developer tool workspace">
           {isNotFound ? (
             <NotFound />
           ) : (
@@ -383,7 +404,6 @@ function ToolboxPage() {
                     toolId={selectedTool.id}
                     name={toolName(selectedTool.id, selectedTool.name)}
                     description={toolDescription(selectedTool.id, selectedTool.description)}
-                    faq={toolFaq(selectedTool.id)}
                   />
                 ) : selectedCategoryId ? (
                   <CategorySeo categoryId={selectedCategoryId} />
@@ -394,8 +414,8 @@ function ToolboxPage() {
             </div>
           </div>
 
-          {/* Editor Area */}
-          <div className="flex-1 min-h-0 max-md:min-h-[32rem] p-3 sm:p-4 lg:p-5 pt-0 flex flex-col gap-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+          {/* Editor Area — fixed, viewport-based height so long docs below never shrink it */}
+          <div className="shrink-0 md:h-[clamp(30rem,calc(100dvh-13rem),56rem)] max-md:min-h-[32rem] p-3 sm:p-4 lg:p-5 pt-0 flex flex-col gap-3">
             {isDualInput ? (
               /* Dual input for Diff tool — inline diff highlighting, no separate output */
               <div className="flex-1 min-h-[200px] max-md:min-h-[28rem] flex flex-col">
@@ -455,12 +475,22 @@ function ToolboxPage() {
               </div>
             )}
           </div>
+
+          {/* Below the fold: long-form guide, examples, FAQ, related tools */}
+          {selectedTool && (
+            <ToolDocs
+              key={selectedTool.id}
+              tool={selectedTool}
+              name={toolName(selectedTool.id, selectedTool.name)}
+              faq={toolFaq(selectedTool.id)}
+            />
+          )}
             </>
           )}
+
+          <Footer />
         </main>
       </div>
-
-      <Footer />
 
       {/* Tool Search Modal */}
       <ToolSearch

@@ -1,5 +1,6 @@
 import type { Messages } from './types';
 import { en } from './en';
+import { extraToolFaqs } from '@/seo/extraToolFaqs';
 
 export type { Messages, ToolLocale } from './types';
 export { en } from './en';
@@ -17,7 +18,8 @@ export function resolveToolDescription(toolId: string, fallback: string): string
 }
 
 export function resolveToolFaq(toolId: string): { q: string; a: string }[] | undefined {
-  return en.tools[toolId]?.faq;
+  const merged = [...(en.tools[toolId]?.faq ?? []), ...(extraToolFaqs[toolId] ?? [])];
+  return merged.length > 0 ? merged.slice(0, 7) : undefined;
 }
 
 export function resolveCategoryName(categoryId: string, fallback: string): string {

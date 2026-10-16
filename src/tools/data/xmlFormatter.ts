@@ -131,6 +131,7 @@ const tool: ToolDefinition = {
   inputType: 'xml',
   outputType: 'xml',
   autoTransform: true,
+  relatedToolIds: ['jsonToXml', 'jsonFormatter'],
   options: [
     {
       id: 'indentation',

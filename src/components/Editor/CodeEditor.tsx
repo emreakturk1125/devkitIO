@@ -1,16 +1,5 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
-import { tokyoNight } from '@uiw/codemirror-theme-tokyo-night';
-import { githubLight } from '@uiw/codemirror-theme-github';
-import { javascript } from '@codemirror/lang-javascript';
-import { json } from '@codemirror/lang-json';
-import { sql } from '@codemirror/lang-sql';
-import { html } from '@codemirror/lang-html';
-import { css } from '@codemirror/lang-css';
-import { xml } from '@codemirror/lang-xml';
-import { markdown } from '@codemirror/lang-markdown';
-import { python } from '@codemirror/lang-python';
-import { java } from '@codemirror/lang-java';
 import type { Extension } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
 
@@ -39,32 +28,18 @@ interface CodeEditorProps {
   minHeight?: string;
 }
 
-function getLanguageExtension(lang: EditorLanguage): Extension | null {
-  switch (lang) {
-    case 'javascript':
-      return javascript({ jsx: true });
-    case 'typescript':
-      return javascript({ jsx: true, typescript: true });
-    case 'json':
-      return json();
-    case 'sql':
-      return sql();
-    case 'html':
-      return html();
-    case 'css':
-      return css();
-    case 'xml':
-      return xml();
-    case 'markdown':
-      return markdown();
-    case 'python':
-      return python();
-    case 'java':
-      return java();
-    default:
-      return null;
-  }
-}
+const languageLoaders: Partial<Record<EditorLanguage, () => Promise<Extension>>> = {
+  javascript: () => import('@codemirror/lang-javascript').then((mod) => mod.javascript({ jsx: true })),
+  typescript: () => import('@codemirror/lang-javascript').then((mod) => mod.javascript({ jsx: true, typescript: true })),
+  json: () => import('@codemirror/lang-json').then((mod) => mod.json()),
+  sql: () => import('@codemirror/lang-sql').then((mod) => mod.sql()),
+  html: () => import('@codemirror/lang-html').then((mod) => mod.html()),
+  css: () => import('@codemirror/lang-css').then((mod) => mod.css()),
+  xml: () => import('@codemirror/lang-xml').then((mod) => mod.xml()),
+  markdown: () => import('@codemirror/lang-markdown').then((mod) => mod.markdown()),
+  python: () => import('@codemirror/lang-python').then((mod) => mod.python()),
+  java: () => import('@codemirror/lang-java').then((mod) => mod.java()),
+};
 
 const wordWrapExtension = EditorView.lineWrapping;
 
@@ -78,14 +53,44 @@ export default function CodeEditor({
   height = '100%',
   minHeight = '0',
 }: CodeEditorProps) {
-  const extensions = useMemo(() => {
-    const exts: Extension[] = [wordWrapExtension];
-    const langExt = getLanguageExtension(language);
-    if (langExt) exts.push(langExt);
-    return exts;
+  const [langExt, setLangExt] = useState<Extension | null>(null);
+  const [editorTheme, setEditorTheme] = useState<Extension | undefined>(undefined);
+
+  useEffect(() => {
+    const load = languageLoaders[language];
+    if (!load) {
+      setLangExt(null);
+      return;
+    }
+    let cancelled = false;
+    load().then((ext) => {
+      if (!cancelled) setLangExt(ext);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [language]);
 
-  const editorTheme = theme === 'dark' ? tokyoNight : githubLight;
+  useEffect(() => {
+    let cancelled = false;
+    const apply = (ext: Extension) => {
+      if (!cancelled) setEditorTheme(ext);
+    };
+    if (theme === 'dark') {
+      import('@uiw/codemirror-theme-tokyo-night').then((mod) => apply(mod.tokyoNight));
+    } else {
+      import('@uiw/codemirror-theme-github').then((mod) => apply(mod.githubLight));
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, [theme]);
+
+  const extensions = useMemo(() => {
+    const exts: Extension[] = [wordWrapExtension];
+    if (langExt) exts.push(langExt);
+    return exts;
+  }, [langExt]);
 
   return (
     <CodeMirror

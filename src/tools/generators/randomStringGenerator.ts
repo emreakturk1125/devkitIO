@@ -35,6 +35,7 @@ const tool: ToolDefinition = {
   inputType: 'text',
   outputType: 'text',
   autoTransform: false,
+  relatedToolIds: ['passwordGenerator', 'guidGenerator'],
   requiresInput: false,
   options: [
     { id: 'count', label: 'Count', type: 'number', defaultValue: 1 },

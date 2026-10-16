@@ -1,6 +1,7 @@
 import React from 'react';
 import type { ToolDefinition } from '@/types/tool';
 import { useLocale } from '@/hooks/useLocale';
+import { toolIdFromSlug } from '@/seo/site';
 
 interface ToolSelectorProps {
   value: string | null;
@@ -11,11 +12,17 @@ interface ToolSelectorProps {
 
 export const ToolSelector: React.FC<ToolSelectorProps> = ({ value, onChange, tools, disabled }) => {
   const { t, toolName, toolDescription } = useLocale();
+  const canonicalId = value ? toolIdFromSlug(value) : '';
+  const selectedId = tools.some((tool) => tool.id === value)
+    ? value
+    : tools.some((tool) => tool.id === canonicalId)
+      ? canonicalId
+      : '';
 
   return (
     <select
       className="select-field w-full px-3 py-2 rounded bg-[var(--bg-input)] border border-[var(--border-default)] text-[var(--text-primary)] focus:border-[var(--color-brand-500)] outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-      value={value || ''}
+      value={selectedId ?? ''}
       onChange={(e) => onChange(e.target.value || null)}
       disabled={disabled}
     >

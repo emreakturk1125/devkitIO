@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { lazy, Suspense, useState, useEffect, useCallback, useMemo } from 'react';
 import { Clipboard, Trash2, Maximize2, Minimize2 } from 'lucide-react';
-import CodeEditor from '@/components/Editor/CodeEditor';
 import type { EditorLanguage } from '@/components/Editor/CodeEditor';
+
+const CodeEditor = lazy(() => import('@/components/Editor/CodeEditor'));
 import { useLocale } from '@/hooks/useLocale';
 
 interface InputPanelProps {
@@ -125,14 +126,16 @@ export default function InputPanel({
           </div>
         </div>
         <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-          <CodeEditor
-            value={value}
-            onChange={disabled ? undefined : onChange}
-            language={language}
-            theme={theme}
-            placeholder={resolvedPlaceholder}
-            readOnly={disabled}
-          />
+          <Suspense fallback={<div className="min-h-[12rem] flex-1 bg-[var(--bg-input)]" />}>
+            <CodeEditor
+              value={value}
+              onChange={disabled ? undefined : onChange}
+              language={language}
+              theme={theme}
+              placeholder={resolvedPlaceholder}
+              readOnly={disabled}
+            />
+          </Suspense>
         </div>
       </div>
     </div>

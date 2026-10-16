@@ -9,6 +9,7 @@ const tool: ToolDefinition = {
   inputType: 'text',
   outputType: 'text',
   autoTransform: true,
+  relatedToolIds: ['removeEmptyLines', 'sortLines'],
   options: [
     { id: 'trimStart', label: 'Trim Start', type: 'boolean', defaultValue: true },
     { id: 'trimEnd', label: 'Trim End', type: 'boolean', defaultValue: true },

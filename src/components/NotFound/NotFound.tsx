@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLocale } from '@/hooks/useLocale';
 import { getCategoriesWithTools } from '@/registry/toolRegistry';
+import { categoryPath, toolPath } from '@/seo/site';
 
 const POPULAR_TOOLS = [
   { id: 'jsonFormatter', category: 'json' },
@@ -37,7 +38,7 @@ export const NotFound: React.FC = () => {
           {POPULAR_TOOLS.map(({ id, category }) => (
             <Link
               key={id}
-              to={`/tools/${category}/${id}`}
+              to={toolPath(category, id)}
               className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-input)] px-3 py-1.5 text-xs font-medium text-[var(--text-secondary)] transition-colors hover:border-[var(--color-brand-500)] hover:text-[var(--text-primary)]"
             >
               {toolName(id, id)}
@@ -55,7 +56,7 @@ export const NotFound: React.FC = () => {
           {categories.map((cat) => (
             <Link
               key={cat.id}
-              to={`/tools/${cat.id}`}
+              to={categoryPath(cat.id)}
               className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-input)] px-3 py-1.5 text-xs text-[var(--text-secondary)] transition-colors hover:border-[var(--color-brand-500)] hover:text-[var(--text-primary)]"
             >
               {categoryName(cat.id, cat.name)}

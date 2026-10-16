@@ -9,6 +9,7 @@ const tool: ToolDefinition = {
   inputType: 'json',
   outputType: 'text',
   autoTransform: true,
+  relatedToolIds: ['jsonFormatter', 'yamlFormatter'],
   options: [
     {
       id: 'indentation',

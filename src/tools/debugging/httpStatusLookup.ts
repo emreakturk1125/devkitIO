@@ -105,6 +105,7 @@ const tool: ToolDefinition = {
   inputType: 'text',
   outputType: 'text',
   autoTransform: true,
+  relatedToolIds: ['jwtDecoder', 'jsonFormatter'],
   detect: (input: string) => /^\s*\d{3}\s*$/.test(input),
   process: (input: string) => {
     if (!input.trim()) return '';

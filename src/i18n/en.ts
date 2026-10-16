@@ -231,7 +231,7 @@ export const en: Messages = {
       description: 'Generate cryptographically secure random passwords. Pick length, toggle uppercase, lowercase, numbers, and symbols, then batch generate.',
       faq: [
         { q: 'Are the generated passwords saved anywhere?', a: 'No, passwords are generated locally in your browser and are completely ephemeral. They are never saved or transmitted.' },
-        { q: 'Can I exclude ambiguous characters?', a: 'Yes, you can customize the character sets to omit similar-looking characters like l, 1, O, and 0.' }
+        { q: 'Which characters can a password include?', a: 'Toggle uppercase, lowercase, numbers, and symbols, then set the length and how many passwords to generate.' }
       ]
     },
     randomStringGenerator: { 

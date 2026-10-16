@@ -10,20 +10,6 @@ const tool: ToolDefinition = {
   outputType: 'text',
   autoTransform: true,
   relatedToolIds: ['jsonDiff'],
-  longDescription: 'Diff Compare is a powerful text comparison tool that highlights the differences between two blocks of text. It allows you to find additions, deletions, and modifications instantly without installing any desktop software.',
-  howToUse: 'Paste your original text into the left pane and the modified text into the right pane. The tool will automatically generate a unified diff output. You can choose to compare by lines, words, or characters, and optionally ignore whitespace differences.',
-  features: [
-    'Side-by-side input and unified output diff generation',
-    'Three comparison modes: Line-by-line, Word-by-word, and Character-by-character',
-    'Option to completely ignore whitespace differences (helpful for code)',
-    '100% secure, local browser processing'
-  ],
-  useCases: [
-    'Finding what changed between two versions of a source code file',
-    'Comparing configuration files to spot misconfigurations',
-    'Reviewing text edits or draft changes',
-    'Extracting patch information for git or other version control systems'
-  ],
   faq: [
     {
       q: 'Can I ignore spacing and indentation changes?',

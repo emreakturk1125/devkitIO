@@ -1,5 +1,6 @@
 import type { ToolDefinition, ToolCategory } from '@/types/tool';
 import { categories, getCategoryById } from './categoryRegistry';
+import { toolIdFromSlug } from '@/seo/site';
 
 // ─── Tool Registry ────────────────────────────────────────────────────────
 
@@ -26,10 +27,10 @@ export function registerTool(tool: ToolDefinition): void {
 }
 
 /**
- * Get a tool by its ID.
+ * Get a tool by its ID or kebab-case slug.
  */
 export function getToolById(id: string): ToolDefinition | undefined {
-  return toolMap.get(id);
+  return toolMap.get(id) ?? toolMap.get(toolIdFromSlug(id));
 }
 
 /**
@@ -121,7 +122,7 @@ const CATEGORY_TOOL_ORDER: Record<string, string[]> = {
     'sqlInGenerator',
     'sqlToCSharpClass',
   ],
-  data: [
+  json: [
     'jsonFormatter',
     'jsonMinifier',
     'jsonValidator',
@@ -133,6 +134,8 @@ const CATEGORY_TOOL_ORDER: Record<string, string[]> = {
     'classToJson',
     'yamlFormatter',
     'xmlFormatter',
+  ],
+  formatters: [
     'javascriptFormatter',
     'jqueryFormatter',
     'typescriptFormatter',
@@ -158,7 +161,7 @@ const CATEGORY_TOOL_ORDER: Record<string, string[]> = {
     'passwordGenerator',
     'randomStringGenerator',
   ],
-  debugging: [
+  inspect: [
     'diffCompare',
     'regexTester',
     'jwtDecoder',
@@ -189,7 +192,7 @@ function sortCategoryTools(): void {
  * Initialize the registry by importing and registering all tools.
  * Called once at app startup.
  */
-export async function initializeRegistry(): Promise<void> {
+export function initializeRegistry(): void {
   if (_initialized) return;
 
   // Import all tool modules eagerly (they are small definition objects).
@@ -209,3 +212,5 @@ export async function initializeRegistry(): Promise<void> {
   sortCategoryTools();
   _initialized = true;
 }
+
+initializeRegistry();

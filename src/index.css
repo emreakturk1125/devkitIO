@@ -32,15 +32,34 @@
   --color-error: oklch(0.65 0.22 25);
   --color-info: oklch(0.70 0.14 240);
 
-  /* Fonts */
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+  /* Fonts — metric-adjusted fallbacks reduce swap shift when Inter / JetBrains Mono load */
+  --font-sans: 'Inter', 'Inter Fallback', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', ui-monospace, 'Cascadia Mono', Consolas, monospace;
 
   /* Radius */
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
+}
+
+/* Metric-compatible fallbacks so the swap to the web font does not reflow the UI. */
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Segoe UI'), local('Arial');
+  size-adjust: 107%;
+  ascent-override: 90%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono Fallback';
+  src: local('Cascadia Mono'), local('Consolas'), local('Courier New');
+  size-adjust: 110%;
+  ascent-override: 75%;
+  descent-override: 25%;
+  line-gap-override: 0%;
 }
 
 /* ─── Base Styles ───────────────────────────────────────────────────────── */
@@ -582,5 +601,133 @@
 .panel.is-fullscreen > .panel-header {
   flex-shrink: 0;
 }
+
+/* ─── Tool Docs (below the fold) ───────────────────────────────────────── */
+/* Plain CSS (not Tailwind utilities) on purpose: the prerender script
+   (scripts/prerender-seo.mjs) emits the same class names into static HTML,
+   and those classes must exist regardless of Tailwind's source scanning. */
+
+.tool-docs { flex-shrink: 0; }
+
+.docs-h2 {
+  font-size: 1.125rem;
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
+}
+
+.docs-p {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  max-width: 70ch;
+}
+
+.docs-card {
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1rem;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.docs-card:hover {
+  border-color: var(--color-brand-500);
+}
+
+.docs-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.625rem;
+  height: 1.625rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--text-inverse);
+  background: linear-gradient(135deg, var(--color-brand-400), var(--color-brand-600));
+}
+
+.docs-caption {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+  margin-bottom: 0.375rem;
+}
+
+.tok-string { color: #a5d6a7; }
+.tok-keyword { color: #82aaff; }
+.tok-number { color: #f78c6c; }
+.tok-punct { color: #89ddff; }
+
+html.light .tok-string { color: #157a3a; }
+html.light .tok-keyword { color: #1d4ed8; }
+html.light .tok-number { color: #c2410c; }
+html.light .tok-punct { color: #0f766e; }
+
+.docs-pre {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 0.875rem;
+  overflow: auto;
+  max-height: 22rem;
+  white-space: pre;
+}
+
+.docs-list {
+  list-style: none;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.docs-list > li {
+  position: relative;
+  padding-left: 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.docs-list > li::before {
+  content: '';
+  position: absolute;
+  left: 0.25rem;
+  top: 0.6em;
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 9999px;
+  background: var(--color-brand-400);
+}
+
+/* ─── Prerendered static shell (replaced by React on mount) ────────────── */
+
+.prerender-shell {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+  display: grid;
+  gap: 2rem;
+}
+
+.prerender-shell h1 {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.prerender-shell a { color: var(--color-brand-400); }
+.prerender-shell ol { padding-left: 1.25rem; color: var(--text-secondary); line-height: 1.7; }
+.prerender-shell dt { font-weight: 600; color: var(--text-primary); margin-top: 0.75rem; }
+.prerender-shell dd { color: var(--text-secondary); line-height: 1.7; }
 
 

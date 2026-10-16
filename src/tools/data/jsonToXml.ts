@@ -58,6 +58,7 @@ const tool: ToolDefinition = {
   inputType: 'json',
   outputType: 'xml',
   autoTransform: true,
+  relatedToolIds: ['jsonFormatter', 'xmlFormatter'],
   options: [
     {
       id: 'rootName',

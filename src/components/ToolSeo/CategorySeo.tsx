@@ -3,6 +3,7 @@ import { getCategoryById } from '@/registry/categoryRegistry';
 import { getToolsByCategory } from '@/registry/toolRegistry';
 import { useLocale } from '@/hooks/useLocale';
 import { Link } from 'react-router-dom';
+import { toolPath } from '@/seo/site';
 
 interface CategorySeoProps {
   categoryId: string;
@@ -34,7 +35,7 @@ export const CategorySeo: React.FC<CategorySeoProps> = ({ categoryId }) => {
         {tools.map(tool => (
           <Link 
             key={tool.id} 
-            to={`/tools/${categoryId}/${tool.id}`}
+            to={toolPath(categoryId, tool.id)}
             className="flex flex-col p-2.5 rounded border border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:bg-[var(--bg-hover)] transition-colors min-w-0"
           >
             <span className="text-xs font-semibold text-[var(--color-brand-500)] mb-1 truncate">

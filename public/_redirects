@@ -1,2 +1,56 @@
-# Cloudflare only allows 200, 301, 302, 303, 307, 308 here.
-# Unknown paths are served by 404.html (copied/prerendered into dist).
+# Cloudflare 301 redirects for legacy camelCase URLs and category normalization
+/tools/formatters/jsonFormatter /tools/json/json-formatter 301
+/tools/formatters/json-formatter /tools/json/json-formatter 301
+/tools/json/jsonFormatter /tools/json/json-formatter 301
+/json-formatter /tools/json/json-formatter 301
+/sql-formatter /tools/sql/sql-formatter 301
+/base64 /tools/encoding/base64 301
+
+# JSON Tools
+/tools/json/jsonMinifier /tools/json/json-minifier 301
+/tools/json/jsonValidator /tools/json/json-validator 301
+/tools/json/jsonToClass /tools/json/json-to-class 301
+/tools/json/jsonToTypeScript /tools/json/json-to-typescript 301
+/tools/json/jsonToXml /tools/json/json-to-xml 301
+/tools/json/jsonToYaml /tools/json/json-to-yaml 301
+/tools/json/jsonDiff /tools/json/json-diff 301
+/tools/json/classToJson /tools/json/class-to-json 301
+/tools/json/yamlFormatter /tools/json/yaml-formatter 301
+/tools/json/xmlFormatter /tools/json/xml-formatter 301
+
+# Code Formatters
+/tools/formatters/javascriptFormatter /tools/formatters/javascript-formatter 301
+/tools/formatters/jqueryFormatter /tools/formatters/jquery-formatter 301
+/tools/formatters/typescriptFormatter /tools/formatters/typescript-formatter 301
+/tools/formatters/htmlFormatter /tools/formatters/html-formatter 301
+/tools/formatters/cssFormatter /tools/formatters/css-formatter 301
+
+# SQL Tools
+/tools/sql/sqlFormatter /tools/sql/sql-formatter 301
+/tools/sql/sqlInGenerator /tools/sql/sql-in-generator 301
+/tools/sql/sqlToCSharpClass /tools/sql/sql-to-csharp-class 301
+
+# Text Tools
+/tools/text/columnToComma /tools/text/column-to-comma 301
+/tools/text/commaToColumn /tools/text/comma-to-column 301
+/tools/text/columnToQuoted /tools/text/column-to-quoted 301
+/tools/text/columnToSqlIn /tools/text/column-to-sql-in 301
+/tools/text/removeDuplicates /tools/text/remove-duplicates 301
+/tools/text/sortLines /tools/text/sort-lines 301
+/tools/text/removeEmptyLines /tools/text/remove-empty-lines 301
+/tools/text/trimLines /tools/text/trim-lines 301
+/tools/text/caseConverter /tools/text/case-converter 301
+/tools/text/wordCounter /tools/text/word-counter 301
+/tools/text/characterCounter /tools/text/character-counter 301
+
+# Generators
+/tools/generators/guidGenerator /tools/generators/guid-generator 301
+/tools/generators/uuidGenerator /tools/generators/uuid-generator 301
+/tools/generators/passwordGenerator /tools/generators/password-generator 301
+/tools/generators/randomStringGenerator /tools/generators/random-string-generator 301
+
+# Inspect & Debug
+/tools/inspect/diffCompare /tools/inspect/diff-compare 301
+/tools/inspect/jwtDecoder /tools/inspect/jwt-decoder 301
+/tools/inspect/regexTester /tools/inspect/regex-tester 301
+/tools/inspect/httpStatusLookup /tools/inspect/http-status-lookup 301

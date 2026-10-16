@@ -9,6 +9,7 @@ const tool: ToolDefinition = {
   inputType: 'text',
   outputType: 'sql',
   autoTransform: true,
+  relatedToolIds: ['sqlInGenerator', 'columnToComma'],
   options: [
     {
       id: 'quoteStyle',

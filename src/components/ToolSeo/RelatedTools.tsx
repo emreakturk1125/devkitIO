@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { getToolById } from '@/registry/toolRegistry';
 import { useLocale } from '@/hooks/useLocale';
+import { toolPath } from '@/seo/site';
 
 interface RelatedToolsProps {
   relatedToolIds?: string[];
@@ -23,15 +24,15 @@ export const RelatedTools: React.FC<RelatedToolsProps> = ({ relatedToolIds }) =>
     <section className="mt-4" aria-labelledby="related-tools-heading">
       <h2
         id="related-tools-heading"
-        className="text-xs font-semibold text-[var(--text-primary)] uppercase tracking-wider mb-2"
+        className="docs-h2"
       >
-        Related Tools
+        Related Developer Tools
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {tools.map(tool => (
           <Link
             key={tool!.id}
-            to={`/tools/${tool!.category}/${tool!.id}`}
+            to={toolPath(tool!.category, tool!.id)}
             className="flex flex-col p-2.5 rounded border border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:bg-[var(--bg-hover)] transition-colors min-w-0"
           >
             <span className="text-xs font-semibold text-[var(--color-brand-500)] mb-1 truncate">

@@ -4,6 +4,7 @@ import { Star, ChevronRight, X, Sun, Moon } from 'lucide-react';
 import { getToolById, getCategoriesWithTools } from '@/registry/toolRegistry';
 import type { ToolDefinition } from '@/types/tool';
 import { useLocale } from '@/hooks/useLocale';
+import { categoryPath, toolPath } from '@/seo/site';
 
 interface SidebarProps {
   favoriteIds: string[];
@@ -45,7 +46,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       return (
         <div key={tool.id} className="flex items-center group px-2 py-1.5 lg:py-1 mx-2 rounded hover:bg-[var(--bg-hover)] cursor-pointer">
           <Link
-            to={`/tools/${tool.category}/${tool.id}`}
+            to={toolPath(tool.category, tool.id)}
             className="flex-1 min-w-0 min-h-9 lg:min-h-0 flex items-center text-left text-sm text-[var(--sidebar-item)] group-hover:text-[var(--sidebar-category)] truncate pl-4"
             onClick={() => {
               if (window.innerWidth < 1024) onClose();
@@ -121,7 +122,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <ChevronRight className={`h-3.5 w-3.5 transition-transform ${expandedCategories[category.id] ? 'rotate-90' : ''}`} />
                 </button>
                 <Link
-                  to={`/tools/${category.id}`}
+                  to={categoryPath(category.id)}
                   className="min-w-0 flex-1 truncate py-2 pr-4 text-sm font-semibold text-[var(--sidebar-category)] lg:py-1.5"
                   onClick={() => {
                     if (window.innerWidth < 1024) onClose();

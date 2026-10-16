@@ -66,6 +66,7 @@ const tool: ToolDefinition = {
   inputType: 'text',
   outputType: 'text',
   autoTransform: true,
+  relatedToolIds: ['characterCounter', 'wordCounter'],
   options: [
     {
       id: 'mode',

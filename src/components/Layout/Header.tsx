@@ -50,7 +50,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearchOpen, onMenuOpen, theme,
         <button
           type="button"
           onClick={onToggleTheme}
-          className="hidden min-h-9 min-w-9 rounded p-1.5 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-hover)] sm:inline-flex"
+          className="inline-flex min-h-9 min-w-9 items-center justify-center rounded p-1.5 text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-hover)]"
           title={t.toggleTheme}
           aria-label={t.toggleTheme}
         >

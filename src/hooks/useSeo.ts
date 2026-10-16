@@ -23,6 +23,12 @@ interface SeoOptions {
   noindex?: boolean;
   breadcrumbs?: BreadcrumbItem[];
   faqItems?: FaqItem[];
+  toolName?: string;
+  howToSteps?: string[];
+  /** When set, the page is a tool and emits SoftwareApplication. */
+  featureList?: string[];
+  applicationSubCategory?: string;
+  schemaName?: string;
 }
 
 function setMeta(attr: 'name' | 'property', key: string, value: string): void {
@@ -46,24 +52,71 @@ function setCanonical(href: string): void {
   el.href = href;
 }
 
-function updateJsonLd(url: string, name: string, description: string): void {
-  // Find the WebApplication JSON-LD script (not the WebSite or id'd ones)
+function findAppScript(): HTMLScriptElement {
   const scripts = document.querySelectorAll<HTMLScriptElement>(
     'script[type="application/ld+json"]:not([id])'
   );
-  let script: HTMLScriptElement | null = null;
-  for (const s of scripts) {
-    if (s.textContent?.includes('"WebApplication"')) {
-      script = s;
-      break;
+  for (const candidate of scripts) {
+    const text = candidate.textContent ?? '';
+    if (text.includes('"WebApplication"') || text.includes('"SoftwareApplication"')) {
+      return candidate;
     }
   }
-  if (!script?.textContent) return;
+  const created = document.createElement('script');
+  created.type = 'application/ld+json';
+  document.head.appendChild(created);
+  return created;
+}
+
+function updateAppJsonLd(options: {
+  url: string;
+  name: string;
+  description: string;
+  toolPage: boolean;
+  features?: string[];
+  subCategory?: string;
+}): void {
+  const script = findAppScript();
+  const displayName = options.name === SITE_NAME ? SITE_NAME : `${options.name} — ${SITE_NAME}`;
+
+  if (options.toolPage) {
+    script.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: displayName,
+      url: options.url,
+      description: options.description,
+      applicationCategory: 'DeveloperApplication',
+      applicationSubCategory: options.subCategory,
+      operatingSystem: 'Any',
+      browserRequirements: 'Requires JavaScript. Processing stays in the browser.',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      isAccessibleForFree: true,
+      featureList: options.features ?? [],
+      inLanguage: 'en',
+    });
+    return;
+  }
+
   try {
-    const data = JSON.parse(script.textContent) as Record<string, unknown>;
-    data.url = url;
-    data.name = name === SITE_NAME ? SITE_NAME : `${name} — ${SITE_NAME}`;
-    data.description = description;
+    const data = JSON.parse(script.textContent || '{}') as Record<string, unknown>;
+    if (data['@type'] !== 'WebApplication') {
+      script.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebApplication',
+        name: displayName,
+        url: options.url,
+        description: options.description,
+        applicationCategory: 'DeveloperApplication',
+        operatingSystem: 'Any',
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+        isAccessibleForFree: true,
+      });
+      return;
+    }
+    data.url = options.url;
+    data.name = displayName;
+    data.description = options.description;
     script.textContent = JSON.stringify(data);
   } catch {
     /* keep existing JSON-LD if parse fails */
@@ -132,9 +185,40 @@ function updateFaqJsonLd(faqItems?: FaqItem[]): void {
   script.textContent = JSON.stringify(data);
 }
 
+function updateHowToJsonLd(toolName?: string, steps?: string[]): void {
+  const id = 'seo-howto';
+  let script = document.getElementById(id) as HTMLScriptElement | null;
+
+  if (!steps || steps.length === 0 || !toolName) {
+    script?.remove();
+    return;
+  }
+
+  if (!script) {
+    script = document.createElement('script');
+    script.id = id;
+    script.type = 'application/ld+json';
+    document.head.appendChild(script);
+  }
+
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: `How to Use ${toolName} Online (Step-by-Step Guide)`,
+    step: steps.map((step, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: `Step ${index + 1}`,
+      text: step,
+    })),
+  };
+
+  script.textContent = JSON.stringify(data);
+}
+
 /**
  * Keeps title, description, canonical, social tags, lang attribute,
- * BreadcrumbList and FAQPage structured data in sync with the current route.
+ * BreadcrumbList, FAQPage, and HowTo structured data in sync with the current route.
  */
 export function useSeo({
   title,
@@ -143,6 +227,11 @@ export function useSeo({
   noindex = false,
   breadcrumbs,
   faqItems,
+  toolName,
+  howToSteps,
+  featureList,
+  applicationSubCategory,
+  schemaName,
 }: SeoOptions): void {
   useEffect(() => {
     const url = absoluteUrl(path);
@@ -160,12 +249,22 @@ export function useSeo({
     setMeta('name', 'twitter:description', description);
     setMeta('name', 'twitter:url', url);
 
-    updateJsonLd(url, title.split(' — ')[0] ?? title, description);
+    updateAppJsonLd({
+      url,
+      name: schemaName ?? title.split(' — ')[0] ?? title,
+      description,
+      toolPage: Boolean(toolName),
+      features: featureList,
+      subCategory: applicationSubCategory,
+    });
 
     // BreadcrumbList JSON-LD
     updateBreadcrumbJsonLd(breadcrumbs);
 
     // FAQPage JSON-LD
     updateFaqJsonLd(faqItems);
-  }, [title, description, path, noindex, breadcrumbs, faqItems]);
+
+    // HowTo JSON-LD
+    updateHowToJsonLd(toolName, howToSteps);
+  }, [title, description, path, noindex, breadcrumbs, faqItems, toolName, howToSteps, featureList, applicationSubCategory, schemaName]);
 }

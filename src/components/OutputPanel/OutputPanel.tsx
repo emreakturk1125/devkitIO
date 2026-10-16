@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { lazy, Suspense, useState, useEffect, useCallback } from 'react';
 import { Download, Maximize2, Minimize2 } from 'lucide-react';
-import CodeEditor from '@/components/Editor/CodeEditor';
 import CopyButton from '@/components/CopyButton/CopyButton';
 import type { EditorLanguage } from '@/components/Editor/CodeEditor';
+
+const CodeEditor = lazy(() => import('@/components/Editor/CodeEditor'));
 import { useLocale } from '@/hooks/useLocale';
 
 interface OutputPanelProps {
@@ -115,13 +116,15 @@ export default function OutputPanel({
           </div>
         ) : (
           <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-            <CodeEditor
-              value={value}
-              language={language}
-              readOnly
-              theme={theme}
-              placeholder={t.resultPlaceholder}
-            />
+            <Suspense fallback={<div className="min-h-[12rem] flex-1 bg-[var(--bg-input)]" />}>
+              <CodeEditor
+                value={value}
+                language={language}
+                readOnly
+                theme={theme}
+                placeholder={t.resultPlaceholder}
+              />
+            </Suspense>
           </div>
         )}
       </div>

@@ -35,11 +35,8 @@ export interface ToolDefinition {
   requiresInput?: boolean;
   
   // SEO & Content Fields
+  // Long-form docs (description, steps, features, examples) live in `src/seo/toolContent.ts`.
   relatedToolIds?: string[];
-  longDescription?: string;
-  howToUse?: string;
-  features?: string[];
-  useCases?: string[];
   faq?: { q: string; a: string }[];
 }
 

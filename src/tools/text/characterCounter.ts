@@ -9,6 +9,7 @@ const tool: ToolDefinition = {
   inputType: 'text',
   outputType: 'text',
   autoTransform: true,
+  relatedToolIds: ['wordCounter', 'caseConverter'],
   options: [
     {
       id: 'includeSpaces',

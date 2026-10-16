@@ -120,25 +120,27 @@ export function useToolbox(): ToolboxState & ToolboxActions {
 
   const selectTool = useCallback(
     (toolId: string | null) => {
-      if (toolId !== selectedToolId) {
+      const tool = toolId ? getToolById(toolId) : undefined;
+      const nextId = tool?.id ?? null;
+      if (nextId !== selectedToolId) {
         setInputState('');
         setSecondaryInputState('');
       }
-      setSelectedToolId(toolId);
-      if (toolId) {
-        const tool = getToolById(toolId);
-        if (tool && tool.category !== selectedCategoryId) {
-          setSelectedCategoryId(tool.category);
-        }
+      setSelectedToolId(nextId);
+      if (tool && tool.category !== selectedCategoryId) {
+        setSelectedCategoryId(tool.category);
       }
     },
     [selectedCategoryId, selectedToolId]
   );
 
   const selectCategoryAndTool = useCallback((categoryId: string, toolId: string) => {
-    const changed = categoryId !== selectedCategoryId || toolId !== selectedToolId;
-    setSelectedCategoryId(categoryId);
-    setSelectedToolId(toolId);
+    const tool = getToolById(toolId);
+    const nextId = tool?.id ?? toolId;
+    const nextCategory = tool?.category ?? categoryId;
+    const changed = nextCategory !== selectedCategoryId || nextId !== selectedToolId;
+    setSelectedCategoryId(nextCategory);
+    setSelectedToolId(nextId);
     if (changed) {
       setInputState('');
       setSecondaryInputState('');
