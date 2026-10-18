@@ -144,7 +144,7 @@
 
     <!-- Hide the prerender shell until React mounts so the swap does not shift layout.
          No-JS clients never add .js, so the static guide stays visible. -->
-    <script>document.documentElement.classList.add('js')</script>
+    <script>(function(){var d=document.documentElement;d.classList.add('js');try{if(JSON.parse(localStorage.getItem('devtoolbox_theme'))==='light'){d.classList.remove('dark');d.classList.add('light');var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#ffffff')}}catch(e){}})()</script>
     <style>html.js #root:not(.is-mounted){visibility:hidden}</style>
 
     <!-- Fonts -->
