@@ -8,59 +8,23 @@ const SITE_NAME = 'DevKit';
 
 // Import toolContent and site utilities directly
 const { toolContent } = await import('../src/seo/toolContent.ts');
-const { toolSlug, toolPageTitle, toolPageDescription } = await import('../src/seo/site.ts');
+const {
+  BASE_DESCRIPTION,
+  BASE_TITLE,
+  categoryHeading,
+  categoryPageDescription,
+  categoryPageTitle,
+  toolPageDescription,
+  toolPageTitle,
+  toolPriority,
+  toolSlug,
+} = await import('../src/seo/site.ts');
+const { categories: categoryRegistry } = await import('../src/registry/categoryRegistry.ts');
+const { en } = await import('../src/i18n/en.ts');
+const { homeAboutParagraphs, homeFaq } = await import('../src/seo/homeContent.ts');
 const { tokenizeCode } = await import('../src/seo/highlight.ts');
 const { parseRichText, withSiblingLinks } = await import('../src/seo/richText.ts');
 const { extraToolFaqs } = await import('../src/seo/extraToolFaqs.ts');
-
-const HIGH_PRIORITY = new Set([
-  'jsonFormatter',
-  'jsonToClass',
-  'sqlFormatter',
-  'base64',
-  'guidGenerator',
-  'diffCompare',
-  'jwtDecoder',
-]);
-
-/** Category display names and descriptions (mirrors categoryRegistry.ts) */
-const CATEGORY_META = {
-  json: {
-    name: 'JSON & Data Conversion',
-    description: 'JSON, XML, YAML formatting, validation and data conversion tools',
-    keywords: 'json formatter, json beautifier, json to xml, json to yaml, json validator, xml formatter, yaml formatter, json converter',
-  },
-  formatters: {
-    name: 'Code Formatters',
-    description: 'JavaScript, TypeScript, HTML and CSS code formatting tools',
-    keywords: 'javascript formatter, typescript formatter, html formatter, css formatter, code beautifier, prettier online, format code',
-  },
-  sql: {
-    name: 'SQL',
-    description: 'SQL generation, formatting and transformation tools',
-    keywords: 'sql formatter, sql beautifier, sql in clause, sql to csharp, sql generator, format sql online',
-  },
-  text: {
-    name: 'Text & List Utils',
-    description: 'Text manipulation, list conversion, sorting and counting tools',
-    keywords: 'word counter, character counter, remove duplicates, sort lines, case converter, text tools online',
-  },
-  encoding: {
-    name: 'Encoding',
-    description: 'Base64, URL, HTML encoding and decoding tools',
-    keywords: 'base64 encoder, base64 decoder, encode decode online, base64 converter, jwt decoder',
-  },
-  generators: {
-    name: 'Generators',
-    description: 'UUID, GUID, password and random data generators',
-    keywords: 'guid generator, uuid generator, password generator, random string generator, generate uuid online',
-  },
-  inspect: {
-    name: 'Inspect & Debug',
-    description: 'Diff compare, JWT decode, regex test and HTTP status lookup',
-    keywords: 'diff compare, jwt decoder, regex tester, http status codes, text diff online',
-  },
-};
 
 function walkTs(dir) {
   const files = [];
@@ -304,7 +268,7 @@ function buildToolBody({ tool, content, faqItems, related, breadcrumbs }) {
       `<section><h2 class="docs-h2">Code Example: Before &amp; After</h2>` +
         `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">` +
         `<figure class="min-w-0"><figcaption class="docs-caption">Input${ex.inputLabel ? ` — ${escapeHtml(ex.inputLabel)}` : ''}</figcaption><pre class="docs-pre"><code>${highlightHtml(ex.input)}</code></pre></figure>` +
-        `<figure class="min-w-0"><figcaption class="docs-caption">Output</figcaption><pre class="docs-pre"><code>${highlightHtml(ex.output)}</code></pre></figure>` +
+        `<figure class="min-w-0"><figcaption class="docs-caption">${escapeHtml(ex.outputLabel ?? 'Output')}</figcaption><pre class="docs-pre"><code>${highlightHtml(ex.output)}</code></pre></figure>` +
         `</div></section>`
     );
   }
@@ -348,7 +312,7 @@ function buildToolBody({ tool, content, faqItems, related, breadcrumbs }) {
 
 // ─── Page Meta Injection ────────────────────────────────────────────────────
 
-function injectPageMeta(html, { title, description, path, name, breadcrumbs, noindex, faqJsonLd, howToJsonLd, bodyHtml, keywords, featureList, subCategory }) {
+function injectPageMeta(html, { title, description, path, name, breadcrumbs, noindex, faqJsonLd, howToJsonLd, bodyHtml, featureList, subCategory }) {
   const url = path === '/' ? `${SITE_URL}/` : `${SITE_URL}${path}`;
   const safeTitle = escapeHtml(title);
   const safeDesc = escapeHtml(description);
@@ -396,13 +360,25 @@ function injectPageMeta(html, { title, description, path, name, breadcrumbs, noi
     `<meta name="twitter:description" content="${safeDesc}" />`
   );
 
-  if (keywords) {
-    next = replaceAttr(
-      next,
-      /<meta name="keywords" content="[^"]*" \/>/,
-      `<meta name="keywords" content="${escapeHtml(keywords)}" />`
-    );
+  // The template keywords describe the whole site; they are wrong on tool and category pages.
+  if (path !== '/') {
+    next = replaceAttr(next, /\s*<meta name="keywords" content="[^"]*" \/>/, '');
   }
+
+  // Template JSON-LD (no id): noindex pages carry none; only the home page keeps WebSite.
+  next = next.replace(
+    /\s*<script type="application\/ld\+json">([\s\S]*?)<\/script>/g,
+    (whole, json) => {
+      try {
+        const type = JSON.parse(json)['@type'];
+        if (noindex) return '';
+        if (type === 'WebSite' && path !== '/') return '';
+      } catch {
+        /* keep unparsable blocks untouched */
+      }
+      return whole;
+    }
+  );
 
   if (noindex) {
     next = replaceAttr(
@@ -487,7 +463,7 @@ function injectPageMeta(html, { title, description, path, name, breadcrumbs, noi
 }
 
 function buildSitemap(tools, categories) {
-  const today = new Date().toISOString().slice(0, 10);
+  // No <lastmod>: a build date would claim every page changed on every deploy.
   const urls = [
     { loc: `${SITE_URL}/`, changefreq: 'weekly', priority: '1.0' },
     ...categories.map((id) => ({
@@ -498,7 +474,7 @@ function buildSitemap(tools, categories) {
     ...tools.map((tool) => ({
       loc: `${SITE_URL}/tools/${tool.category}/${tool.slug}`,
       changefreq: 'monthly',
-      priority: HIGH_PRIORITY.has(tool.id) ? '0.9' : '0.8',
+      priority: toolPriority(tool.id),
     })),
   ];
 
@@ -506,7 +482,6 @@ function buildSitemap(tools, categories) {
     .map(
       (u) => `  <url>
     <loc>${u.loc}</loc>
-    <lastmod>${today}</lastmod>
     <changefreq>${u.changefreq}</changefreq>
     <priority>${u.priority}</priority>
   </url>`
@@ -549,23 +524,23 @@ try {
 
 writeFile(join(root, 'dist/sitemap.xml'), sitemap);
 
-const HOME_TITLE = `${SITE_NAME} — Free Online Developer Tools`;
-const HOME_DESCRIPTION =
-  'Free online developer toolkit — JSON formatter, SQL formatter, Base64 encoder, GUID generator, diff compare & 35+ tools. 100% client-side, your data never leaves your browser.';
+const categoryMetaById = new Map(categoryRegistry.map((c) => [c.id, c]));
+const categoryInfo = (id) => categoryMetaById.get(id) ?? { name: id, description: '' };
 
-// Home page static body
+// Home page static body — mirrors HomeSeo + HomeDocs in the React app
+const homeFaqItems = homeFaq.map((f) => ({ question: f.q, answer: f.a }));
 const homeBody = `<div class="prerender-shell">
   <header>
-    <h1>${escapeHtml(HOME_TITLE)}</h1>
-    <p class="docs-p">${escapeHtml(HOME_DESCRIPTION)}</p>
+    <h1>${escapeHtml(en.ui.homeHeading)}</h1>
+    <p class="docs-p">${escapeHtml(en.ui.homeIntro)}</p>
   </header>
   <nav aria-label="Categories">
     <h2 class="docs-h2">Tool Categories</h2>
     <ul class="docs-list" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0.75rem;">
       ${categories
         .map((id) => {
-          const meta = CATEGORY_META[id] || { name: id, description: '' };
-          return `<li class="docs-card"><a href="/tools/${id}" style="font-weight:600;color:var(--color-brand-400);">${escapeHtml(meta.name)} Tools</a><p class="docs-p" style="font-size:0.8125rem;margin-top:0.25rem;">${escapeHtml(meta.description)}</p></li>`;
+          const meta = categoryInfo(id);
+          return `<li class="docs-card"><a href="/tools/${id}" style="font-weight:600;color:var(--color-brand-400);">${escapeHtml(meta.name)}</a><p class="docs-p" style="font-size:0.8125rem;margin-top:0.25rem;">${escapeHtml(meta.description)}</p></li>`;
         })
         .join('')}
     </ul>
@@ -574,20 +549,33 @@ const homeBody = `<div class="prerender-shell">
     <h2 class="docs-h2">Popular Developer Tools</h2>
     <ul class="docs-list">
       ${tools
-        .filter((t) => HIGH_PRIORITY.has(t.id))
+        .filter((t) => toolPriority(t.id) === '0.9')
         .map((t) => `<li><a href="/tools/${t.category}/${t.slug}" style="font-weight:600;color:var(--color-brand-400);">${escapeHtml(t.name)}</a> — ${escapeHtml(t.description)}</li>`)
         .join('')}
     </ul>
   </nav>
+  <section>
+    <h2 class="docs-h2">What is ${escapeHtml(SITE_NAME)}?</h2>
+    ${homeAboutParagraphs(tools.length, categories.length)
+      .map((p) => `<p class="docs-p">${escapeHtml(p)}</p>`)
+      .join('')}
+  </section>
+  <section>
+    <h2 class="docs-h2">Frequently Asked Questions (FAQ)</h2>
+    <dl>${homeFaqItems
+      .map((f) => `<dt style="font-weight:600;margin-top:0.75rem;">${escapeHtml(f.question)}</dt><dd class="docs-p" style="margin-bottom:0.75rem;">${escapeHtml(f.answer)}</dd>`)
+      .join('')}</dl>
+  </section>
 </div>`;
 
 writeFile(
   distHtmlPath,
   injectPageMeta(template, {
-    title: HOME_TITLE,
-    description: HOME_DESCRIPTION,
+    title: BASE_TITLE,
+    description: BASE_DESCRIPTION,
     path: '/',
     name: SITE_NAME,
+    faqJsonLd: buildFaqJsonLd(homeFaqItems),
     bodyHtml: homeBody,
   })
 );
@@ -605,10 +593,11 @@ writeFile(
 );
 
 for (const category of categories) {
-  const catMeta = CATEGORY_META[category] || { name: category, description: '' };
+  const catMeta = categoryInfo(category);
+  const catHeading = categoryHeading(category, catMeta.name);
   const catTools = tools.filter((t) => t.category === category);
-  const title = `${catMeta.name} Tools — Free Online Developer Toolkit | ${SITE_NAME}`;
-  const description = `${catMeta.description}. Free online, fast & 100% client-side on ${SITE_NAME}.`;
+  const title = categoryPageTitle(catHeading);
+  const description = categoryPageDescription(catMeta.description, category);
 
   const catBreadcrumbs = [
     { name: SITE_NAME, url: `${SITE_URL}/` },
@@ -618,8 +607,8 @@ for (const category of categories) {
   const catBody = `<div class="prerender-shell">
     ${breadcrumbNav(catBreadcrumbs)}
     <header>
-      <h1>${escapeHtml(catMeta.name)} Tools</h1>
-      <p class="docs-p">${escapeHtml(description)}</p>
+      <h1>${escapeHtml(catHeading)}</h1>
+      <p class="docs-p">${escapeHtml(catMeta.description)}</p>
     </header>
     <nav aria-label="${escapeHtml(catMeta.name)} tools">
       <ul class="docs-list" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0.75rem;">
@@ -636,8 +625,7 @@ for (const category of categories) {
       title,
       description,
       path: `/tools/${category}`,
-      name: `${catMeta.name} Tools`,
-      keywords: catMeta.keywords,
+      name: catHeading,
       breadcrumbs: catBreadcrumbs,
       bodyHtml: catBody,
     })
@@ -647,9 +635,6 @@ for (const category of categories) {
     const title = toolPageTitle(tool.name, tool.id);
     const description = toolPageDescription(tool.description, tool.id);
     const content = toolContent[tool.id];
-
-    // Tool keywords: tool name + category keywords
-    const toolKeywords = `${tool.name.toLowerCase()}, ${tool.name.toLowerCase()} online, free ${tool.name.toLowerCase()}, ${catMeta.keywords || ''}`;
 
     // Tool FAQ items & JSON-LD
     const faqItems = buildToolFaqItems(tool.name, faqCopy, tool.faq);
@@ -683,7 +668,6 @@ for (const category of categories) {
         description,
         path: `/tools/${tool.category}/${tool.slug}`,
         name: tool.name,
-        keywords: toolKeywords,
         breadcrumbs: toolBreadcrumbs,
         faqJsonLd: toolFaqJsonLd,
         howToJsonLd: toolHowToJsonLd,

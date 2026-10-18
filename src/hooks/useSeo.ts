@@ -239,6 +239,7 @@ export function useSeo({
     document.title = title;
     setMeta('name', 'description', description);
     setMeta('name', 'robots', noindex ? NOINDEX_ROBOTS : INDEXABLE_ROBOTS);
+    setMeta('name', 'googlebot', noindex ? NOINDEX_ROBOTS : 'index, follow');
     setCanonical(url);
 
     setMeta('property', 'og:title', title);

@@ -12,6 +12,8 @@ export interface ToolExample {
   /** Label shown above the input block (e.g. options used). */
   inputLabel?: string;
   input: string;
+  /** Label shown above the output block when it is not plain tool output. */
+  outputLabel?: string;
   output: string;
 }
 
@@ -821,7 +823,7 @@ export const toolContent: Record<string, ToolContent> = {
   // ─── Encoding ─────────────────────────────────────────────────────────────
   base64: {
     longDescription:
-      'The Base64 Encoder/Decoder converts text into Base64 format and back. It properly handles UTF-8 characters and emojis, making it safe for all modern web encoding needs. For tokens, open [JWT Decoder](/tools/inspect/jwt-decoder) to split the header and payload.',
+      'The Base64 Encoder/Decoder converts text into Base64 format and back. It properly handles UTF-8 characters and emojis, making it safe for all modern web encoding needs. For tokens, open [JWT Decoder](/tools/encoding/jwt-decoder) to split the header and payload.',
     howToSteps: [
       'Type or paste your text into the Input editor.',
       'Select Encode or Decode in the options.',
@@ -974,9 +976,10 @@ export const toolContent: Record<string, ToolContent> = {
       'Reviewing text edits or draft changes',
     ],
     example: {
-      inputLabel: 'Line diff',
-      input: 'hello\nworld',
-      output: 'hello\nDevKit',
+      inputLabel: 'Original (left) and modified (right) text',
+      input: 'Original:\nhello\nworld\n\nModified:\nhello\nDevKit',
+      outputLabel: 'Highlighted result, shown here as -/+ lines',
+      output: '  hello\n- world\n+ DevKit',
     },
   },
 

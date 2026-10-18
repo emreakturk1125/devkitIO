@@ -13,14 +13,14 @@ export const categories: ToolCategory[] = [
   {
     id: 'formatters',
     name: 'Code Formatters',
-    description: 'JavaScript, TypeScript, HTML, CSS and SQL code formatting tools',
+    description: 'JavaScript, TypeScript, jQuery, HTML, CSS, XML and YAML code formatting tools',
     icon: 'Code',
     tools: [],
   },
   {
     id: 'sql',
     name: 'SQL',
-    description: 'SQL generation and transformation tools',
+    description: 'SQL formatting, generation and conversion tools',
     icon: 'Database',
     tools: [],
   },
@@ -34,7 +34,7 @@ export const categories: ToolCategory[] = [
   {
     id: 'encoding',
     name: 'Encoding',
-    description: 'Base64, URL, HTML encoding and decoding tools',
+    description: 'Base64 encoding and decoding and JWT decoding tools',
     icon: 'Lock',
     tools: [],
   },
@@ -48,7 +48,7 @@ export const categories: ToolCategory[] = [
   {
     id: 'inspect',
     name: 'Inspect & Debug',
-    description: 'Diff compare, JWT decode, regex test and HTTP status lookup',
+    description: 'Text diff compare, regex testing and HTTP status code lookup',
     icon: 'Bug',
     tools: [],
   },

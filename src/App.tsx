@@ -30,6 +30,7 @@ import {
   BASE_DESCRIPTION,
   BASE_TITLE,
   SITE_NAME,
+  categoryHeading,
   categoryPageDescription,
   categoryPageTitle,
   categoryPath,
@@ -38,6 +39,8 @@ import {
   toolPath,
 } from '@/seo/site';
 import { getToolContent } from '@/seo/toolContent';
+import { homeFaq } from '@/seo/homeContent';
+import { HomeDocs } from '@/components/ToolSeo/HomeDocs';
 
 import type { EditorLanguage } from '@/components/Editor/CodeEditor';
 import { Play, Star } from 'lucide-react';
@@ -191,8 +194,8 @@ function ToolboxPage() {
       const name = categoryName(selectedCategoryId, category?.name ?? selectedCategoryId);
       const desc = categoryDescription(selectedCategoryId, category?.description ?? '');
       return {
-        title: categoryPageTitle(name),
-        description: categoryPageDescription(desc),
+        title: categoryPageTitle(categoryHeading(selectedCategoryId, name)),
+        description: categoryPageDescription(desc, selectedCategoryId),
         path: categoryPath(selectedCategoryId),
         breadcrumbs: [
           { name: SITE_NAME, path: '/' },
@@ -204,6 +207,7 @@ function ToolboxPage() {
       title: BASE_TITLE,
       description: BASE_DESCRIPTION,
       path: '/',
+      faqItems: homeFaq.map((f) => ({ question: f.q, answer: f.a })),
     };
   }, [
     isNotFound,
@@ -485,6 +489,8 @@ function ToolboxPage() {
               faq={toolFaq(selectedTool.id)}
             />
           )}
+
+          {!selectedTool && !selectedCategoryId && <HomeDocs />}
             </>
           )}
 

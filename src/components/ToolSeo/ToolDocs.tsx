@@ -110,7 +110,7 @@ export const ToolDocs: React.FC<ToolDocsProps> = ({ tool, name, faq }) => {
               </figure>
               <figure className="min-w-0">
                 <figcaption className="docs-caption flex items-center gap-1">
-                  <ArrowRight size={12} aria-hidden="true" /> Output
+                  <ArrowRight size={12} aria-hidden="true" /> {content.example.outputLabel ?? 'Output'}
                 </figcaption>
                 <pre className="docs-pre"><CodeSample code={content.example.output} /></pre>
               </figure>

@@ -15,8 +15,10 @@
 /tools/json/jsonToYaml /tools/json/json-to-yaml 301
 /tools/json/jsonDiff /tools/json/json-diff 301
 /tools/json/classToJson /tools/json/class-to-json 301
-/tools/json/yamlFormatter /tools/json/yaml-formatter 301
-/tools/json/xmlFormatter /tools/json/xml-formatter 301
+/tools/json/yamlFormatter /tools/formatters/yaml-formatter 301
+/tools/json/xmlFormatter /tools/formatters/xml-formatter 301
+/tools/formatters/yamlFormatter /tools/formatters/yaml-formatter 301
+/tools/formatters/xmlFormatter /tools/formatters/xml-formatter 301
 
 # Code Formatters
 /tools/formatters/javascriptFormatter /tools/formatters/javascript-formatter 301
@@ -51,6 +53,7 @@
 
 # Inspect & Debug
 /tools/inspect/diffCompare /tools/inspect/diff-compare 301
-/tools/inspect/jwtDecoder /tools/inspect/jwt-decoder 301
+/tools/inspect/jwtDecoder /tools/encoding/jwt-decoder 301
+/tools/encoding/jwtDecoder /tools/encoding/jwt-decoder 301
 /tools/inspect/regexTester /tools/inspect/regex-tester 301
 /tools/inspect/httpStatusLookup /tools/inspect/http-status-lookup 301

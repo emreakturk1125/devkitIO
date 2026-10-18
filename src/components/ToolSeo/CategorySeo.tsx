@@ -3,7 +3,7 @@ import { getCategoryById } from '@/registry/categoryRegistry';
 import { getToolsByCategory } from '@/registry/toolRegistry';
 import { useLocale } from '@/hooks/useLocale';
 import { Link } from 'react-router-dom';
-import { toolPath } from '@/seo/site';
+import { SITE_NAME, categoryHeading, toolPath } from '@/seo/site';
 
 interface CategorySeoProps {
   categoryId: string;
@@ -21,11 +21,18 @@ export const CategorySeo: React.FC<CategorySeoProps> = ({ categoryId }) => {
 
   return (
     <section aria-labelledby={`category-heading-${categoryId}`}>
+      <nav aria-label="Breadcrumb" className="mb-2">
+        <ol className="flex items-center space-x-1 text-[10px] sm:text-[11px] text-[var(--text-tertiary)]">
+          <li><Link to="/" className="hover:text-[var(--text-primary)] transition-colors">{SITE_NAME}</Link></li>
+          <li><span className="mx-1">›</span></li>
+          <li className="text-[var(--text-secondary)] font-medium" aria-current="page">{name}</li>
+        </ol>
+      </nav>
       <h1
         id={`category-heading-${categoryId}`}
         className="text-sm font-semibold text-[var(--text-primary)] sm:text-base mb-1"
       >
-        {name} Tools
+        {categoryHeading(categoryId, name)}
       </h1>
       <p className="max-w-3xl min-w-0 text-xs leading-relaxed text-[var(--text-secondary)] mb-3">
         {description}

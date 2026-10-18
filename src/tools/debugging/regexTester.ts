@@ -41,7 +41,7 @@ const tool: ToolDefinition = {
   inputType: 'text',
   outputType: 'text',
   autoTransform: true,
-  relatedToolIds: ['diffCompare', 'jsonFormatter'],
+  relatedToolIds: ['diffCompare'],
   options: [
     {
       id: 'pattern',

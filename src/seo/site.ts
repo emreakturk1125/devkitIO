@@ -1,11 +1,11 @@
-import { META_DESCRIPTIONS } from './metaDescriptions.ts';
+import { CATEGORY_META_DESCRIPTIONS, META_DESCRIPTIONS } from './metaDescriptions.ts';
 
 export const SITE_URL = 'https://devkitio.com';
 export const SITE_NAME = 'DevKit';
 
-export const BASE_TITLE = 'DevKit — Free Online Developer Tools';
+export const BASE_TITLE = 'DevKit — Free Online Developer Tools for JSON, SQL & Base64';
 export const BASE_DESCRIPTION =
-  'Free online developer toolkit — JSON formatter, SQL formatter, Base64 encoder, GUID generator & 35+ tools. 100% client-side, nothing leaves your browser.';
+  'Free online developer tools: format JSON and SQL, encode Base64, generate GUIDs, compare text and more. Everything runs in your browser; input is not uploaded.';
 
 export const INDEXABLE_ROBOTS =
   'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1';
@@ -18,6 +18,7 @@ const HIGH_PRIORITY_TOOLS = new Set([
   'base64',
   'guidGenerator',
   'diffCompare',
+  'jwtDecoder',
 ]);
 
 export const TOOL_ID_TO_SLUG: Record<string, string> = {
@@ -94,20 +95,22 @@ export function toolPriority(toolId: string): string {
 }
 
 const CUSTOM_TITLES: Record<string, string> = {
-  jsonFormatter: 'Free JSON Formatter & Validator Online (100% Private) — DevKit',
-  sqlFormatter: 'SQL Formatter & Beautifier Online — T-SQL, MySQL, PostgreSQL | DevKit',
+  jsonFormatter: 'JSON Formatter & Validator Online (100% Private) — DevKit',
+  sqlFormatter: 'SQL Formatter Online — T-SQL, MySQL, PostgreSQL | DevKit',
+  randomStringGenerator: 'Random String Generator Online — Secure & Free | DevKit',
+  columnToQuoted: 'Column to Quoted List Online — Free, Client-Side | DevKit',
   base64: 'Base64 Encode & Decode Online — Fast & UTF-8 Safe | DevKit',
   guidGenerator: 'Free GUID / UUID Generator Online (.NET & Batch) | DevKit',
   uuidGenerator: 'Online UUID v4 Generator — Cryptographically Secure | DevKit',
-  diffCompare: 'Online Text Diff Checker — Compare Text & Code Differences | DevKit',
+  diffCompare: 'Online Text Diff Checker — Compare Text & Code | DevKit',
   jwtDecoder: 'JWT Decoder Online — Decode Header & Payload Safely | DevKit',
   jsonToClass: 'JSON to C#, TypeScript & Java Class Converter | DevKit',
   jsonMinifier: 'JSON Minifier Online — Compact JSON in One Click | DevKit',
   jsonValidator: 'JSON Validator & Syntax Checker Online — DevKit',
-  caseConverter: 'Case Converter Online — camelCase, snake_case, PascalCase | DevKit',
+  caseConverter: 'Case Converter — camelCase, snake_case, PascalCase | DevKit',
   wordCounter: 'Word Counter & Character Count Tool Online | DevKit',
   passwordGenerator: 'Secure Password Generator Online — DevKit',
-  regexTester: 'Regex Tester Online — Test Regular Expressions in Real Time | DevKit',
+  regexTester: 'Regex Tester Online — Test Regular Expressions | DevKit',
 };
 
 export function toolPageTitle(toolName: string, toolId?: string): string {
@@ -125,11 +128,24 @@ export function toolPageDescription(toolDescription: string, toolId?: string): s
   return `${toolDescription} 100% client-side in your browser, no data leaves your device.`;
 }
 
-export function categoryPageTitle(categoryName: string): string {
-  return `${categoryName} Tools — Free Online Developer Toolkit | ${SITE_NAME}`;
+/** Plural-noun names would read "Generators Tools"; these ids get an explicit heading. */
+const CATEGORY_HEADINGS: Record<string, string> = {
+  formatters: 'Code Formatters',
+  generators: 'Online Generators',
+  text: 'Text & List Utilities',
+};
+
+export function categoryHeading(categoryId: string, categoryName: string): string {
+  return CATEGORY_HEADINGS[categoryId] ?? `${categoryName} Tools`;
 }
 
-export function categoryPageDescription(categoryDescription: string): string {
+/** Pass the value returned by `categoryHeading`. */
+export function categoryPageTitle(heading: string): string {
+  return `${heading} — Free & Client-Side | ${SITE_NAME}`;
+}
+
+export function categoryPageDescription(categoryDescription: string, categoryId?: string): string {
+  if (categoryId && CATEGORY_META_DESCRIPTIONS[categoryId]) return CATEGORY_META_DESCRIPTIONS[categoryId];
   return `${categoryDescription}. Free online, fast & 100% client-side on DevKit.`;
 }
 

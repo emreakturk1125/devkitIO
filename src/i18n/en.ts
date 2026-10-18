@@ -66,12 +66,12 @@ export const en: Messages = {
   },
   categories: {
     json: { name: 'JSON & Data Conversion', description: 'JSON, XML, YAML formatting, validation and data conversion tools' },
-    formatters: { name: 'Code Formatters', description: 'JavaScript, TypeScript, HTML, CSS and SQL code formatting tools' },
-    sql: { name: 'SQL', description: 'SQL generation and transformation tools' },
+    formatters: { name: 'Code Formatters', description: 'JavaScript, TypeScript, jQuery, HTML, CSS, XML and YAML code formatting tools' },
+    sql: { name: 'SQL', description: 'SQL formatting, generation and conversion tools' },
     text: { name: 'Text & List Utils', description: 'Text manipulation, list conversion, sorting and counting tools' },
-    encoding: { name: 'Encoding', description: 'Base64, URL, HTML encoding and decoding tools' },
+    encoding: { name: 'Encoding', description: 'Base64 encoding and decoding and JWT decoding tools' },
     generators: { name: 'Generators', description: 'UUID, GUID, password and random data generators' },
-    inspect: { name: 'Inspect & Debug', description: 'Diff compare, JWT decode, regex test and HTTP status lookup' },
+    inspect: { name: 'Inspect & Debug', description: 'Text diff compare, regex testing and HTTP status code lookup' },
   },
   tools: {
     jsonFormatter: { 

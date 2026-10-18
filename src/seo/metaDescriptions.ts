@@ -35,8 +35,19 @@ export const META_DESCRIPTIONS: Record<string, string> = {
   uuidGenerator: "Generate secure UUID v4 values online, one or in a batch. Free, no install, and nothing is sent to a server. Copy the result in one click. It runs locally.",
   passwordGenerator: "Generate strong random passwords online in your browser. Free, no install, and secrets never leave your device. Copy the result in one click. It is fast.",
   randomStringGenerator: "Generate random API keys and test strings online. Free, no install, and output stays in your browser. Copy the result in one click. It stays on your device.",
-  diffCompare: "Compare two texts online and highlight every change. Free, no install, and both sides stay in your browser. Copy the result in one click. It runs locally.",
+  diffCompare: "Compare two texts online and highlight added and removed lines, words or characters. Free, no install, and both texts stay in your browser. It runs locally.",
   jwtDecoder: "Decode a JWT header and payload online without verifying it. Free, and the token stays in your browser. Copy the result in one click. It stays on your device.",
   regexTester: "Test JavaScript regex online and inspect every match. Free, no install, and your pattern stays on the device. Copy the result in one click. It runs locally.",
   httpStatusLookup: "Look up HTTP status codes online, including CDN errors. Free, instant, and the lookup runs fully in your browser. Copy the result in one click. It is fast.",
+};
+
+/** Category landing-page descriptions (150–160 characters), keyed by category id. */
+export const CATEGORY_META_DESCRIPTIONS: Record<string, string> = {
+  json: "Format, validate, minify, diff and convert JSON, XML and YAML online. Generate C#, TypeScript or Java classes from JSON. Free tools that run in your browser.",
+  formatters: "Format JavaScript, TypeScript, jQuery, HTML, CSS, XML and YAML code online with adjustable indentation. Free formatters that run in your browser, no install.",
+  sql: "Format SQL for T-SQL, MySQL, PostgreSQL and more, build IN clauses and turn CREATE TABLE statements into C# classes. Free tools that run in your browser.",
+  text: "Clean and convert text lists online: remove duplicates and empty lines, sort, trim, change case, count words and build quoted or SQL IN lists. Free, in-browser.",
+  encoding: "Encode and decode Base64 and decode JWT tokens online. Free tools that run in your browser, so your text and tokens are not uploaded. Open a tool to start.",
+  generators: "Generate GUIDs, UUID v4 values, secure passwords and random strings online. Free generators that run in your browser, with batch counts and format options.",
+  inspect: "Compare text with a diff checker, test regular expressions and look up HTTP status codes online. Free debugging tools that run in your browser, no install.",
 };
