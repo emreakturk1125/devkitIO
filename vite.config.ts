@@ -22,9 +22,10 @@ export default defineConfig({
             return 'react-vendor';
           }
           if (id.includes('lucide-react')) return 'icons';
-          // Editor core only. Language packs and themes stay in their own async chunks.
+          // Editor core + themes so dark/light switching is synchronous and instant.
           if (
             id.includes('@uiw/react-codemirror') ||
+            id.includes('@uiw/codemirror-theme-') ||
             id.includes('@codemirror/view') ||
             id.includes('@codemirror/state') ||
             id.includes('@codemirror/language') ||

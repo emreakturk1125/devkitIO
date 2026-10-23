@@ -27,6 +27,9 @@ export const en: Messages = {
     output: 'OUTPUT',
     diffResult: 'DIFF RESULT',
     paste: 'Paste',
+    sample: 'Sample',
+    loadSample: 'Load sample input',
+    tryInEditor: 'Try in editor ↑',
     clear: 'Clear',
     expand: 'Expand',
     exit: 'Exit',
@@ -65,13 +68,13 @@ export const en: Messages = {
       'Format, convert and generate JSON, SQL, text and more — entirely in your browser.',
   },
   categories: {
-    json: { name: 'JSON & Data Conversion', description: 'JSON, XML, YAML formatting, validation and data conversion tools' },
+    json: { name: 'JSON & Data', description: 'JSON formatting, validation, diffing and class conversion tools' },
     formatters: { name: 'Code Formatters', description: 'JavaScript, TypeScript, jQuery, HTML, CSS, XML and YAML code formatting tools' },
-    sql: { name: 'SQL', description: 'SQL formatting, generation and conversion tools' },
-    text: { name: 'Text & List Utils', description: 'Text manipulation, list conversion, sorting and counting tools' },
-    encoding: { name: 'Encoding', description: 'Base64 encoding and decoding and JWT decoding tools' },
-    generators: { name: 'Generators', description: 'UUID, GUID, password and random data generators' },
-    inspect: { name: 'Inspect & Debug', description: 'Text diff compare, regex testing and HTTP status code lookup' },
+    sql: { name: 'SQL Tools', description: 'SQL query formatting, IN clause generation and C# class conversion tools' },
+    text: { name: 'Text & Lists', description: 'Text manipulation, list conversion, line deduplication, sorting and counting tools' },
+    encoding: { name: 'Encoding & Tokens', description: 'UTF-8 Base64 encoding/decoding and JWT token inspection tools' },
+    generators: { name: 'Generators', description: 'UUID, GUID, secure password and random string generators' },
+    inspect: { name: 'Debug & Testing', description: 'Text diff checker, regex tester and HTTP status code lookup' },
   },
   tools: {
     jsonFormatter: { 
@@ -99,7 +102,7 @@ export const en: Messages = {
       ]
     },
     jsonToClass: { 
-      name: 'JSON to Class', 
+      name: 'JSON to Class (C#, TS, Java)', 
       description: 'Generate C#, TypeScript, or Java class definitions from a JSON sample. Smart type inference detects dates, GUIDs, nested objects, and arrays automatically.',
       faq: [
         { q: 'What languages are supported for class generation?', a: 'Currently, the tool supports generating classes for C#, TypeScript, and Java based on your JSON input.' },
@@ -139,7 +142,7 @@ export const en: Messages = {
       ]
     },
     classToJson: { 
-      name: 'Class to JSON', 
+      name: 'Class to Sample JSON', 
       description: 'Convert C#, TypeScript, or Java class definitions to sample JSON. Auto-detects the language and generates realistic mock values for each property type.',
       faq: [
         { q: 'Does it generate random mock data?', a: 'Yes, it inspects the data types in your class definitions and creates realistic sample values like names, dates, and numbers.' },
@@ -203,7 +206,7 @@ export const en: Messages = {
       ]
     },
     base64: { 
-      name: 'Base64 Encoder/Decoder', 
+      name: 'Base64 Encode / Decode', 
       description: 'Encode text to Base64 or decode Base64 back to text. Fully UTF-8 safe — handles Unicode characters, data URIs, and encoded tokens right in your browser.',
       faq: [
         { q: 'Is the Base64 encoding UTF-8 safe?', a: 'Yes, it properly encodes and decodes Unicode characters like emojis and non-Latin alphabets.' },
@@ -251,7 +254,7 @@ export const en: Messages = {
       ]
     },
     sqlInGenerator: { 
-      name: 'SQL IN Generator', 
+      name: 'SQL IN Clause Builder', 
       description: 'Convert a list of values into a SQL IN clause. Paste IDs or names from a spreadsheet and get a ready-to-use IN expression with automatic deduplication and trimming.',
       faq: [
         { q: 'Does it wrap text values in quotes?', a: 'Yes, you can specify whether the input values are numbers or strings, and it will wrap strings in single quotes.' },
@@ -291,7 +294,7 @@ export const en: Messages = {
       ]
     },
     columnToSqlIn: { 
-      name: 'Column to SQL IN', 
+      name: 'Column to SQL IN List', 
       description: 'Convert a column of values into a SQL IN expression. Paste IDs or names line by line and get a ready-to-use IN clause with automatic deduplication.',
       faq: [
         { q: 'Is it different from the SQL IN Generator?', a: 'This tool specifically focuses on rapid raw column conversion without complex parsing, ideal for simple lists.' },
@@ -299,7 +302,7 @@ export const en: Messages = {
       ]
     },
     removeDuplicates: { 
-      name: 'Remove Duplicates', 
+      name: 'Remove Duplicate Lines', 
       description: 'Remove duplicate lines from text while preserving original order. Supports case-insensitive matching and whitespace trimming.',
       faq: [
         { q: 'Is the original line order preserved?', a: 'Yes, the first occurrence of each unique line is kept exactly in its original position.' },
@@ -355,7 +358,7 @@ export const en: Messages = {
       ]
     },
     diffCompare: { 
-      name: 'Diff Compare', 
+      name: 'Text Diff Checker', 
       description: 'Compare two texts and highlight differences line by line, word by word, or character by character. Supports optional whitespace ignoring.',
       faq: [
         { q: 'Can I ignore whitespace differences?', a: 'Yes, there is an option to ignore changes in indentation and trailing spaces.' },

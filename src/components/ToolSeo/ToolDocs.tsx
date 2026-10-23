@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, ArrowRight } from 'lucide-react';
+import { ShieldCheck, ArrowRight, Sparkles } from 'lucide-react';
 import type { ToolDefinition } from '@/types/tool';
 import { Faq } from '@/components/Faq/Faq';
 import { RelatedTools } from './RelatedTools';
@@ -15,6 +15,7 @@ interface ToolDocsProps {
   tool: ToolDefinition;
   name: string;
   faq?: { q: string; a: string }[];
+  onLoadSample?: () => void;
 }
 
 export const DOCS_SECTION_ID = 'docs';
@@ -55,7 +56,7 @@ function CodeSample({ code }: { code: string }) {
   );
 }
 
-export const ToolDocs: React.FC<ToolDocsProps> = ({ tool, name, faq }) => {
+export const ToolDocs: React.FC<ToolDocsProps> = ({ tool, name, faq, onLoadSample }) => {
   const { t, toolName } = useLocale();
   const content = getToolContent(tool.id);
   const related = (tool.relatedToolIds ?? [])
@@ -100,7 +101,22 @@ export const ToolDocs: React.FC<ToolDocsProps> = ({ tool, name, faq }) => {
 
         {content?.example && (
           <section aria-labelledby="docs-example">
-            <h2 id="docs-example" className="docs-h2">Code Example: Before &amp; After</h2>
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <h2 id="docs-example" className="docs-h2 !mb-0">Code Example: Before &amp; After</h2>
+              {onLoadSample && tool.requiresInput !== false && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    onLoadSample();
+                    document.querySelector('main')?.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="btn-ghost !py-1 !px-2.5 !text-xs text-[var(--color-brand-400)] hover:text-[var(--color-brand-300)]"
+                >
+                  <Sparkles size={13} aria-hidden="true" />
+                  <span>{t.tryInEditor}</span>
+                </button>
+              )}
+            </div>
             <div className="grid gap-3 md:grid-cols-2">
               <figure className="min-w-0">
                 <figcaption className="docs-caption">

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useEffect, useCallback, useMemo } from 'react';
-import { Clipboard, Trash2, Maximize2, Minimize2 } from 'lucide-react';
+import { Clipboard, Trash2, Maximize2, Minimize2, Sparkles } from 'lucide-react';
 import type { EditorLanguage } from '@/components/Editor/CodeEditor';
 
 const CodeEditor = lazy(() => import('@/components/Editor/CodeEditor'));
@@ -14,6 +14,7 @@ interface InputPanelProps {
   label?: string;
   onPaste?: () => void;
   onClear?: () => void;
+  onLoadSample?: () => void;
   disabled?: boolean;
 }
 
@@ -25,6 +26,7 @@ export default function InputPanel({
   placeholder,
   label,
   onClear,
+  onLoadSample,
   disabled = false,
 }: InputPanelProps) {
   const { t, format } = useLocale();
@@ -86,6 +88,17 @@ export default function InputPanel({
               <span className="hidden text-[0.6875rem] font-normal normal-case tracking-normal text-[var(--text-tertiary)] sm:inline mr-2">
                 {format(t.linesChars, { lines: lineCount, chars: charCount })}
               </span>
+            )}
+            {!disabled && onLoadSample && (
+              <button
+                className="btn-ghost !px-2 !py-1.5 sm:!py-1 !text-[0.6875rem] min-h-8 min-w-8"
+                onClick={onLoadSample}
+                title={t.loadSample}
+                aria-label={t.loadSample}
+              >
+                <Sparkles size={14} />
+                <span className="hidden sm:inline">{t.sample}</span>
+              </button>
             )}
             {!disabled && (
               <button

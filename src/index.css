@@ -78,6 +78,14 @@
     text-rendering: optimizeLegibility;
   }
 
+  /* Prevent staggered 150ms–300ms CSS transitions when toggling dark/light theme */
+  html.theme-switching,
+  html.theme-switching *,
+  html.theme-switching *::before,
+  html.theme-switching *::after {
+    transition: none !important;
+  }
+
   /* Dark mode (default) */
   html, html.dark {
     color-scheme: dark;

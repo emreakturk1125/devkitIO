@@ -16,6 +16,12 @@ export interface FaqItem {
   answer: string;
 }
 
+export interface CategoryToolItem {
+  name: string;
+  url: string;
+  description: string;
+}
+
 interface SeoOptions {
   title: string;
   description: string;
@@ -29,6 +35,8 @@ interface SeoOptions {
   featureList?: string[];
   applicationSubCategory?: string;
   schemaName?: string;
+  /** When set, the page is a category hub and emits CollectionPage + ItemList. */
+  categoryTools?: CategoryToolItem[];
 }
 
 function setMeta(attr: 'name' | 'property', key: string, value: string): void {
@@ -58,7 +66,11 @@ function findAppScript(): HTMLScriptElement {
   );
   for (const candidate of scripts) {
     const text = candidate.textContent ?? '';
-    if (text.includes('"WebApplication"') || text.includes('"SoftwareApplication"')) {
+    if (
+      text.includes('"WebApplication"') ||
+      text.includes('"SoftwareApplication"') ||
+      text.includes('"CollectionPage"')
+    ) {
       return candidate;
     }
   }
@@ -75,6 +87,7 @@ function updateAppJsonLd(options: {
   toolPage: boolean;
   features?: string[];
   subCategory?: string;
+  categoryTools?: CategoryToolItem[];
 }): void {
   const script = findAppScript();
   const displayName = options.name === SITE_NAME ? SITE_NAME : `${options.name} — ${SITE_NAME}`;
@@ -85,6 +98,7 @@ function updateAppJsonLd(options: {
       '@type': 'SoftwareApplication',
       name: displayName,
       url: options.url,
+      image: absoluteUrl('/og-image.png'),
       description: options.description,
       applicationCategory: 'DeveloperApplication',
       applicationSubCategory: options.subCategory,
@@ -98,6 +112,34 @@ function updateAppJsonLd(options: {
     return;
   }
 
+  if (options.categoryTools && options.categoryTools.length > 0) {
+    script.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: displayName,
+      url: options.url,
+      description: options.description,
+      inLanguage: 'en',
+      isPartOf: {
+        '@type': 'WebSite',
+        name: SITE_NAME,
+        url: absoluteUrl('/'),
+      },
+      mainEntity: {
+        '@type': 'ItemList',
+        numberOfItems: options.categoryTools.length,
+        itemListElement: options.categoryTools.map((tool, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: tool.name,
+          url: tool.url,
+          description: tool.description,
+        })),
+      },
+    });
+    return;
+  }
+
   try {
     const data = JSON.parse(script.textContent || '{}') as Record<string, unknown>;
     if (data['@type'] !== 'WebApplication') {
@@ -106,6 +148,7 @@ function updateAppJsonLd(options: {
         '@type': 'WebApplication',
         name: displayName,
         url: options.url,
+        image: absoluteUrl('/og-image.png'),
         description: options.description,
         applicationCategory: 'DeveloperApplication',
         operatingSystem: 'Any',
@@ -232,6 +275,7 @@ export function useSeo({
   featureList,
   applicationSubCategory,
   schemaName,
+  categoryTools,
 }: SeoOptions): void {
   useEffect(() => {
     const url = absoluteUrl(path);
@@ -245,10 +289,12 @@ export function useSeo({
     setMeta('property', 'og:title', title);
     setMeta('property', 'og:description', description);
     setMeta('property', 'og:url', url);
+    setMeta('property', 'og:image:alt', title);
 
     setMeta('name', 'twitter:title', title);
     setMeta('name', 'twitter:description', description);
     setMeta('name', 'twitter:url', url);
+    setMeta('name', 'twitter:image:alt', title);
 
     updateAppJsonLd({
       url,
@@ -257,6 +303,7 @@ export function useSeo({
       toolPage: Boolean(toolName),
       features: featureList,
       subCategory: applicationSubCategory,
+      categoryTools,
     });
 
     // BreadcrumbList JSON-LD
@@ -267,5 +314,5 @@ export function useSeo({
 
     // HowTo JSON-LD
     updateHowToJsonLd(toolName, howToSteps);
-  }, [title, description, path, noindex, breadcrumbs, faqItems, toolName, howToSteps, featureList, applicationSubCategory, schemaName]);
+  }, [title, description, path, noindex, breadcrumbs, faqItems, toolName, howToSteps, featureList, applicationSubCategory, schemaName, categoryTools]);
 }

@@ -1,6 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Star, ChevronRight, X, Sun, Moon } from 'lucide-react';
+import {
+  Star,
+  ChevronRight,
+  X,
+  Sun,
+  Moon,
+  Braces,
+  Code,
+  Database,
+  Type,
+  Lock,
+  Sparkles,
+  Bug,
+} from 'lucide-react';
 import { getToolById, getCategoriesWithTools } from '@/registry/toolRegistry';
 import type { ToolDefinition } from '@/types/tool';
 import { useLocale } from '@/hooks/useLocale';
@@ -13,7 +26,19 @@ interface SidebarProps {
   onClose: () => void;
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
+  selectedCategoryId?: string | null;
+  selectedToolId?: string | null;
 }
+
+const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  Braces,
+  Code,
+  Database,
+  Type,
+  Lock,
+  Sparkles,
+  Bug,
+};
 
 export const Sidebar: React.FC<SidebarProps> = ({
   favoriteIds,
@@ -22,12 +47,30 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onClose,
   theme,
   onToggleTheme,
+  selectedCategoryId,
+  selectedToolId,
 }) => {
   const { t, toolName, categoryName } = useLocale();
-  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
+  const categories = getCategoriesWithTools();
+
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {};
+    for (const cat of categories) {
+      initial[cat.id] = true;
+    }
+    return initial;
+  });
+
+  // Automatically expand the active category when navigating via URL or search
+  useEffect(() => {
+    if (selectedCategoryId) {
+      setExpandedCategories((prev) =>
+        prev[selectedCategoryId] ? prev : { ...prev, [selectedCategoryId]: true }
+      );
+    }
+  }, [selectedCategoryId]);
 
   const favoriteTools = favoriteIds.map(id => getToolById(id)).filter(Boolean) as ToolDefinition[];
-  const categories = getCategoriesWithTools();
 
   const toggleCategory = (categoryId: string) => {
     setExpandedCategories(prev => ({
@@ -43,11 +86,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
     return tools.map(tool => {
       const name = toolName(tool.id, tool.name);
+      const isSelected = selectedToolId === tool.id;
       return (
-        <div key={tool.id} className="flex items-center group px-2 py-1.5 lg:py-1 mx-2 rounded hover:bg-[var(--bg-hover)] cursor-pointer">
+        <div
+          key={tool.id}
+          className={`flex items-center group px-2 py-1.5 lg:py-1 mx-2 rounded transition-colors cursor-pointer ${
+            isSelected
+              ? 'bg-[var(--color-brand-500)]/15 text-[var(--color-brand-400)]'
+              : 'hover:bg-[var(--bg-hover)]'
+          }`}
+        >
           <Link
             to={toolPath(tool.category, tool.id)}
-            className="flex-1 min-w-0 min-h-9 lg:min-h-0 flex items-center text-left text-sm text-[var(--sidebar-item)] group-hover:text-[var(--sidebar-category)] truncate pl-4"
+            aria-current={isSelected ? 'page' : undefined}
+            className={`flex-1 min-w-0 min-h-9 lg:min-h-0 flex items-center text-left text-sm truncate pl-3.5 ${
+              isSelected
+                ? 'font-semibold text-[var(--color-brand-400)]'
+                : 'text-[var(--sidebar-item)] group-hover:text-[var(--sidebar-category)]'
+            }`}
             onClick={() => {
               if (window.innerWidth < 1024) onClose();
             }}
@@ -71,7 +127,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const sidebarContent = (
-    <div className="flex h-full w-[min(16rem,85vw)] flex-col overflow-hidden border-r border-[var(--border-subtle)] bg-[var(--bg-panel)] pt-[env(safe-area-inset-top)] pl-[env(safe-area-inset-left)]">
+    <div className="flex h-full w-[min(19rem,85vw)] flex-col overflow-hidden border-r border-[var(--border-subtle)] bg-[var(--bg-panel)] pt-[env(safe-area-inset-top)] pl-[env(safe-area-inset-left)]">
       <div className="flex items-center justify-between gap-2 p-4 border-b border-[var(--border-subtle)] lg:hidden">
         <span className="font-bold text-[var(--text-primary)]">{t.menu}</span>
         <div className="flex items-center gap-1">
@@ -109,35 +165,51 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="px-4 mb-2 text-xs font-semibold text-[var(--sidebar-heading)] uppercase tracking-wider">
             {t.allCategories}
           </div>
-          {categories.map(category => (
-            <div key={category.id} className="mb-1">
-              <div className="flex min-h-10 items-center hover:bg-[var(--bg-hover)] lg:min-h-0">
-                <button
-                  type="button"
-                  className="flex shrink-0 items-center py-2 pl-4 pr-1 text-[var(--sidebar-muted)] lg:py-1.5"
-                  onClick={() => toggleCategory(category.id)}
-                  aria-expanded={Boolean(expandedCategories[category.id])}
-                  aria-label={categoryName(category.id, category.name)}
+          {categories.map(category => {
+            const IconComponent = CATEGORY_ICONS[category.icon];
+            const isExpanded = Boolean(expandedCategories[category.id]);
+            const isCategorySelected = selectedCategoryId === category.id && !selectedToolId;
+            return (
+              <div key={category.id} className="mb-1">
+                <div
+                  className={`flex min-h-10 items-center lg:min-h-0 mx-1 rounded transition-colors ${
+                    isCategorySelected ? 'bg-[var(--color-brand-500)]/15' : 'hover:bg-[var(--bg-hover)]'
+                  }`}
                 >
-                  <ChevronRight className={`h-3.5 w-3.5 transition-transform ${expandedCategories[category.id] ? 'rotate-90' : ''}`} />
-                </button>
-                <Link
-                  to={categoryPath(category.id)}
-                  className="min-w-0 flex-1 truncate py-2 pr-4 text-sm font-semibold text-[var(--sidebar-category)] lg:py-1.5"
-                  onClick={() => {
-                    if (window.innerWidth < 1024) onClose();
-                  }}
-                >
-                  {categoryName(category.id, category.name)}
-                </Link>
-              </div>
-              {expandedCategories[category.id] && (
-                <div className="mt-1">
+                  <button
+                    type="button"
+                    className="flex shrink-0 items-center py-2 pl-3 pr-1.5 text-[var(--sidebar-muted)] hover:text-[var(--text-primary)] lg:py-1.5"
+                    onClick={() => toggleCategory(category.id)}
+                    aria-expanded={isExpanded}
+                    aria-label={categoryName(category.id, category.name)}
+                  >
+                    <ChevronRight className={`h-3.5 w-3.5 transition-transform duration-150 ${isExpanded ? 'rotate-90' : ''}`} />
+                  </button>
+                  <Link
+                    to={categoryPath(category.id)}
+                    aria-current={isCategorySelected ? 'page' : undefined}
+                    className={`min-w-0 flex-1 flex items-center gap-2 truncate py-2 pr-3 text-sm font-semibold lg:py-1.5 ${
+                      selectedCategoryId === category.id
+                        ? 'text-[var(--color-brand-400)]'
+                        : 'text-[var(--sidebar-category)]'
+                    }`}
+                    onClick={() => {
+                      setExpandedCategories(prev => ({ ...prev, [category.id]: true }));
+                      if (window.innerWidth < 1024) onClose();
+                    }}
+                  >
+                    {IconComponent && (
+                      <IconComponent className="h-3.5 w-3.5 shrink-0 opacity-80" />
+                    )}
+                    <span className="truncate">{categoryName(category.id, category.name)}</span>
+                  </Link>
+                </div>
+                <div className={isExpanded ? 'mt-0.5' : 'hidden'} aria-hidden={!isExpanded}>
                   {renderToolList(category.tools)}
                 </div>
-              )}
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </div>
       </nav>
     </div>

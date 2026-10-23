@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import type { Extension } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
+import { tokyoNight } from '@uiw/codemirror-theme-tokyo-night';
+import { githubLight } from '@uiw/codemirror-theme-github';
 
 export type EditorLanguage =
   | 'text'
@@ -54,7 +56,7 @@ export default function CodeEditor({
   minHeight = '0',
 }: CodeEditorProps) {
   const [langExt, setLangExt] = useState<Extension | null>(null);
-  const [editorTheme, setEditorTheme] = useState<Extension | undefined>(undefined);
+  const editorTheme = theme === 'dark' ? tokyoNight : githubLight;
 
   useEffect(() => {
     const load = languageLoaders[language];
@@ -70,21 +72,6 @@ export default function CodeEditor({
       cancelled = true;
     };
   }, [language]);
-
-  useEffect(() => {
-    let cancelled = false;
-    const apply = (ext: Extension) => {
-      if (!cancelled) setEditorTheme(ext);
-    };
-    if (theme === 'dark') {
-      import('@uiw/codemirror-theme-tokyo-night').then((mod) => apply(mod.tokyoNight));
-    } else {
-      import('@uiw/codemirror-theme-github').then((mod) => apply(mod.githubLight));
-    }
-    return () => {
-      cancelled = true;
-    };
-  }, [theme]);
 
   const extensions = useMemo(() => {
     const exts: Extension[] = [wordWrapExtension];

@@ -15,6 +15,7 @@ import { Sidebar } from '@/components/Sidebar/Sidebar';
 import { ToolSeo } from '@/components/ToolSeo/ToolSeo';
 import { ToolDocs } from '@/components/ToolSeo/ToolDocs';
 import { CategorySeo } from '@/components/ToolSeo/CategorySeo';
+import { CategoryDocs } from '@/components/ToolSeo/CategoryDocs';
 import { HomeSeo } from '@/components/ToolSeo/HomeSeo';
 import { NotFound } from '@/components/NotFound/NotFound';
 
@@ -30,6 +31,7 @@ import {
   BASE_DESCRIPTION,
   BASE_TITLE,
   SITE_NAME,
+  absoluteUrl,
   categoryHeading,
   categoryPageDescription,
   categoryPageTitle,
@@ -39,7 +41,7 @@ import {
   toolPath,
 } from '@/seo/site';
 import { getToolContent } from '@/seo/toolContent';
-import { homeFaq } from '@/seo/homeContent';
+import { categorySeoContent, homeFaq } from '@/seo/homeContent';
 import { HomeDocs } from '@/components/ToolSeo/HomeDocs';
 
 import type { EditorLanguage } from '@/components/Editor/CodeEditor';
@@ -115,6 +117,7 @@ function ToolboxPage() {
   const { t, toolName, toolDescription, toolFaq, categoryName, categoryDescription, format } = useLocale();
 
   const [searchOpen, setSearchOpen] = useState(false);
+  const [initialSearchQuery, setInitialSearchQuery] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const registryReady = true;
 
@@ -193,14 +196,24 @@ function ToolboxPage() {
       const category = getCategoryById(selectedCategoryId);
       const name = categoryName(selectedCategoryId, category?.name ?? selectedCategoryId);
       const desc = categoryDescription(selectedCategoryId, category?.description ?? '');
+      const heading = categoryHeading(selectedCategoryId, name);
+      const catSeo = categorySeoContent[selectedCategoryId];
+      const catTools = getToolsByCategory(selectedCategoryId).map((tool) => ({
+        name: toolName(tool.id, tool.name),
+        url: absoluteUrl(toolPath(selectedCategoryId, tool.id)),
+        description: toolDescription(tool.id, tool.description),
+      }));
       return {
-        title: categoryPageTitle(categoryHeading(selectedCategoryId, name)),
+        title: categoryPageTitle(heading),
         description: categoryPageDescription(desc, selectedCategoryId),
+        schemaName: heading,
         path: categoryPath(selectedCategoryId),
         breadcrumbs: [
           { name: SITE_NAME, path: '/' },
           { name, path: categoryPath(selectedCategoryId) },
         ],
+        categoryTools: catTools,
+        faqItems: catSeo?.faq.map((f) => ({ question: f.q, answer: f.a })),
       };
     }
     return {
@@ -238,6 +251,7 @@ function ToolboxPage() {
     const urlParams = new URLSearchParams(location.search);
     const q = urlParams.get('q');
     if (q) {
+      setInitialSearchQuery(q);
       setSearchOpen(true);
       // Remove ?q= from URL to keep it clean
       navigate(location.pathname, { replace: true });
@@ -319,6 +333,25 @@ function ToolboxPage() {
       ? 'typescript'
       : getEditorLanguage(selectedTool?.outputType ?? selectedTool?.inputType);
 
+  const handleLoadSample = useCallback(() => {
+    if (!selectedTool) return;
+    const content = getToolContent(selectedTool.id);
+    if (!content?.example) return;
+    if (selectedTool.id === 'diffCompare') {
+      setInput('{\n  "service": "auth-api",\n  "port": 8080,\n  "debug": true,\n  "timeoutMs": 3000\n}');
+      setSecondaryInput('{\n  "service": "auth-api",\n  "port": 9090,\n  "debug": false,\n  "timeoutMs": 5000,\n  "region": "eu-central-1"\n}');
+      return;
+    }
+    if (selectedTool.id === 'jsonDiff') {
+      setInput('{\n  "version": 1,\n  "flags": {\n    "beta": false,\n    "darkMode": true\n  }\n}');
+      setSecondaryInput('{\n  "version": 2,\n  "flags": {\n    "beta": true,\n    "darkMode": true\n  },\n  "region": "eu"\n}');
+      return;
+    }
+    if (content.example.input && content.example.input !== '(no input required)') {
+      setInput(content.example.input);
+    }
+  }, [selectedTool, setInput, setSecondaryInput]);
+
   return (
     <div className="flex flex-col h-dvh min-w-0 overflow-x-hidden bg-[var(--bg-app)]">
       {/* Header */}
@@ -338,6 +371,8 @@ function ToolboxPage() {
           onClose={() => setSidebarOpen(false)}
           theme={theme}
           onToggleTheme={toggleTheme}
+          selectedCategoryId={selectedCategoryId}
+          selectedToolId={selectedToolId}
         />
 
         {/* Main Content — scrolls as one page: workspace (above the fold) + docs + footer */}
@@ -429,6 +464,7 @@ function ToolboxPage() {
                     modifiedValue={secondaryInput}
                     onOriginalChange={setInput}
                     onModifiedChange={setSecondaryInput}
+                    onLoadSample={handleLoadSample}
                     theme={theme}
                     diffType={(toolOptions.diffType as 'lines' | 'words' | 'chars') ?? 'lines'}
                     ignoreWhitespace={toolOptions.ignoreWhitespace === true}
@@ -444,6 +480,7 @@ function ToolboxPage() {
                   language={inputLang}
                   theme={theme}
                   onClear={clearInput}
+                  onLoadSample={selectedTool && !inputDisabled ? handleLoadSample : undefined}
                   disabled={inputDisabled}
                 />
                 <OutputPanel
@@ -487,7 +524,12 @@ function ToolboxPage() {
               tool={selectedTool}
               name={toolName(selectedTool.id, selectedTool.name)}
               faq={toolFaq(selectedTool.id)}
+              onLoadSample={!inputDisabled ? handleLoadSample : undefined}
             />
+          )}
+
+          {!selectedTool && selectedCategoryId && (
+            <CategoryDocs key={selectedCategoryId} categoryId={selectedCategoryId} />
           )}
 
           {!selectedTool && !selectedCategoryId && <HomeDocs />}
@@ -501,8 +543,12 @@ function ToolboxPage() {
       {/* Tool Search Modal */}
       <ToolSearch
         isOpen={searchOpen}
-        onClose={() => setSearchOpen(false)}
+        onClose={() => {
+          setSearchOpen(false);
+          setInitialSearchQuery('');
+        }}
         onSelectTool={selectCategoryAndTool}
+        initialQuery={initialSearchQuery}
       />
     </div>
   );

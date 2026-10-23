@@ -95,22 +95,58 @@ export function toolPriority(toolId: string): string {
 }
 
 const CUSTOM_TITLES: Record<string, string> = {
-  jsonFormatter: 'JSON Formatter & Validator Online (100% Private) — DevKit',
-  sqlFormatter: 'SQL Formatter Online — T-SQL, MySQL, PostgreSQL | DevKit',
-  randomStringGenerator: 'Random String Generator Online — Secure & Free | DevKit',
-  columnToQuoted: 'Column to Quoted List Online — Free, Client-Side | DevKit',
-  base64: 'Base64 Encode & Decode Online — Fast & UTF-8 Safe | DevKit',
-  guidGenerator: 'Free GUID / UUID Generator Online (.NET & Batch) | DevKit',
-  uuidGenerator: 'Online UUID v4 Generator — Cryptographically Secure | DevKit',
-  diffCompare: 'Online Text Diff Checker — Compare Text & Code | DevKit',
-  jwtDecoder: 'JWT Decoder Online — Decode Header & Payload Safely | DevKit',
-  jsonToClass: 'JSON to C#, TypeScript & Java Class Converter | DevKit',
-  jsonMinifier: 'JSON Minifier Online — Compact JSON in One Click | DevKit',
-  jsonValidator: 'JSON Validator & Syntax Checker Online — DevKit',
-  caseConverter: 'Case Converter — camelCase, snake_case, PascalCase | DevKit',
-  wordCounter: 'Word Counter & Character Count Tool Online | DevKit',
-  passwordGenerator: 'Secure Password Generator Online — DevKit',
-  regexTester: 'Regex Tester Online — Test Regular Expressions | DevKit',
+  // JSON & Data Conversion
+  jsonFormatter: 'JSON Formatter, Beautifier & Pretty Print Online — DevKit',
+  jsonMinifier: 'JSON Minifier & Compressor Online — One-Click Compact | DevKit',
+  jsonValidator: 'JSON Validator & Syntax Checker Online (Line Errors) — DevKit',
+  jsonToClass: 'JSON to C#, TypeScript & Java Class Converter Online | DevKit',
+  jsonToTypeScript: 'JSON to TypeScript Interface & Type Generator Online | DevKit',
+  jsonToXml: 'JSON to XML Converter Online — Custom Root & Escaping | DevKit',
+  jsonToYaml: 'JSON to YAML Converter Online — Kubernetes & Docker | DevKit',
+  jsonDiff: 'JSON Diff & Compare Tool Online — Semantic Path Diff | DevKit',
+  classToJson: 'C#, TypeScript & Java Class to Sample JSON Generator | DevKit',
+
+  // Code Formatters
+  yamlFormatter: 'YAML Formatter, Beautifier & Validator Online | DevKit',
+  xmlFormatter: 'XML Formatter, Beautifier & Pretty Print Online (SVG) | DevKit',
+  javascriptFormatter: 'JavaScript Formatter & Beautifier Online (Prettier) | DevKit',
+  jqueryFormatter: 'jQuery & Legacy JS Formatter / Beautifier Online | DevKit',
+  typescriptFormatter: 'TypeScript & TSX Formatter Online — Prettier Beautifier | DevKit',
+  htmlFormatter: 'HTML Formatter & Beautifier Online — Indent Markup | DevKit',
+  cssFormatter: 'CSS Formatter & Beautifier Online — Clean Stylesheets | DevKit',
+
+  // SQL Tools
+  sqlFormatter: 'SQL Formatter & Beautifier Online — T-SQL, MySQL, Postgres | DevKit',
+  sqlInGenerator: 'SQL IN Clause Generator from List Online — Dedup & Quote | DevKit',
+  sqlToCSharpClass: 'SQL CREATE TABLE to C# POCO Class Generator Online | DevKit',
+
+  // Text & List Utilities
+  columnToComma: 'Column to Comma Separated List Converter Online | DevKit',
+  commaToColumn: 'Comma to Column Converter Online — Split CSV to Lines | DevKit',
+  columnToQuoted: 'Column to Quoted List Converter Online — Single/Double | DevKit',
+  columnToSqlIn: 'Excel Column to SQL IN Clause Converter Online | DevKit',
+  removeDuplicates: 'Remove Duplicate Lines Online — Deduplicate Text List | DevKit',
+  sortLines: 'Sort Lines Alphabetically & Numerically Online | DevKit',
+  removeEmptyLines: 'Remove Empty & Blank Lines from Text Online | DevKit',
+  trimLines: 'Trim Whitespace from Lines Online — Leading & Trailing | DevKit',
+  caseConverter: 'Case Converter Online — camelCase, snake_case, PascalCase | DevKit',
+  wordCounter: 'Word Counter, Line & Sentence Count Tool Online | DevKit',
+  characterCounter: 'Character Counter Online — Letters, Digits & No-Spaces | DevKit',
+
+  // Encoding
+  base64: 'Base64 Encode & Decode Online — UTF-8 Safe Converter | DevKit',
+  jwtDecoder: 'JWT Decoder & Inspector Online — Decode Header & Payload | DevKit',
+
+  // Generators
+  guidGenerator: 'Free GUID / UUID Generator Online (.NET D, N, B, P & Batch) | DevKit',
+  uuidGenerator: 'UUID v4 Generator Online — RFC 4122 Bulk & Compact | DevKit',
+  passwordGenerator: 'Secure Random Password Generator Online (Web Crypto) — DevKit',
+  randomStringGenerator: 'Random String & API Key Generator Online (Hex/Alpha) | DevKit',
+
+  // Inspect & Debug
+  diffCompare: 'Online Text Diff Checker — Compare Text & Code Side-by-Side | DevKit',
+  regexTester: 'Regex Tester & Debugger Online — JS RegExp Match & Groups | DevKit',
+  httpStatusLookup: 'HTTP Status Code Lookup & Reference (1xx–5xx & Cloudflare) | DevKit',
 };
 
 export function toolPageTitle(toolName: string, toolId?: string): string {
@@ -128,11 +164,15 @@ export function toolPageDescription(toolDescription: string, toolId?: string): s
   return `${toolDescription} 100% client-side in your browser, no data leaves your device.`;
 }
 
-/** Plural-noun names would read "Generators Tools"; these ids get an explicit heading. */
+/** Category landing-page H1 headings so every category has a rich, descriptive title. */
 const CATEGORY_HEADINGS: Record<string, string> = {
+  json: 'JSON & Data Conversion Tools',
   formatters: 'Code Formatters',
-  generators: 'Online Generators',
+  sql: 'SQL Formatting & Generation Tools',
   text: 'Text & List Utilities',
+  encoding: 'Encoding & JWT Token Tools',
+  generators: 'Online Generators',
+  inspect: 'Debugging & Testing Tools',
 };
 
 export function categoryHeading(categoryId: string, categoryName: string): string {

@@ -6,7 +6,7 @@ import { categoryPath, toolPath } from '@/seo/site';
 
 const POPULAR_TOOLS = [
   { id: 'jsonFormatter', category: 'json' },
-  { id: 'sqlFormatter', category: 'formatters' },
+  { id: 'sqlFormatter', category: 'sql' },
   { id: 'base64', category: 'encoding' },
   { id: 'guidGenerator', category: 'generators' },
   { id: 'diffCompare', category: 'inspect' },

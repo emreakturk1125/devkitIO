@@ -132,15 +132,15 @@ const CATEGORY_TOOL_ORDER: Record<string, string[]> = {
     'jsonToYaml',
     'jsonDiff',
     'classToJson',
-    'yamlFormatter',
-    'xmlFormatter',
   ],
   formatters: [
     'javascriptFormatter',
-    'jqueryFormatter',
     'typescriptFormatter',
     'htmlFormatter',
     'cssFormatter',
+    'xmlFormatter',
+    'yamlFormatter',
+    'jqueryFormatter',
   ],
   text: [
     'columnToComma',
@@ -155,6 +155,10 @@ const CATEGORY_TOOL_ORDER: Record<string, string[]> = {
     'wordCounter',
     'characterCounter',
   ],
+  encoding: [
+    'base64',
+    'jwtDecoder',
+  ],
   generators: [
     'guidGenerator',
     'uuidGenerator',
@@ -164,7 +168,6 @@ const CATEGORY_TOOL_ORDER: Record<string, string[]> = {
   inspect: [
     'diffCompare',
     'regexTester',
-    'jwtDecoder',
     'httpStatusLookup',
   ],
 };

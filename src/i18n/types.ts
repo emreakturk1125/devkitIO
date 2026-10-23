@@ -30,6 +30,9 @@ export interface Messages {
     output: string;
     diffResult: string;
     paste: string;
+    sample: string;
+    loadSample: string;
+    tryInEditor: string;
     clear: string;
     expand: string;
     exit: string;

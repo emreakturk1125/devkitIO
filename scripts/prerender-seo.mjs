@@ -21,10 +21,18 @@ const {
 } = await import('../src/seo/site.ts');
 const { categories: categoryRegistry } = await import('../src/registry/categoryRegistry.ts');
 const { en } = await import('../src/i18n/en.ts');
-const { homeAboutParagraphs, homeFaq } = await import('../src/seo/homeContent.ts');
+const { categorySeoContent, homeAboutParagraphs, homeFaq } = await import('../src/seo/homeContent.ts');
 const { tokenizeCode } = await import('../src/seo/highlight.ts');
 const { parseRichText, withSiblingLinks } = await import('../src/seo/richText.ts');
 const { extraToolFaqs } = await import('../src/seo/extraToolFaqs.ts');
+
+function toIsoDate(filePath) {
+  try {
+    return statSync(filePath).mtime.toISOString().split('T')[0];
+  } catch {
+    return '2026-10-18';
+  }
+}
 
 function walkTs(dir) {
   const files = [];
@@ -105,6 +113,7 @@ function extractTools() {
         description: localized?.description ?? description ?? name,
         faq: [...(localized?.faq ?? []), ...(extraToolFaqs[id] ?? [])].slice(0, 7),
         relatedToolIds,
+        lastmod: toIsoDate(file),
       });
     }
   }
@@ -232,7 +241,21 @@ function breadcrumbNav(crumbs) {
     .join('')}</ol></nav>`;
 }
 
-function buildToolBody({ tool, content, faqItems, related, breadcrumbs }) {
+function buildStaticFooter(categories, tools, categoryInfo) {
+  const groups = categories
+    .map((catId) => {
+      const catMeta = categoryInfo(catId);
+      const catTools = tools.filter((t) => t.category === catId);
+      return `<div style="min-width:0;"><a href="/tools/${catId}" style="font-weight:600;color:var(--text-primary);display:block;margin-bottom:0.375rem;">${escapeHtml(catMeta.name)}</a><ul style="list-style:none;padding:0;margin:0;display:grid;gap:0.25rem;font-size:0.8125rem;">${catTools
+        .map((t) => `<li><a href="/tools/${t.category}/${t.slug}" style="color:var(--text-secondary);">${escapeHtml(t.name)}</a></li>`)
+        .join('')}</ul></div>`;
+    })
+    .join('');
+
+  return `<footer style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border-subtle);"><nav aria-label="Developer tools directory"><h2 class="docs-h2">All Developer Tools by Category</h2><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.25rem;">${groups}</div></nav></footer>`;
+}
+
+function buildToolBody({ tool, content, faqItems, related, breadcrumbs, footerHtml }) {
   const name = escapeHtml(tool.name);
   const linkedDescription = content?.longDescription
     ? withSiblingLinks(
@@ -307,12 +330,16 @@ function buildToolBody({ tool, content, faqItems, related, breadcrumbs }) {
     );
   }
 
+  if (footerHtml) {
+    parts.push(footerHtml);
+  }
+
   return `<div class="prerender-shell">${parts.join('')}</div>`;
 }
 
 // ─── Page Meta Injection ────────────────────────────────────────────────────
 
-function injectPageMeta(html, { title, description, path, name, breadcrumbs, noindex, faqJsonLd, howToJsonLd, bodyHtml, featureList, subCategory }) {
+function injectPageMeta(html, { title, description, path, name, breadcrumbs, noindex, faqJsonLd, howToJsonLd, bodyHtml, featureList, subCategory, categoryTools }) {
   const url = path === '/' ? `${SITE_URL}/` : `${SITE_URL}${path}`;
   const safeTitle = escapeHtml(title);
   const safeDesc = escapeHtml(description);
@@ -346,6 +373,11 @@ function injectPageMeta(html, { title, description, path, name, breadcrumbs, noi
   );
   next = replaceAttr(
     next,
+    /<meta property="og:image:alt" content="[^"]*" \/>/,
+    `<meta property="og:image:alt" content="${safeTitle}" />`
+  );
+  next = replaceAttr(
+    next,
     /<meta name="twitter:url" content="[^"]*" \/>/,
     `<meta name="twitter:url" content="${url}" />`
   );
@@ -358,6 +390,11 @@ function injectPageMeta(html, { title, description, path, name, breadcrumbs, noi
     next,
     /<meta name="twitter:description" content="[^"]*" \/>/,
     `<meta name="twitter:description" content="${safeDesc}" />`
+  );
+  next = replaceAttr(
+    next,
+    /<meta name="twitter:image:alt" content="[^"]*" \/>/,
+    `<meta name="twitter:image:alt" content="${safeTitle}" />`
   );
 
   // The template keywords describe the whole site; they are wrong on tool and category pages.
@@ -393,8 +430,9 @@ function injectPageMeta(html, { title, description, path, name, breadcrumbs, noi
     );
   }
 
-  // Update SoftwareApplication JSON-LD for tool pages
+  // Update SoftwareApplication JSON-LD for tool pages and CollectionPage + ItemList for category pages
   const isToolPage = /^\/tools\/[^/]+\/[^/]+$/.test(path);
+  const isCategoryPage = /^\/tools\/[^/]+$/.test(path);
   if (isToolPage && !noindex) {
     next = next.replace(
       /(<script type="application\/ld\+json">\s*\{[^}]*"@type":\s*"WebApplication"[\s\S]*?)<\/script>/,
@@ -420,6 +458,37 @@ function injectPageMeta(html, { title, description, path, name, breadcrumbs, noi
           inLanguage: 'en',
         };
         return `<script type="application/ld+json">${JSON.stringify(appSchema)}</script>`;
+      }
+    );
+  } else if (isCategoryPage && !noindex && categoryTools) {
+    next = next.replace(
+      /(<script type="application\/ld\+json">\s*\{[^}]*"@type":\s*"WebApplication"[\s\S]*?)<\/script>/,
+      () => {
+        const collectionSchema = {
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: `${name} — ${SITE_NAME}`,
+          url,
+          description,
+          inLanguage: 'en',
+          isPartOf: {
+            '@type': 'WebSite',
+            name: SITE_NAME,
+            url: `${SITE_URL}/`,
+          },
+          mainEntity: {
+            '@type': 'ItemList',
+            numberOfItems: categoryTools.length,
+            itemListElement: categoryTools.map((t, i) => ({
+              '@type': 'ListItem',
+              position: i + 1,
+              name: t.name,
+              url: `${SITE_URL}/tools/${t.category}/${t.slug}`,
+              description: t.description,
+            })),
+          },
+        };
+        return `<script type="application/ld+json">${JSON.stringify(collectionSchema)}</script>`;
       }
     );
   } else if (path !== '/' && !noindex) {
@@ -463,16 +532,22 @@ function injectPageMeta(html, { title, description, path, name, breadcrumbs, noi
 }
 
 function buildSitemap(tools, categories) {
-  // No <lastmod>: a build date would claim every page changed on every deploy.
+  const siteLastmod = toIsoDate(join(root, 'src/seo/toolContent.ts'));
   const urls = [
-    { loc: `${SITE_URL}/`, changefreq: 'weekly', priority: '1.0' },
-    ...categories.map((id) => ({
-      loc: `${SITE_URL}/tools/${id}`,
-      changefreq: 'monthly',
-      priority: '0.6',
-    })),
+    { loc: `${SITE_URL}/`, lastmod: siteLastmod, changefreq: 'weekly', priority: '1.0' },
+    ...categories.map((id) => {
+      const catTools = tools.filter((t) => t.category === id);
+      const latest = catTools.reduce((max, t) => (t.lastmod > max ? t.lastmod : max), siteLastmod);
+      return {
+        loc: `${SITE_URL}/tools/${id}`,
+        lastmod: latest,
+        changefreq: 'monthly',
+        priority: '0.7',
+      };
+    }),
     ...tools.map((tool) => ({
       loc: `${SITE_URL}/tools/${tool.category}/${tool.slug}`,
+      lastmod: tool.lastmod > siteLastmod ? tool.lastmod : siteLastmod,
       changefreq: 'monthly',
       priority: toolPriority(tool.id),
     })),
@@ -482,6 +557,7 @@ function buildSitemap(tools, categories) {
     .map(
       (u) => `  <url>
     <loc>${u.loc}</loc>
+    <lastmod>${u.lastmod}</lastmod>
     <changefreq>${u.changefreq}</changefreq>
     <priority>${u.priority}</priority>
   </url>`
@@ -526,6 +602,7 @@ writeFile(join(root, 'dist/sitemap.xml'), sitemap);
 
 const categoryMetaById = new Map(categoryRegistry.map((c) => [c.id, c]));
 const categoryInfo = (id) => categoryMetaById.get(id) ?? { name: id, description: '' };
+const staticFooterHtml = buildStaticFooter(categories, tools, categoryInfo);
 
 // Home page static body — mirrors HomeSeo + HomeDocs in the React app
 const homeFaqItems = homeFaq.map((f) => ({ question: f.q, answer: f.a }));
@@ -566,6 +643,7 @@ const homeBody = `<div class="prerender-shell">
       .map((f) => `<dt style="font-weight:600;margin-top:0.75rem;">${escapeHtml(f.question)}</dt><dd class="docs-p" style="margin-bottom:0.75rem;">${escapeHtml(f.answer)}</dd>`)
       .join('')}</dl>
   </section>
+  ${staticFooterHtml}
 </div>`;
 
 writeFile(
@@ -598,11 +676,28 @@ for (const category of categories) {
   const catTools = tools.filter((t) => t.category === category);
   const title = categoryPageTitle(catHeading);
   const description = categoryPageDescription(catMeta.description, category);
+  const catSeo = categorySeoContent[category];
+  const catFaqItems = (catSeo?.faq ?? []).map((f) => ({ question: f.q, answer: f.a }));
 
   const catBreadcrumbs = [
     { name: SITE_NAME, url: `${SITE_URL}/` },
     { name: catMeta.name, url: `${SITE_URL}/tools/${category}` },
   ];
+
+  const catOverviewHtml = catSeo?.overview?.length
+    ? `<section><h2 class="docs-h2">About ${escapeHtml(catHeading)}</h2>${catSeo.overview
+        .map((p) => `<p class="docs-p" style="margin-bottom:0.75rem;">${escapeHtml(p)}</p>`)
+        .join('')}</section>`
+    : '';
+
+  const catFaqHtml = catFaqItems.length
+    ? `<section><h2 class="docs-h2">Frequently Asked Questions (FAQ)</h2><dl>${catFaqItems
+        .map(
+          (f) =>
+            `<dt style="font-weight:600;margin-top:0.75rem;">${escapeHtml(f.question)}</dt><dd class="docs-p" style="margin-bottom:0.75rem;">${escapeHtml(f.answer)}</dd>`
+        )
+        .join('')}</dl></section>`
+    : '';
 
   const catBody = `<div class="prerender-shell">
     ${breadcrumbNav(catBreadcrumbs)}
@@ -617,6 +712,9 @@ for (const category of categories) {
           .join('')}
       </ul>
     </nav>
+    ${catOverviewHtml}
+    ${catFaqHtml}
+    ${staticFooterHtml}
   </div>`;
 
   writeFile(
@@ -627,7 +725,9 @@ for (const category of categories) {
       path: `/tools/${category}`,
       name: catHeading,
       breadcrumbs: catBreadcrumbs,
+      faqJsonLd: catFaqItems.length > 0 ? buildFaqJsonLd(catFaqItems) : undefined,
       bodyHtml: catBody,
+      categoryTools: catTools,
     })
   );
 
@@ -659,6 +759,7 @@ for (const category of categories) {
       faqItems,
       related,
       breadcrumbs: toolBreadcrumbs,
+      footerHtml: staticFooterHtml,
     });
 
     writeFile(

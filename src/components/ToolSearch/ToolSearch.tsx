@@ -7,11 +7,12 @@ interface ToolSearchProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectTool: (categoryId: string, toolId: string) => void;
+  initialQuery?: string;
 }
 
-export const ToolSearch: React.FC<ToolSearchProps> = ({ isOpen, onClose, onSelectTool }) => {
+export const ToolSearch: React.FC<ToolSearchProps> = ({ isOpen, onClose, onSelectTool, initialQuery = '' }) => {
   const { t, toolName, toolDescription, categoryName } = useLocale();
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(initialQuery);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -39,11 +40,11 @@ export const ToolSearch: React.FC<ToolSearchProps> = ({ isOpen, onClose, onSelec
 
   useEffect(() => {
     if (isOpen) {
-      setQuery('');
+      setQuery(initialQuery);
       setSelectedIndex(0);
       setTimeout(() => inputRef.current?.focus(), 50);
     }
-  }, [isOpen]);
+  }, [isOpen, initialQuery]);
 
   useEffect(() => {
     setSelectedIndex(0);

@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useRef, type ReactNode } from 'react';
 import { diffLines, diffWords, type Change } from 'diff';
+import { Sparkles } from 'lucide-react';
 import { useLocale } from '@/hooks/useLocale';
 
 interface DiffViewProps {
@@ -7,6 +8,7 @@ interface DiffViewProps {
   modifiedValue: string;
   onOriginalChange: (value: string) => void;
   onModifiedChange: (value: string) => void;
+  onLoadSample?: () => void;
   theme?: 'dark' | 'light';
   diffType?: 'lines' | 'words' | 'chars';
   ignoreWhitespace?: boolean;
@@ -365,6 +367,7 @@ export default function DiffView({
   modifiedValue,
   onOriginalChange,
   onModifiedChange,
+  onLoadSample,
   theme = 'dark',
   ignoreWhitespace = false,
 }: DiffViewProps) {
@@ -413,11 +416,25 @@ export default function DiffView({
         >
           <div className="panel-header">
             <span>{t.original}</span>
-            {showDiff && hasDiff && removedCount > 0 && (
-              <span style={{ color: palette.removedText, fontSize: '0.6875rem', fontWeight: 500 }}>
-                −{removedCount} {removedCount === 1 ? 'line' : 'lines'}
-              </span>
-            )}
+            <div className="flex items-center gap-2">
+              {showDiff && hasDiff && removedCount > 0 && (
+                <span style={{ color: palette.removedText, fontSize: '0.6875rem', fontWeight: 500 }}>
+                  −{removedCount} {removedCount === 1 ? 'line' : 'lines'}
+                </span>
+              )}
+              {onLoadSample && (
+                <button
+                  type="button"
+                  className="btn-ghost !px-2 !py-1 !text-[0.6875rem] min-h-7"
+                  onClick={onLoadSample}
+                  title={t.loadSample}
+                  aria-label={t.loadSample}
+                >
+                  <Sparkles size={13} />
+                  <span className="hidden sm:inline">{t.sample}</span>
+                </button>
+              )}
+            </div>
           </div>
           <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
             <textarea
